@@ -35,7 +35,7 @@ public class Frame extends JFrame {
         frame = new JFrame();
         area = new JTextArea();
         field = new JTextField();
-        image = new ImageIcon("C:\\Users\\mobasha\\IdeaProjects\\Project_2-2\\gradle\\src\\main\\java\\gui\\pics\\img.png");
+        image = new ImageIcon("gradle\\src\\main\\java\\gui\\pics\\img.png");
         Image img = image.getImage();
         Image modImg = img.getScaledInstance(700,600, Image.SCALE_SMOOTH);
         image = new ImageIcon(modImg);
@@ -205,7 +205,7 @@ public class Frame extends JFrame {
 
                 }
 
-                else if(message.contains("good morning "))
+                else if(message.contains("good morning"))
                 {
 
                     bot("Good morning,Have a nice day !");
