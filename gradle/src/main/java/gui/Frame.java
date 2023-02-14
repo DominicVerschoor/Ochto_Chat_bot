@@ -46,7 +46,7 @@ public class Frame extends JFrame {
         label.add(area);
         label.add(field);
         frame.add(label);
-        frame.setTitle("OCTO_BOT");
+        frame.setTitle("OCTO");
         frame.setLocationRelativeTo(null);
         time=LocalTime.now();
         date=LocalDate.now();
@@ -58,9 +58,9 @@ public class Frame extends JFrame {
         area.setSize(350,400);
         area.setLocation(15,35);
         area.setBackground(Color.LIGHT_GRAY);
-        LineBorder lineBorder =new LineBorder(Color.white, 7, true);
+        LineBorder lineBorder =new LineBorder(Color.white, 8, true);
         area.setBorder(lineBorder);
-        area.setFont(new Font("Serif",Font.BOLD,13));
+        area.setFont(new Font("Caslon",Font.BOLD,13));
 
         // FOR THE TEXT INPUT FIELD
         field.setSize(350,40);
@@ -68,7 +68,7 @@ public class Frame extends JFrame {
         field.setBackground(Color.LIGHT_GRAY);
         LineBorder lineBorder1 =new LineBorder(Color.white, 7, true);
         field.setBorder(lineBorder1);
-        field.setFont(new Font("Serif",Font.BOLD,13));
+        field.setFont(new Font("Caslon",Font.BOLD,13));
 
 
         field.addActionListener(new ActionListener() {
