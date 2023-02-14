@@ -30,12 +30,12 @@ public class Frame extends JFrame {
 
     public Frame(){
 
-        imageIcon = new ImageIcon("C:\\Users\\mobasha\\IdeaProjects\\Project_2-2\\gradle\\src\\main\\java\\gui\\pics\\img2.png");
+        imageIcon = new ImageIcon("gradle\\src\\main\\java\\gui\\pics\\img2.png");
         random = new Random();
         frame = new JFrame();
         area = new JTextArea();
         field = new JTextField();
-        image = new ImageIcon("C:\\Users\\mobasha\\IdeaProjects\\Project_2-2\\gradle\\src\\main\\java\\gui\\pics\\img.png");
+        image = new ImageIcon("gradle\\src\\main\\java\\gui\\pics\\img.png");
         Image img = image.getImage();
         Image modImg = img.getScaledInstance(700,600, Image.SCALE_SMOOTH);
         image = new ImageIcon(modImg);
