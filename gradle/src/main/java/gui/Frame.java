@@ -1,6 +1,7 @@
 package gui;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,7 +10,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Locale;
 import java.util.Random;
 
 
@@ -40,7 +40,7 @@ public class Frame extends JFrame {
         frame.setVisible(true);
         frame.setResizable(false);
         frame.setLayout(null);
-        frame.setSize(700, 600);
+        frame.setSize(700, 550);
         label = new JLabel(image);
         label.setSize(700,600);
         label.add(area);
@@ -52,17 +52,23 @@ public class Frame extends JFrame {
         date=LocalDate.now();
 
 
+        //sp = new JScrollPane (area, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
         //  FOR THE TEXT AREA
         area.setSize(350,400);
         area.setLocation(15,35);
-        area.setBackground(Color.WHITE);
-        area.setFont(new Font("Serif",Font.BOLD,15));
+        area.setBackground(Color.LIGHT_GRAY);
+        LineBorder lineBorder =new LineBorder(Color.white, 7, true);
+        area.setBorder(lineBorder);
+        area.setFont(new Font("Serif",Font.BOLD,13));
 
         // FOR THE TEXT INPUT FIELD
         field.setSize(350,40);
         field.setLocation(15,450);
-        field.setBackground(Color.WHITE);
-        field.setFont(new Font("Serif",Font.BOLD,15));
+        field.setBackground(Color.LIGHT_GRAY);
+        LineBorder lineBorder1 =new LineBorder(Color.white, 7, true);
+        field.setBorder(lineBorder1);
+        field.setFont(new Font("Serif",Font.BOLD,13));
 
 
         field.addActionListener(new ActionListener() {
@@ -70,7 +76,7 @@ public class Frame extends JFrame {
             {
                 String message=field.getText().toLowerCase();
 
-                area.append("You >> "+field.getText()+"\n");
+                area.append("YOU >>   "+field.getText()+"\n");
                 field.setText("");
                 Socket sock=new Socket();
 
@@ -270,7 +276,7 @@ public class Frame extends JFrame {
 
 
         private void bot (String string){
-            area.append("OCTO >> " + string + "\n");
+            area.append("OCTO >>   " + string + "\n");
         }
 
 }
