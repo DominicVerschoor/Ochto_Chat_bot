@@ -15,7 +15,7 @@ public class Frame extends JFrame {
     private JTextField textField;
     private ImageIcon image;
     private JLabel label;
-    private JLabel fieldLable;
+
 
 
 
