@@ -19,6 +19,7 @@ public class Frame extends JFrame {
     private JTextArea area;
     private JTextField field;
     private ImageIcon image;
+    private ImageIcon imageIcon;
     private JLabel label;
     private JScrollPane sp;
     private LocalTime time;
@@ -28,6 +29,8 @@ public class Frame extends JFrame {
 
 
     public Frame(){
+
+        imageIcon = new ImageIcon("C:\\Users\\mobasha\\IdeaProjects\\Project_2-2\\gradle\\src\\main\\java\\gui\\pics\\img_2.png");
         random = new Random();
         frame = new JFrame();
         area = new JTextArea();
@@ -47,6 +50,7 @@ public class Frame extends JFrame {
         label.add(field);
         frame.add(label);
         frame.setTitle("OCTO");
+        frame.setIconImage(imageIcon.getImage());
         frame.setLocationRelativeTo(null);
         time=LocalTime.now();
         date=LocalDate.now();
@@ -58,7 +62,7 @@ public class Frame extends JFrame {
         area.setSize(350,400);
         area.setLocation(15,35);
         area.setBackground(Color.LIGHT_GRAY);
-        LineBorder lineBorder =new LineBorder(Color.white, 8, true);
+        LineBorder lineBorder =new LineBorder(Color.white, 6, true);
         area.setBorder(lineBorder);
         area.setFont(new Font("Caslon",Font.BOLD,13));
 
@@ -66,7 +70,7 @@ public class Frame extends JFrame {
         field.setSize(350,40);
         field.setLocation(15,450);
         field.setBackground(Color.LIGHT_GRAY);
-        LineBorder lineBorder1 =new LineBorder(Color.white, 7, true);
+        LineBorder lineBorder1 =new LineBorder(Color.white, 6, true);
         field.setBorder(lineBorder1);
         field.setFont(new Font("Caslon",Font.BOLD,13));
 
