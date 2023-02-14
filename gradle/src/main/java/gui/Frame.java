@@ -11,34 +11,37 @@ import java.net.URLConnection;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Random;
+import java.util.TimerTask;
 
 
 public class Frame extends JFrame {
 
-    private JFrame frame;
-    private JTextArea area;
-    private JTextField field;
-    private ImageIcon image;
-    private ImageIcon imageIcon;
-    private JLabel label;
-    private JScrollPane sp;
-    private LocalTime time;
-    private LocalDate date;
-    private Random random;
+    private final JFrame frame;
+    private final JTextArea area;
+    private final JTextField field;
+    private final ImageIcon image;
+    private final ImageIcon imageIcon;
+    private final JLabel label;
+    private final JScrollPane scrollPane;
+    private final LocalTime time;
+    private final LocalDate date;
+    private final Random random;
 
 
 
     public Frame(){
+        ImageIcon image1;
 
         imageIcon = new ImageIcon("gradle\\src\\main\\java\\gui\\pics\\img2.png");
         random = new Random();
         frame = new JFrame();
         area = new JTextArea();
         field = new JTextField();
-        image = new ImageIcon("gradle\\src\\main\\java\\gui\\pics\\img.png");
-        Image img = image.getImage();
+        image1 = new ImageIcon("gradle\\src\\main\\java\\gui\\pics\\img.png");
+        Image img = image1.getImage();
         Image modImg = img.getScaledInstance(700,600, Image.SCALE_SMOOTH);
-        image = new ImageIcon(modImg);
+        image1 = new ImageIcon(modImg);
+        image = image1;
         frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
         frame.setVisible(true);
         frame.setResizable(false);
@@ -56,11 +59,7 @@ public class Frame extends JFrame {
         date=LocalDate.now();
 
 
-        //sp = new JScrollPane (area, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-
         //  FOR THE TEXT AREA
-        area.setSize(350,400);
-        area.setLocation(15,35);
         area.setBackground(Color.LIGHT_GRAY);
         LineBorder lineBorder =new LineBorder(Color.white, 6, true);
         area.setBorder(lineBorder);
@@ -75,7 +74,17 @@ public class Frame extends JFrame {
         field.setBorder(lineBorder1);
         field.setFont(new Font("Caslon",Font.BOLD,13));
 
+        // SCROLL PANE
+        scrollPane = new JScrollPane();
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setBounds(15,35,350,400);
+        scrollPane.getViewport().setBackground(Color.LIGHT_GRAY);
+        scrollPane.getViewport().add(area);
+        label.add(scrollPane);
 
+
+
+        // DO ACTIONS WHEN EVER USER INPUT SOMETHING
         field.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e)
             {
@@ -114,7 +123,6 @@ public class Frame extends JFrame {
 
                 else if(message.contains("hi")&&message.charAt(0)=='h'||message.contains("hello")||message.contains("hey"))
                 {
-
                     int num=random.nextInt(3);
                     if(num==0)
                     {
@@ -139,7 +147,6 @@ public class Frame extends JFrame {
                 }
                 else if(message.contains("i am good")||message.contains("i am great")||message.contains("i am ")&&message.contains("fine"))
                 {
-
                     bot("Good to hear.");
                 }
                 else if(message.contains("thank"))
@@ -179,7 +186,6 @@ public class Frame extends JFrame {
                 }
                 else if( message.contains("time"))
                 {
-
                     String ctime=new String();
                     if(time.getHour()>12)
                     {
@@ -189,7 +195,6 @@ public class Frame extends JFrame {
 
                     else
                     {
-
                         ctime=ctime+time.getHour()+":"+time.getMinute()+":"+time.getSecond()+" AM";
                     }
                     bot(ctime);
@@ -198,35 +203,29 @@ public class Frame extends JFrame {
                 }
                 else if(message.contains("date")||message.contains("month")||message.contains("year")||message.contains("day"))
                 {
-
                     String cdate=new String();
                     cdate=cdate + date.getDayOfWeek()+","+date.getDayOfMonth()+" "+date.getMonth()+" "+date.getYear();
                     bot(cdate);
-
 
                 }
 
                 else if(message.contains("good morning "))
                 {
-
                     bot("Good morning,Have a nice day !");
 
                 }
                 else if(message.contains("good night"))
                 {
-
                     bot("Good night,Have a nice dreams !");
 
                 }
                 else if(message.contains("good evening"))
                 {
-
                     bot("Good Evening ...!");
 
                 }
                 else if(message.contains("good") && message.contains("noon"))
                 {
-
                     bot("Good Afternoon ...!");
 
                 }
@@ -260,7 +259,6 @@ public class Frame extends JFrame {
                         int num=random.nextInt(3);
                         if(num==0)
                         {
-
                             bot("Sorry ,I can't understand you !");
                         }
                         else if(num==1)
@@ -269,6 +267,11 @@ public class Frame extends JFrame {
                         }
                         else if(num==2)
                         {
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException ex) {
+                                throw new RuntimeException(ex);
+                            }
                             bot("My apologies...I don't understand ");
                         }
                     }
@@ -279,7 +282,7 @@ public class Frame extends JFrame {
 
     }
 
-
+         // OCTO BOT RESPONSE
         private void bot (String string){
             area.append("OCTO >>   " + string + "\n");
         }
