@@ -195,7 +195,7 @@ public class Frame extends JFrame {
 
                 }
 
-                else if(message.contains("good morning"))
+                else if(message.contains("good morning "))
                 {
 
                     bot("Good morning,Have a nice day !");
