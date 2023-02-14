@@ -65,6 +65,7 @@ public class Frame extends JFrame {
         LineBorder lineBorder =new LineBorder(Color.white, 6, true);
         area.setBorder(lineBorder);
         area.setFont(new Font("Caslon",Font.BOLD,13));
+        area.setEditable(false);
 
         // FOR THE TEXT INPUT FIELD
         field.setSize(350,40);
