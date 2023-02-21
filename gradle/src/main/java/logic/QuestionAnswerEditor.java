@@ -7,54 +7,46 @@ import java.util.Scanner;
 
 public class QuestionAnswerEditor {
     private static Scanner s;
-    private static final String fileName = "QuestionAnswer.csv";
+    private static String fileName;
+    private static ArrayList<Slot> slots;
 
-    public static void writeCSV() {
-        StringBuilder s = new StringBuilder();
-        s.append("question|");
+    public QuestionAnswerEditor(String fileName, ArrayList<Slot> slots){
+        this.fileName = "Questions/"+fileName;
+        this.slots = slots;
+    }
 
-        for (int i = 0; i < 20; i++) {
-            s.append("ans" + i + "|");
+    public static void generateQuestion() {
+        StringBuilder output = new StringBuilder();
+
+        for (Slot slt: slots) {
+            output.append(slt.getName()).append("|");
         }
+        output.append("answer").append("\n");
 
-        PrintWriter writer = null;
         try {
-            writer = new PrintWriter(String.format(fileName), StandardCharsets.UTF_8);
+            FileWriter fw = new FileWriter(fileName);
+            BufferedWriter bw = new BufferedWriter(fw);
+            PrintWriter pw = new PrintWriter(bw);
+
+            pw.write(String.valueOf(output));
+
+            pw.flush(); pw.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        assert writer != null;
-
-        writer.println(s);
-        writer.close();
     }
 
-//    public static void addAnswer(){
-//        try {
-//            FileWriter fw = new FileWriter(fileName, true);
-//            BufferedWriter bw = new BufferedWriter(fw);
-//            PrintWriter pw = new PrintWriter(bw);
-//
-//            s = new Scanner(new File(fileName));
-//            s.useDelimiter("[|\n]");
-//
-//            pw.write("ans"+increment+"|");
-//
-//            s.close(); pw.flush(); pw.close();
-//        } catch (Exception e){
-//            e.getStackTrace();
-//        }
-//
-//        increment++;
-//    }
-
-    public static void addQuestion(String question, ArrayList<String> answers) {
+    public static void addAnswer(ArrayList<String> slotResult, String answer) {
         StringBuilder output = new StringBuilder();
 
-        output.append(question + "|");
-        for (String ans: answers) {
-            output.append(ans + "|");
+        for (int i = 0; i < slots.size(); i++) {
+            slots.get(i).addItems(slotResult.get(i));
         }
+
+        for (String str: slotResult) {
+            output.append(str).append("|");
+        }
+        output.append(answer);
 
         try {
             FileWriter fw = new FileWriter(fileName, true);
@@ -103,19 +95,16 @@ public class QuestionAnswerEditor {
     }
 
     public static void main(String[] args) {
-        writeCSV();
-        ArrayList<String> test = new ArrayList<>();
-        test.add("Today is <!monday>");
-        test.add("today is <!tuesday>");
+        ArrayList<Slot> testAns = new ArrayList<>();
+        ArrayList<String> testPl = new ArrayList<>();
 
-        addQuestion("What <?day> is it", test);
+        testPl.add("pl1");
+        testPl.add("pl2");
+        testAns.add(new Slot("s1"));
+        testAns.add(new Slot("s2"));
 
-        ArrayList<String> test2 = new ArrayList<>();
-        test2.add("its <!13>");
-        test2.add("it is <!14>");
-        test2.add("its <!1> aint that cool");
-        test2.add("woah a <!23>");
-
-        addQuestion("What <?time> is it", test2);
+        QuestionAnswerEditor test1 = new QuestionAnswerEditor("Test1Qs", testAns);
+        generateQuestion();
+        addAnswer(testPl, "Test answer");
     }
 }
