@@ -103,7 +103,7 @@ public class QuestionAnswerEditor {
         testAns.add(new Slot("s1"));
         testAns.add(new Slot("s2"));
 
-        QuestionAnswerEditor test1 = new QuestionAnswerEditor("Test1Qs", testAns);
+        QuestionAnswerEditor test1 = new QuestionAnswerEditor("Test1Qs [sl1] [sl1]", testAns);
         generateQuestion();
         addAnswer(testPl, "Test answer");
     }

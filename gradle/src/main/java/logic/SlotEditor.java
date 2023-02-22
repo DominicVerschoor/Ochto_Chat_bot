@@ -57,7 +57,6 @@ public class SlotEditor {
 
             s = new Scanner(new File(fileName));
             s.useDelimiter("[,\n]");
-
             String first = "";
             while (s.hasNextLine()) {
                 first = s.next();
