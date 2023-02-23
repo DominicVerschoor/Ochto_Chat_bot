@@ -14,7 +14,7 @@ import java.util.Random;
 import java.util.TimerTask;
 
 
-public class Frame extends JFrame {
+public class Frame extends JFrame{
 
     private final JFrame frame;
     private final JTextArea area;
@@ -26,6 +26,8 @@ public class Frame extends JFrame {
     private final LocalTime time;
     private final LocalDate date;
     private final Random random;
+    private final JButton button;
+    private final LineBorder lineBorder;
 
 
 
@@ -37,31 +39,32 @@ public class Frame extends JFrame {
         frame = new JFrame();
         area = new JTextArea();
         field = new JTextField();
+        button = new JButton("Add A Skill");
         image1 = new ImageIcon("gradle\\src\\main\\java\\gui\\pics\\img.png");
         Image img = image1.getImage();
-        Image modImg = img.getScaledInstance(700,600, Image.SCALE_SMOOTH);
+        Image modImg = img.getScaledInstance(600,600, Image.SCALE_SMOOTH);
         image1 = new ImageIcon(modImg);
         image = image1;
         frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
         frame.setVisible(true);
         frame.setResizable(false);
         frame.setLayout(null);
-        frame.setSize(700, 550);
+        frame.setSize(600, 550);
         label = new JLabel(image);
-        label.setSize(700,600);
+        label.setSize(600,600);
         label.add(area);
         label.add(field);
+        label.add(button);
         frame.add(label);
         frame.setTitle("OCTO");
         frame.setIconImage(imageIcon.getImage());
         frame.setLocationRelativeTo(null);
         time=LocalTime.now();
         date=LocalDate.now();
-
+        lineBorder =new LineBorder(Color.white, 5, true);
 
         //  FOR THE TEXT AREA
         area.setBackground(Color.LIGHT_GRAY);
-        LineBorder lineBorder =new LineBorder(Color.white, 6, true);
         area.setBorder(lineBorder);
         area.setFont(new Font("Caslon",Font.BOLD,13));
         area.setEditable(false);
@@ -70,8 +73,7 @@ public class Frame extends JFrame {
         field.setSize(350,40);
         field.setLocation(15,450);
         field.setBackground(Color.LIGHT_GRAY);
-        LineBorder lineBorder1 =new LineBorder(Color.white, 6, true);
-        field.setBorder(lineBorder1);
+        field.setBorder(lineBorder);
         field.setFont(new Font("Caslon",Font.BOLD,13));
 
         // SCROLL PANE
@@ -82,8 +84,22 @@ public class Frame extends JFrame {
         scrollPane.getViewport().add(area);
         label.add(scrollPane);
 
+        // BUTTON
+        button.setSize(100,50);
+        button.setLocation(420,50);
+        button.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e)
+            {
+                new Frame2();
+            }
+        });
+        label.add(button);
 
+        main();
+    }
 
+    public void main()
+    {
         // DO ACTIONS WHEN EVER USER INPUT SOMETHING
         field.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e)
@@ -97,20 +113,8 @@ public class Frame extends JFrame {
 
                 if(message.contains("how are you"))
                 {
-                    int num=random.nextInt(3);
-                    if(num==0)
-                    {
-                        bot("I'm fine !,What about you ? ");
-                    }
-                    else if(num==1)
-                    {
-                        bot("I am good , thanks for asking !");
-                    }
-                    else
-                    {
-                        bot("I am great ,thanks for asking !");
-                    }
-
+                    String[] responses = new String[]{"I'm fine !,What about you?","I am good , thanks for asking !","I am great ,thanks for asking !"};
+                    bot(responses[random.nextInt(3)]);
                 }
                 else if(message.contains("you")&&(message.contains("smart")||message.contains("good")))
                 {
@@ -123,23 +127,8 @@ public class Frame extends JFrame {
 
                 else if(message.contains("hi")&&message.charAt(0)=='h'||message.contains("hello")||message.contains("hey"))
                 {
-                    int num=random.nextInt(3);
-                    if(num==0)
-                    {
-                        bot("Hii");
-                    }
-                    else if(num==1)
-                    {
-                        bot("Hello");
-                    }
-                    else if(num==2)
-                    {
-                        bot("Heyy");
-                    }
-                    else if(num==3)
-                    {
-                        bot("hello buddy");
-                    }
+                    String[] responses = new String[]{"Hii","Hello","Heyy","Hello buddy"};
+                    bot(responses[random.nextInt(4)]);
                 }
                 else if(message.contains("by"))
                 {
@@ -151,23 +140,8 @@ public class Frame extends JFrame {
                 }
                 else if(message.contains("thank"))
                 {
-                    int num=random.nextInt(3);
-                    if(num==0)
-                    {
-                        bot("Welcome..");
-                    }
-                    else if(num==1)
-                    {
-                        bot("My plesure");
-                    }
-                    else if(num==2)
-                    {
-                        bot("Happy to help");
-                    }
-                    else if(num==3)
-                    {
-                        bot("That's why i'm here for..");
-                    }
+                    String[] responses = new String[]{"Welcome","My pleasure","Happy to help","That's what i'm here for"};
+                    bot(responses[random.nextInt(4)]);
                 }
                 else if(message.contains("what") && message.contains("name"))
                 {
@@ -237,55 +211,62 @@ public class Frame extends JFrame {
                 }
                 else
                 {
-                    try
-                    {
-                        try
-                        {
-                            URL url=new URL("https://google.co.in");
-                            URLConnection connection=url.openConnection();
-                            connection.connect();
-                            bot("Here some results for you ...");
-                            java.awt.Desktop.getDesktop().browse(java.net.URI.create("http://www.google.com/search?hl=en&q="+message.replace(" ", "+")+"&btnG=Google+Search"));
-
-                        }
-                        catch(Exception ee)
-                        {
-                            bot("Connect with internet connection for get better results...");
-                        }
-
-                    }
-                    catch(Exception eee)
-                    {
-                        int num=random.nextInt(3);
-                        if(num==0)
-                        {
-                            bot("Sorry ,I can't understand you !");
-                        }
-                        else if(num==1)
-                        {
-                            bot("Sorry,I don't understand ");
-                        }
-                        else if(num==2)
-                        {
-                            try {
-                                Thread.sleep(1000);
-                            } catch (InterruptedException ex) {
-                                throw new RuntimeException(ex);
-                            }
-                            bot("My apologies...I don't understand ");
-                        }
-                    }
+                    googleResponse(message);
                 }
 
             }
-        });
-
+        }
+        );
     }
 
-         // OCTO BOT RESPONSE
-        private void bot (String string){
-            area.append("OCTO >>   " + string + "\n");
+    private void googleResponse(String string){
+        try
+        {
+            try
+            {
+                URL url=new URL("https://google.co.in");
+                URLConnection connection=url.openConnection();
+                connection.connect();
+                bot("I currently do not know a lot about this topic...");
+                bot("Here are some other sources that might be able to help you!");
+                String googleURL = ("http://www.google.com/search?hl=en&q="+string.replace(" ", "+")+"&btnG=Google+Search");
+                bot(googleURL);
+                //java.awt.Desktop.getDesktop().browse(java.net.URI.create(googleURL));
+                //Button button1 = new Button("google button?");
+            }
+            catch(Exception ee)
+            {
+                bot("Connect with internet connection for get better results...");
+            }
+
         }
+        catch(Exception eee)
+        {
+            int num=random.nextInt(3);
+            if(num==0)
+            {
+                bot("Sorry ,I can't understand you !");
+            }
+            else if(num==1)
+            {
+                bot("Sorry,I don't understand ");
+            }
+            else if(num==2)
+            {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    throw new RuntimeException(ex);
+                }
+                bot("My apologies...I don't understand ");
+            }
+        }
+    }
+
+     // OCTO BOT RESPONSE
+    private void bot (String string){
+        area.append("OCTO >>   " + string + "\n");
+    }
 
 }
 
