@@ -22,7 +22,7 @@ public class App extends Application {
         AnchorPane anchorPane = new AnchorPane();
         anchorPane.setBackground(Background.fill(Color.DARKGRAY));
         stage.setTitle("OCTO");
-        Image image = new Image("C:\\Users\\mobasha\\OneDrive\\Bureaublad\\Documenten\\GitHub\\Project_2-2\\src\\main\\resources\\com\\example\\ochto\\pics\\img_5.png");
+        Image image = new Image("C:\\Project_2-2\\src\\main\\resources\\com\\example\\ochto\\pics\\img_5.png");
         stage.getIcons().add(image);
         stage.setResizable(false);
         stage.setScene(scene);
