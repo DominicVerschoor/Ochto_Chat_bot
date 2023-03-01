@@ -50,8 +50,6 @@ public class ControllerLogic implements Initializable {
     private final VBox vBox = new VBox();
     @FXML
     Circle circle = new Circle();
-    @FXML
-    private ChoiceBox<String> myChoiceBox;
     private String[] skills ={"Which lectures are there on DAY at TIME"};
 
 
@@ -68,7 +66,7 @@ public class ControllerLogic implements Initializable {
                 CornerRadii.EMPTY,
                 Insets.EMPTY)));
 
-        Image img = new Image("C:\\Users\\mobasha\\IdeaProjects\\Project_2-2\\ochto\\src\\main\\resources\\com\\example\\ochto\\pics\\img.png");
+        Image img = new Image("C:\\Users\\mobasha\\OneDrive\\Bureaublad\\Documenten\\GitHub\\Project_2-2\\src\\main\\resources\\com\\example\\ochto\\pics\\img.png");
         ImageView view = new ImageView(img);
         view.setFitHeight(23);
         view.setPreserveRatio(true);
@@ -79,10 +77,8 @@ public class ControllerLogic implements Initializable {
                  -fx-background-radius: 7 7 7 7;""");
 
 
-        Image im = new Image("C:\\Users\\mobasha\\IdeaProjects\\Project_2-2\\ochto\\src\\main\\resources\\com\\example\\ochto\\pics\\img_6.png",false);
+        Image im = new Image("C:\\Users\\mobasha\\OneDrive\\Bureaublad\\Documenten\\GitHub\\Project_2-2\\src\\main\\resources\\com\\example\\ochto\\pics\\img_6.png",false);
         circle.setFill(new ImagePattern(im));
-        myChoiceBox.getItems().addAll(skills);
-        myChoiceBox.setOnAction(this::getSkill);
 
     }
 
@@ -214,7 +210,7 @@ public class ControllerLogic implements Initializable {
         text.setFill(Color.color(1,1,1));
         text.setFont(Font.font("MathBold", FontWeight.BOLD, FontPosture.REGULAR, 15));
 
-        ImageView imageView = new ImageView(new Image("C:\\Users\\mobasha\\IdeaProjects\\Project_2-2\\ochto\\src\\main\\resources\\com\\example\\ochto\\pics\\senderIcon.png"));
+        ImageView imageView = new ImageView(new Image("C:\\Users\\mobasha\\OneDrive\\Bureaublad\\Documenten\\GitHub\\Project_2-2\\src\\main\\resources\\com\\example\\ochto\\pics\\senderIcon.png"));
         imageView.setFitHeight(25);
         imageView.setFitWidth(25);
 
@@ -240,7 +236,7 @@ public class ControllerLogic implements Initializable {
                 " -fx-background-radius: 20px;");
         text.setFont(Font.font("MathBold", FontWeight.BOLD, FontPosture.REGULAR, 15));
 
-        ImageView imageView = new ImageView(new Image("C:\\Users\\mobasha\\IdeaProjects\\Project_2-2\\ochto\\src\\main\\resources\\com\\example\\ochto\\pics\\octoIconChat.png"));
+        ImageView imageView = new ImageView(new Image("C:\\Users\\mobasha\\OneDrive\\Bureaublad\\Documenten\\GitHub\\Project_2-2\\src\\main\\resources\\com\\example\\ochto\\pics\\octoIconChat.png"));
         imageView.setFitHeight(25);
         imageView.setFitWidth(25);
 
@@ -258,12 +254,6 @@ public class ControllerLogic implements Initializable {
     public void setName(String s){
         addBMessage("Hi "+s.toUpperCase()+"! How can i assist you?",vbox_message);
     }
-    public void getSkill(ActionEvent event)
-    {
-        String currentSkill = myChoiceBox.getValue();
-        text_field.setText(currentSkill);
-    }
-
 
 }
 
