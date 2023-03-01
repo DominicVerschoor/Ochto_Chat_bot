@@ -2,7 +2,6 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
-<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
@@ -16,14 +15,14 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane cache="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="488.0" prefWidth="939.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ochto.ControllerLogic">
+<AnchorPane cache="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="488.0" prefWidth="939.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ochto.ControllerLogic">
    <children>
       <ImageView fitHeight="631.0" fitWidth="940.0" layoutX="-1.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@pics/img_1.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="229.0" fitWidth="248.0" layoutX="727.0" layoutY="40.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="229.0" fitWidth="248.0" layoutX="727.0" layoutY="143.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@pics/img_2.png" />
          </image>
@@ -70,11 +69,5 @@
       <Circle fill="#42e610" layoutX="90.0" layoutY="80.0" radius="9.0" stroke="BLACK" strokeType="INSIDE">
 
       </Circle>
-      <Label layoutX="802.0" layoutY="233.0" text="Skills" textFill="WHITE">
-         <font>
-            <Font size="24.0" />
-         </font>
-      </Label>
-      <ChoiceBox fx:id="myChoiceBox" layoutX="753.0" layoutY="292.0" prefWidth="150.0" />
    </children>
 </AnchorPane>
