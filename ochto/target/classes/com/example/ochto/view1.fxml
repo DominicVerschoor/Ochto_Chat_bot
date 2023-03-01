@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.RadialGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane cache="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="488.0" prefWidth="939.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ochto.ControllerLogic">
+   <children>
+      <ImageView fitHeight="631.0" fitWidth="940.0" layoutX="-1.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@pics/img_1.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="229.0" fitWidth="248.0" layoutX="727.0" layoutY="40.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@pics/img_2.png" />
+         </image>
+      </ImageView>
+      <TextField fx:id="text_field" layoutX="48.0" layoutY="441.0" onAction="#handle" prefHeight="33.0" prefWidth="689.0" promptText="Type Something :)" />
+      <ScrollPane fx:id="scrollPane" layoutX="48.0" layoutY="95.0" prefHeight="339.0" prefWidth="689.0">
+         <content>
+            <VBox fx:id="vbox_message" prefHeight="338.0" prefWidth="689.0" />
+         </content>
+      </ScrollPane>
+      <Label fx:id="label" alignment="CENTER" layoutX="48.0" layoutY="40.0" prefHeight="54.0" prefWidth="689.0" scaleShape="false" style="-fx-background-color: black;" text="Octo  Asisstant " textAlignment="CENTER" textFill="#f2eded" textOverrun="WORD_ELLIPSIS">
+         <font>
+            <Font name="Arial Bold" size="25.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="NONE" />
+         </cursor>
+         <opaqueInsets>
+            <Insets top="1.0" />
+         </opaqueInsets></Label>
+      <Circle fx:id="circle" layoutX="77.0" layoutY="67.0" radius="20.0" stroke="BLACK" strokeType="INSIDE">
+         <fill>
+            <RadialGradient centerX="0.5" centerY="0.5" cycleMethod="REFLECT" radius="0.5">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color />
+                     </color>
+                  </Stop>
+                  <Stop offset="0.47103658536585363">
+                     <color>
+                        <Color red="0.11999999731779099" green="0.5746666789054871" blue="1.0" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="1.0" green="1.0" blue="1.0" />
+                     </color>
+                  </Stop>
+               </stops>
+            </RadialGradient>
+         </fill>
+      </Circle>
+      <Circle fill="#42e610" layoutX="90.0" layoutY="80.0" radius="9.0" stroke="BLACK" strokeType="INSIDE">
+
+      </Circle>
+      <Label layoutX="802.0" layoutY="233.0" text="Skills" textFill="WHITE">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <ChoiceBox fx:id="myChoiceBox" layoutX="753.0" layoutY="292.0" prefWidth="150.0" />
+   </children>
+</AnchorPane>
