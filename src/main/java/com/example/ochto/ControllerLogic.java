@@ -34,6 +34,15 @@ import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
+
 
 public class ControllerLogic implements Initializable {
     @FXML
@@ -52,6 +61,7 @@ public class ControllerLogic implements Initializable {
     @FXML
     Circle circle = new Circle();
     private String[] skills ={"Which lectures are there on DAY at TIME"};
+    private final Stage stage2 = new Stage();
 
 
     @Override
@@ -67,7 +77,8 @@ public class ControllerLogic implements Initializable {
                 CornerRadii.EMPTY,
                 Insets.EMPTY)));
 
-        Image img = new Image("C:\\Project_2-2\\src\\main\\resources\\com\\example\\ochto\\pics\\img.png");
+        Image img = new Image("C:\\Users\\mielg\\OneDrive\\Documenten\\GitHub\\Project_2-2\\src\\main\\resources\\com\\example\\ochto\\pics\\img.png");
+        //C:\\Users\\mielg\\OneDrive\\Documenten\\GitHub\\Project_2-2\\src\\main\\resources\\com\\example\\ochto\\pics\\img_5.png
         ImageView view = new ImageView(img);
         view.setFitHeight(23);
         view.setPreserveRatio(true);
@@ -78,25 +89,21 @@ public class ControllerLogic implements Initializable {
                  -fx-background-radius: 7 7 7 7;""");
 
 
-        Image im = new Image("C:\\Project_2-2\\src\\main\\resources\\com\\example\\ochto\\pics\\img_6.png",false);
+        Image im = new Image("C:\\Users\\mielg\\OneDrive\\Documenten\\GitHub\\Project_2-2\\src\\main\\resources\\com\\example\\ochto\\pics\\img_6.png",false);
+        //C:\\Users\\mielg\\OneDrive\\Documenten\\GitHub\\Project_2-2\\src\\main\\resources\\com\\example\\ochto\\pics\\img_6.png
         circle.setFill(new ImagePattern(im));
 
     }
 
     @FXML
-    public void handle(ActionEvent event) {
+    public void handle(ActionEvent newActionEvent) {
         message = text_field.getText();
         addUMessage(message, vbox_message);
         if (!message.isEmpty()) {
             if (message.contains("how are you")) {
-                int num = random.nextInt(3);
-                if (num == 0) {
-                    message = "I'm fine !,What about you ? ";
-                } else if (num == 1) {
-                    message = "I am good , thanks for asking !";
-                } else {
-                    message = "I am great ,thanks for asking !";
-                }
+
+                String[] responses = new String[]{"I'm fine !,What about you?","I am good, thanks for asking!","I'm great ,thanks for asking!"};
+                message = responses[random.nextInt(3)];
 
             } else if (message.contains("you") && (message.contains("smart") || message.contains("good"))) {
                 message = "Thank you !";
@@ -105,14 +112,8 @@ public class ControllerLogic implements Initializable {
                 message = "You are so polite.How can i help you ?";
 
             } else if (message.contains("hi") && message.charAt(0) == 'h' || message.contains("hello") || message.contains("hey")) {
-                int num = random.nextInt(3);
-                if (num == 0) {
-                    message = "Hii";
-                } else if (num == 1) {
-                    message = "Hello";
-                } else {
-                    message = "Hey";
-                }
+                String[] responses = new String[]{"Hi!","Hello","Hey"};
+                message = responses[random.nextInt(3)];
 
             } else if (message.contains("by")) {
                 message = "Byy,See you soon ..!";
@@ -194,8 +195,6 @@ public class ControllerLogic implements Initializable {
         timer.schedule(tt, delay * 2000);
     }
 
-
-
     public void addUMessage(String message, VBox vbox) {
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER_RIGHT);
@@ -211,7 +210,8 @@ public class ControllerLogic implements Initializable {
         text.setFill(Color.color(1,1,1));
         text.setFont(Font.font("MathBold", FontWeight.BOLD, FontPosture.REGULAR, 15));
 
-        ImageView imageView = new ImageView(new Image("C:\\Project_2-2\\src\\main\\resources\\com\\example\\ochto\\pics\\senderIcon.png"));
+        ImageView imageView = new ImageView(new Image("C:\\Users\\mielg\\OneDrive\\Documenten\\GitHub\\Project_2-2\\src\\main\\resources\\com\\example\\ochto\\pics\\senderIcon.png"));
+        //C:\\Users\\mielg\\OneDrive\\Documenten\\GitHub\\Project_2-2\\src\\main\\resources\\com\\example\\ochto\\pics\\senderIcon.png
         imageView.setFitHeight(25);
         imageView.setFitWidth(25);
 
@@ -237,7 +237,8 @@ public class ControllerLogic implements Initializable {
                 " -fx-background-radius: 20px;");
         text.setFont(Font.font("MathBold", FontWeight.BOLD, FontPosture.REGULAR, 15));
 
-        ImageView imageView = new ImageView(new Image("C:\\Project_2-2\\src\\main\\resources\\com\\example\\ochto\\pics\\octoIconChat.png"));
+        ImageView imageView = new ImageView(new Image("C:\\Users\\mielg\\OneDrive\\Documenten\\GitHub\\Project_2-2\\src\\main\\resources\\com\\example\\ochto\\pics\\octoIconChat.png"));
+        //C:\\Users\\mielg\\OneDrive\\Documenten\\GitHub\\Project_2-2\\src\\main\\resources\\com\\example\\ochto\\pics\\octoIconChat.png
         imageView.setFitHeight(25);
         imageView.setFitWidth(25);
 
@@ -255,10 +256,26 @@ public class ControllerLogic implements Initializable {
     public void setName(String s){
         addBMessage("Hi "+s.toUpperCase()+"! How can i assist you?",vbox_message);
     }
+
+    @FXML
     public void handleButton(ActionEvent newActionEvent)
     {
-        
+        try{
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("view3.fxml"));
+            Parent root = loader.load();
 
+            ControllerSkillEditor controller = new ControllerSkillEditor();
+            loader.setController(controller);
+
+            Scene scene = new Scene(root);
+            stage2.setScene(scene);
+            stage2.setTitle("Skill Editor");
+            stage2.setResizable(false);
+            stage2.centerOnScreen();
+            stage2.show();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 }
