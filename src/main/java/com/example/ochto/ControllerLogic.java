@@ -101,37 +101,22 @@ public class ControllerLogic implements Initializable {
         addUMessage(message, vbox_message);
         if (!message.isEmpty()) {
             if (message.contains("how are you")) {
-
                 String[] responses = new String[]{"I'm fine !,What about you?","I am good, thanks for asking!","I'm great ,thanks for asking!"};
                 message = responses[random.nextInt(3)];
-
             } else if (message.contains("you") && (message.contains("smart") || message.contains("good"))) {
                 message = "Thank you !";
-
             } else if (message.contains("welcome")) {
                 message = "You are so polite.How can i help you ?";
-
             } else if (message.contains("hi") && message.charAt(0) == 'h' || message.contains("hello") || message.contains("hey")) {
                 String[] responses = new String[]{"Hi!","Hello","Hey"};
                 message = responses[random.nextInt(3)];
-
             } else if (message.contains("by")) {
                 message = "Byy,See you soon ..!";
-
-            }
-            else if (message.contains("i am good") || message.contains("i am great") || message.contains("i am ") && message.contains("fine")) {
+            } else if (message.contains("i am good") || message.contains("i am great") || message.contains("i am ") && message.contains("fine")) {
                 message = "Good to hear.";
-
             } else if (message.contains("thank")) {
-                int num = random.nextInt(3);
-                if (num == 0) {
-                    message = "Welcome..";
-                } else if (num == 1) {
-                    message = "My plesure";
-                } else {
-                    message = "Happy to help";
-                }
-
+                String[] responses = new String[]{"You're welcome","My pleasure","Happy to help"};
+                message = responses[random.nextInt(3)];
             } else if (message.contains("what") && message.contains("name")) {
                 if (message.contains("your")) {
                     message = "I'm Bot...;";
@@ -139,10 +124,8 @@ public class ControllerLogic implements Initializable {
                 if (message.contains("my")) {
                     message = "Your name is .. maybe .. hmmm... IDK :<";
                 }
-
             } else if (message.contains("change")) {
                 message = "Sorry,I can't change anything...";
-
             } else if (message.contains("time")) {
                 String ctime = "";
                 if (time.getHour() > 12) {
@@ -158,22 +141,16 @@ public class ControllerLogic implements Initializable {
                 String cdate = new String();
                 cdate = cdate + date.getDayOfWeek() + "," + date.getDayOfMonth() + " " + date.getMonth() + " " + date.getYear();
                 message = (cdate);
-
             } else if (message.contains("good morning")) {
                 message = "Good morning,Have a nice day !";
-
             } else if (message.contains("good night")) {
                 message = "Good night,Have a nice dreams !";
-
             } else if (message.contains("good evening")) {
                 message = "Good Evening ...!";
-
             } else if (message.contains("good") && message.contains("noon")) {
                 message = "Good Afternoon ...!";
-
             } else if (message.contains("clear") && (message.contains("screen") || message.contains("chat"))) {
                 message = "wait a few second...";
-
             } else{
                 message = "Sorry, but Im not able to response to this yet!";
             }

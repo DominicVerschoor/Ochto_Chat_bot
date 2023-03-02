@@ -22,50 +22,62 @@ public class ControllerSkillEditor implements Initializable{
     @FXML
     private Button actionButton;
     @FXML
+    private VBox mainVBox;
+    @FXML
     private Button questionButton;
     @FXML
     private ScrollPane scrollPane1;
     @FXML
-    private ScrollPane scrollPane2;
-    @FXML
-    private ScrollPane scrollPane3;
-    @FXML
     private Button slotButton;
     @FXML
-    private TextField text_field1;
+    private TextField question_textfield;
     @FXML
-    private TextField text_field2;
+    private TextField action_textfield;
     @FXML
-    private TextField text_field3;
-    @FXML
-    private VBox vBox1;
-    @FXML
-    private VBox vBox2;
-    @FXML
-    private VBox vBox3;
-
-    public ArrayList<String> questions;
+    private TextField slot_textfield;
+    
+    public ArrayList<ArrayList<ArrayList<String>>> allQuestions;
+    public ArrayList<ArrayList<String>> currentQuestion;
+    public ArrayList<String> question;
     public ArrayList<String> slots;
     public ArrayList<String> actions;
 
-    @FXML
-    void onQuestionButton(ActionEvent event) {
-        String input = text_field1.getText();
-        if (!input.isEmpty()){
-            addInput(input, vBox1, text_field1);
-            questions.add(input);
-        }
-        else{
-            System.out.println("Input is Empty");
-        }
-    }
+    private HBox currentHBox;
+    private VBox currentQuestionVBox;
+    private VBox currentActionVBox;
+    private VBox currentSlotVBox;
 
     @FXML
-    void onSlotButton(ActionEvent event) {
-        String input = text_field2.getText();
+    void onQuestionButton(ActionEvent event) {
+        String input = question_textfield.getText();
         if (!input.isEmpty()){
-            addInput(input, vBox2, text_field2);
-            slots.add(input);
+            currentHBox = new HBox();
+            mainVBox.getChildren().add(currentHBox);
+
+            currentQuestionVBox = new VBox();
+            currentQuestionVBox.setPrefWidth(300);
+            currentActionVBox = new VBox();
+            currentActionVBox.setPrefWidth(300);
+            currentSlotVBox = new VBox();
+            currentSlotVBox.setPrefWidth(300);
+            currentHBox.getChildren().addAll(currentQuestionVBox);
+            currentHBox.getChildren().addAll(currentSlotVBox);
+            currentHBox.getChildren().addAll(currentActionVBox);
+
+            Text text = new Text(input);
+            currentQuestionVBox.getChildren().addAll(text);
+
+            currentQuestion = new ArrayList<>();
+            question = new ArrayList<>();
+            actions = new ArrayList<>();
+            slots = new ArrayList<>();
+            question.add(input);
+            currentQuestion.add(question);
+            currentQuestion.add(slots);
+            currentQuestion.add(actions);
+            allQuestions.add(currentQuestion);
+
+            question_textfield.clear();
         }
         else{
             System.out.println("Input is Empty");
@@ -74,33 +86,46 @@ public class ControllerSkillEditor implements Initializable{
 
     @FXML
     void onActionButton(ActionEvent event) {
-        String input = text_field3.getText();
+        if (allQuestions.isEmpty()){
+            System.out.println("Enter a Question first");
+        }
+        else{
+            String input = action_textfield.getText();
         if (!input.isEmpty()){
-            addInput(input, vBox3, text_field3);
+            Text text = new Text(input);
+            currentActionVBox.getChildren().addAll(text);
             actions.add(input);
+            action_textfield.clear();
         }
         else{
             System.out.println("Input is Empty");
         }
+        }
     }
 
-    public void addInput(String input, VBox vbox, TextField textfield){
-        HBox hBox = new HBox();
-        hBox.setAlignment(Pos.CENTER_LEFT);
-        hBox.setPadding(new Insets(0,0,0,5));
-    
-        Text text = new Text(input);
-        hBox.getChildren().addAll(text);
-        vbox.getChildren().add(hBox);
-    
-        textfield.clear();
+    @FXML
+    void onSlotButton(ActionEvent event) {
+        if (allQuestions.isEmpty()){
+            System.out.println("Enter a Question first");
+        }
+        else{
+            String input = slot_textfield.getText();
+            if (!input.isEmpty()){
+                Text text = new Text(input);
+                currentSlotVBox.getChildren().addAll(text);
+                slots.add(input);
+                slot_textfield.clear();
+            }
+            else{
+                System.out.println("Input is Empty");
+            }
+        }
     }
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        questions = new ArrayList<String>();
-        actions = new ArrayList<String>();
-        slots = new ArrayList<String>();
+        allQuestions = new ArrayList<>();
     }
 
 }

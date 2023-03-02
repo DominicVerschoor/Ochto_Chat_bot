@@ -17,6 +17,8 @@ public class ControllerLogIn {
     private final Stage stage = new Stage();
     @FXML
     private TextField tf = new TextField();
+    @FXML
+    private Button logInButton;
 
 
     @FXML
