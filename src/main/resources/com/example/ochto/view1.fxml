@@ -16,14 +16,14 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane cache="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="488.0" prefWidth="939.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ochto.ControllerLogic">
+<AnchorPane fx:id="anchor_pane" cache="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="488.0" prefWidth="939.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ochto.ControllerLogic">
    <children>
-      <ImageView fitHeight="631.0" fitWidth="940.0" layoutX="-1.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="main_image_view" fitHeight="631.0" fitWidth="940.0" layoutX="-1.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@pics/img_1.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="240.0" fitWidth="240.0" layoutX="721.0" layoutY="143.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="240.0" fitWidth="240.0" layoutX="729.0" layoutY="94.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@pics/img_2.png" />
          </image>
@@ -70,6 +70,7 @@
       <Circle fill="#42e610" layoutX="90.0" layoutY="80.0" radius="9.0" stroke="BLACK" strokeType="INSIDE">
 
       </Circle>
-      <Button fx:id="skillButton" layoutX="792.0" layoutY="370.0" mnemonicParsing="false" onAction="#handleButton" text="Add Skill" />
+      <Button fx:id="skillButton" layoutX="799.0" layoutY="320.0" mnemonicParsing="false" onAction="#handleButton" text="Add Skill" />
+      <Button fx:id="theme_button" layoutX="806.0" layoutY="406.0" mnemonicParsing="false" onAction="#changeTheme" />
    </children>
 </AnchorPane>

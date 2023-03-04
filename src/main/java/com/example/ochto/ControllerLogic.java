@@ -62,7 +62,15 @@ public class ControllerLogic implements Initializable {
     Circle circle = new Circle();
     private String[] skills ={"Which lectures are there on DAY at TIME"};
     private final Stage stage2 = new Stage();
-
+    @FXML
+    private Button theme_button = new Button();
+    private boolean isDarkTheme = true;
+    private ImageView dark_theme_ImageView;
+    private ImageView light_theme_ImageView;
+    private Image dark_theme_background = new Image("C:\\Project_2-2\\src\\main\\resources\\com\\example\\ochto\\pics\\img_1.png");
+    private Image light_theme_background = new Image("C:\\Project_2-2\\src\\main\\resources\\com\\example\\ochto\\pics\\White_full.png");
+    @FXML
+    private ImageView main_image_view = new ImageView();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -77,7 +85,7 @@ public class ControllerLogic implements Initializable {
                 CornerRadii.EMPTY,
                 Insets.EMPTY)));
 
-        Image img = new Image("C:\\Users\\mielg\\OneDrive\\Documenten\\GitHub\\Project_2-2\\src\\main\\resources\\com\\example\\ochto\\pics\\img.png");
+        Image img = new Image("C:\\Project_2-2\\src\\main\\resources\\com\\example\\ochto\\pics\\img.png");
         //C:\\Users\\mielg\\OneDrive\\Documenten\\GitHub\\Project_2-2\\src\\main\\resources\\com\\example\\ochto\\pics\\img_5.png
         ImageView view = new ImageView(img);
         view.setFitHeight(23);
@@ -89,10 +97,26 @@ public class ControllerLogic implements Initializable {
                  -fx-background-radius: 7 7 7 7;""");
 
 
-        Image im = new Image("C:\\Users\\mielg\\OneDrive\\Documenten\\GitHub\\Project_2-2\\src\\main\\resources\\com\\example\\ochto\\pics\\img_6.png",false);
+        Image im = new Image("C:\\Project_2-2\\src\\main\\resources\\com\\example\\ochto\\pics\\img_6.png",false);
         //C:\\Users\\mielg\\OneDrive\\Documenten\\GitHub\\Project_2-2\\src\\main\\resources\\com\\example\\ochto\\pics\\img_6.png
         circle.setFill(new ImagePattern(im));
-
+        theme_button.setStyle(
+            "-fx-background-radius: 5em; " +
+            "-fx-min-width: 50px; " +
+            "-fx-min-height: 50px; " +
+            "-fx-max-width: 50px; " +
+            "-fx-max-height: 50px;"
+        );
+        Image dark_theme = new Image("C:\\Project_2-2\\src\\main\\resources\\com\\example\\ochto\\pics\\dark_theme.png");
+        dark_theme_ImageView = new ImageView(dark_theme);
+        Image light_theme = new Image("C:\\Project_2-2\\src\\main\\resources\\com\\example\\ochto\\pics\\light_theme.png");
+        light_theme_ImageView = new ImageView(light_theme);
+        dark_theme_ImageView.setFitHeight(50);
+        dark_theme_ImageView.setPreserveRatio(true);
+        light_theme_ImageView.setFitHeight(50);
+        light_theme_ImageView.setPreserveRatio(true);
+        theme_button.setGraphic(light_theme_ImageView);
+        main_image_view.setImage(dark_theme_background);
     }
 
     @FXML
@@ -210,7 +234,7 @@ public class ControllerLogic implements Initializable {
         text.setFill(Color.color(1,1,1));
         text.setFont(Font.font("MathBold", FontWeight.BOLD, FontPosture.REGULAR, 15));
 
-        ImageView imageView = new ImageView(new Image("C:\\Users\\mielg\\OneDrive\\Documenten\\GitHub\\Project_2-2\\src\\main\\resources\\com\\example\\ochto\\pics\\senderIcon.png"));
+        ImageView imageView = new ImageView(new Image("C:\\Project_2-2\\src\\main\\resources\\com\\example\\ochto\\pics\\senderIcon.png"));
         //C:\\Users\\mielg\\OneDrive\\Documenten\\GitHub\\Project_2-2\\src\\main\\resources\\com\\example\\ochto\\pics\\senderIcon.png
         imageView.setFitHeight(25);
         imageView.setFitWidth(25);
@@ -237,7 +261,7 @@ public class ControllerLogic implements Initializable {
                 " -fx-background-radius: 20px;");
         text.setFont(Font.font("MathBold", FontWeight.BOLD, FontPosture.REGULAR, 15));
 
-        ImageView imageView = new ImageView(new Image("C:\\Users\\mielg\\OneDrive\\Documenten\\GitHub\\Project_2-2\\src\\main\\resources\\com\\example\\ochto\\pics\\octoIconChat.png"));
+        ImageView imageView = new ImageView(new Image("C:\\Project_2-2\\src\\main\\resources\\com\\example\\ochto\\pics\\octoIconChat.png"));
         //C:\\Users\\mielg\\OneDrive\\Documenten\\GitHub\\Project_2-2\\src\\main\\resources\\com\\example\\ochto\\pics\\octoIconChat.png
         imageView.setFitHeight(25);
         imageView.setFitWidth(25);
@@ -275,6 +299,27 @@ public class ControllerLogic implements Initializable {
             stage2.show();
         } catch (Exception e){
             e.printStackTrace();
+        }
+    }
+    @FXML
+    public void changeTheme(ActionEvent newActionEvent)
+    {
+        if (isDarkTheme) {//here we change to light theme
+            theme_button.setGraphic(dark_theme_ImageView);
+            isDarkTheme = false;
+            main_image_view.setImage(light_theme_background);
+            vbox_message.setBackground(new Background(new BackgroundFill(Color.rgb(190, 190, 190),
+                CornerRadii.EMPTY,
+                Insets.EMPTY)));
+
+        }
+        else{//here we change to dark theme
+            theme_button.setGraphic(light_theme_ImageView);
+            isDarkTheme = true;
+            main_image_view.setImage(dark_theme_background);
+            vbox_message.setBackground(new Background(new BackgroundFill(Color.rgb(30, 30, 30),
+                CornerRadii.EMPTY,
+                Insets.EMPTY)));
         }
     }
 
