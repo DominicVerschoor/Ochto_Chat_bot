@@ -31,7 +31,7 @@ public class ControllerLogIn {
         ControllerLogic controller = loader.getController();
         controller.setName(tf.getText());
         stage.setTitle("OCTO");
-        Image image = new Image("C:\\Project_2-2\\src\\main\\resources\\com\\example\\ochto\\pics\\img_5.png");;
+        Image image = new Image("file:src\\main\\resources\\com\\example\\ochto\\pics\\img_5.png");;
         //C:\\Users\\mielg\\OneDrive\\Documenten\\GitHub\\Project_2-2\\src\\main\\resources\\com\\example\\ochto\\pics\\img_5.png
         stage.getIcons().add(image);
         stage.setResizable(false);
