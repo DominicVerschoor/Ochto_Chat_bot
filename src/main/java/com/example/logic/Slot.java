@@ -1,43 +1,19 @@
 package com.example.logic;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Scanner;
-
 public class Slot {
-    private String name;
-    private ArrayList<String> items;
+    private String slotName;
+    private String slotContent;
 
-    public Slot(String name) {
-        this.name = "<" + name + ">";
-        items = new ArrayList<>();
+    public Slot(String slotName, String slotContent){
+        this.slotName = slotName;
+        this.slotContent = slotContent;
     }
 
-    public void addItems(String newItems) {
-        String[] splitString = newItems.split(",", 0);
-
-        for (String str : splitString) {
-            if (!items.contains(str)) {
-                items.add(str);
-            }
-        }
+    public String getSlotName(){
+        return slotName;
     }
 
-    public ArrayList<String> getItems() {
-        return items;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String toString() {
-        String str = name + ",";
-
-        for (String item : items) {
-            str += item + ",";
-        }
-
-        return str;
+    public String getSlotContent(){
+        return slotContent;
     }
 }
