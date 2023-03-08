@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="488.0" prefWidth="939.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ochto.ControllerSkillEditor">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="488.0" prefWidth="939.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ochto.ControllerSkillAdder">
    <children>
       <ImageView fitHeight="631.0" fitWidth="940.0" layoutX="-1.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -19,8 +19,7 @@
       <TextField fx:id="text_field3" layoutX="634.0" layoutY="35.0" prefHeight="34.0" prefWidth="290.0" promptText="Enter Actions" />
       <TextField fx:id="text_field2" layoutX="324.0" layoutY="35.0" prefHeight="34.0" prefWidth="290.0" promptText="Enter Slots" />
       <Button fx:id="questionButton" layoutX="135.0" layoutY="79.0" mnemonicParsing="false" onAction="#onQuestionButton" prefHeight="26.0" prefWidth="50.0" text="Add" />
-      <Button fx:id="actionButton" layoutX="754.0" layoutY="79.0" mnemonicParsing="false" onAction="#onActionButton" prefHeight="26.0" prefWidth="50.0" text="Add" />
-      <Button fx:id="slotButton" layoutX="444.0" layoutY="79.0" mnemonicParsing="false" onAction="#onSlotButton" prefHeight="26.0" prefWidth="50.0" text="Add" />
+      <Button fx:id="slotActionButton" layoutX="553.0" layoutY="79.0" mnemonicParsing="false" onAction="#onSLotActionButton" prefHeight="26.0" prefWidth="134.0" text="Add Slot/Action Pair" />
       <ScrollPane fx:id="scrollPane1" layoutX="15.0" layoutY="124.0" prefHeight="335.0" prefWidth="290.0">
          <content>
             <VBox fx:id="vBox1" prefHeight="338.0" prefWidth="290.0" />

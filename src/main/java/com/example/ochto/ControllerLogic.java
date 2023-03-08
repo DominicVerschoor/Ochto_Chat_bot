@@ -86,7 +86,6 @@ public class ControllerLogic implements Initializable {
                 Insets.EMPTY)));
 
         Image img = new Image("file:src/main/resources/com/example/ochto/pics/img.png");
-        //C:/Users/mielg/OneDrive/Documenten/GitHub/Project_2-2/src/main/resources/com/example/ochto/pics/img_5.png
         ImageView view = new ImageView(img);
         view.setFitHeight(23);
         view.setPreserveRatio(true);
@@ -98,7 +97,6 @@ public class ControllerLogic implements Initializable {
 
 
         Image im = new Image("file:src/main/resources/com/example/ochto/pics/img_6.png",false);
-        //C:/Users/mielg/OneDrive/Documenten/GitHub/Project_2-2/src/main/resources/com/example/ochto/pics/img_6.png
         circle.setFill(new ImagePattern(im));
         theme_button.setStyle(
             "-fx-background-radius: 5em; " +
@@ -235,7 +233,6 @@ public class ControllerLogic implements Initializable {
         text.setFont(Font.font("MathBold", FontWeight.BOLD, FontPosture.REGULAR, 15));
 
         ImageView imageView = new ImageView(new Image("file:src/main/resources/com/example/ochto/pics/senderIcon.png"));
-        //C:/Users/mielg/OneDrive/Documenten/GitHub/Project_2-2/src/main/resources/com/example/ochto/pics/senderIcon.png
         imageView.setFitHeight(25);
         imageView.setFitWidth(25);
 
@@ -262,7 +259,6 @@ public class ControllerLogic implements Initializable {
         text.setFont(Font.font("MathBold", FontWeight.BOLD, FontPosture.REGULAR, 15));
 
         ImageView imageView = new ImageView(new Image("file:src/main/resources/com/example/ochto/pics/octoIconChat.png"));
-        //C:/Users/mielg/OneDrive/Documenten/GitHub/Project_2-2/src/main/resources/com/example/ochto/pics/octoIconChat.png
         imageView.setFitHeight(25);
         imageView.setFitWidth(25);
 
@@ -288,7 +284,7 @@ public class ControllerLogic implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("view3.fxml"));
             Parent root = loader.load();
 
-            ControllerSkillEditor controller = new ControllerSkillEditor();
+            ControllerSkillAdder controller = new ControllerSkillAdder();
             loader.setController(controller);
 
             Scene scene = new Scene(root);

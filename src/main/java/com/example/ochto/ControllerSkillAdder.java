@@ -17,10 +17,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.geometry.Insets;
 
-public class ControllerSkillEditor implements Initializable{
+public class ControllerSkillAdder implements Initializable{
 
     @FXML
-    private Button actionButton;
+    private Button slotActionButton;
     @FXML
     private Button questionButton;
     @FXML
@@ -29,8 +29,6 @@ public class ControllerSkillEditor implements Initializable{
     private ScrollPane scrollPane2;
     @FXML
     private ScrollPane scrollPane3;
-    @FXML
-    private Button slotButton;
     @FXML
     private TextField text_field1;
     @FXML
@@ -81,6 +79,28 @@ public class ControllerSkillEditor implements Initializable{
         }
         else{
             System.out.println("Input is Empty");
+        }
+    }
+
+    @FXML
+    void onSLotActionButton(ActionEvent event){
+        System.out.println("Button Clicked");
+        String slotInput = text_field2.getText();
+        String actionInput = text_field3.getText();
+        if (!slotInput.isEmpty() && !actionInput.isEmpty()){
+            System.out.println("inputs valid");
+
+            addInput(slotInput, vBox2, text_field2);
+            slots.add(slotInput);
+            addInput(actionInput, vBox3, text_field3);
+            actions.add(actionInput);
+
+        } else if (!slotInput.isEmpty() && actionInput.isEmpty()){
+            System.out.println("Action input is empty");
+        } else if (slotInput.isEmpty() && !actionInput.isEmpty()){
+            System.out.println("Slot input is empty");
+        } else{
+            System.out.println("Inputs are Empty");
         }
     }
 
