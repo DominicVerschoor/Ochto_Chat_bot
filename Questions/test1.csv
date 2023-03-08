@@ -1,0 +1,10 @@
+What Lecture do I have on <DAY> <TIME>
+<DAY> Monday
+<DAY> Tuesday
+<DAY> Friday
+<TIME> 12
+<TIME> 1
+<TIME> 16
+Action <DAY> Monday <TIME> 12 MM 12
+Action <DAY> Tuesday <TIME> 16 HCI 16
+Action <DAY> Friday <TIME> 1 TCS 1

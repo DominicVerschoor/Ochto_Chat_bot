@@ -1,6 +1,6 @@
 package com.example.ochto;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
+import com.example.logic.SkillHandler;
+import com.example.logic.Skill;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -18,7 +18,6 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.*;
 import javafx.scene.text.Font;
 import java.net.URL;
-import java.net.URLConnection;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Random;
@@ -32,16 +31,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 
 public class ControllerLogic implements Initializable {
@@ -71,6 +66,7 @@ public class ControllerLogic implements Initializable {
     private Image light_theme_background = new Image("file:src/main/resources/com/example/ochto/pics/White_full.png");
     @FXML
     private ImageView main_image_view = new ImageView();
+    private SkillHandler skillHandler = new SkillHandler();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -91,10 +87,10 @@ public class ControllerLogic implements Initializable {
         view.setFitHeight(23);
         view.setPreserveRatio(true);
 
-        text_field.setStyle("""
-                text-field {
-                 -fx-border-radius: 7 7 7 7;
-                 -fx-background-radius: 7 7 7 7;""");
+//        text_field.setStyle("""
+//                text-field {
+//                 -fx-border-radius: 7 7 7 7;
+//                 -fx-background-radius: 7 7 7 7;""");
 
 
         Image im = new Image("file:src/main/resources/com/example/ochto/pics/img_6.png",false);
@@ -124,83 +120,87 @@ public class ControllerLogic implements Initializable {
         message = text_field.getText();
         addUMessage(message, vbox_message);
         if (!message.isEmpty()) {
-            if (message.contains("how are you")) {
+            Skill currentSkill = skillHandler.findSkill(message);
 
-                String[] responses = new String[]{"I'm fine !,What about you?","I am good, thanks for asking!","I'm great ,thanks for asking!"};
-                message = responses[random.nextInt(3)];
+            message = currentSkill.getAction(message);
 
-            } else if (message.contains("you") && (message.contains("smart") || message.contains("good"))) {
-                message = "Thank you !";
-
-            } else if (message.contains("welcome")) {
-                message = "You are so polite.How can i help you ?";
-
-            } else if (message.contains("hi") && message.charAt(0) == 'h' || message.contains("hello") || message.contains("hey")) {
-                String[] responses = new String[]{"Hi!","Hello","Hey"};
-                message = responses[random.nextInt(3)];
-
-            } else if (message.contains("by")) {
-                message = "Byy,See you soon ..!";
-
-            }
-            else if (message.contains("i am good") || message.contains("i am great") || message.contains("i am ") && message.contains("fine")) {
-                message = "Good to hear.";
-
-            } else if (message.contains("thank")) {
-                int num = random.nextInt(3);
-                if (num == 0) {
-                    message = "Welcome..";
-                } else if (num == 1) {
-                    message = "My plesure";
-                } else {
-                    message = "Happy to help";
-                }
-
-            } else if (message.contains("what") && message.contains("name")) {
-                if (message.contains("your")) {
-                    message = "I'm Bot...;";
-                }
-                if (message.contains("my")) {
-                    message = "Your name is .. maybe .. hmmm... IDK :<";
-                }
-
-            } else if (message.contains("change")) {
-                message = "Sorry,I can't change anything...";
-
-            } else if (message.contains("time")) {
-                String ctime = "";
-                if (time.getHour() > 12) {
-                    int hour = time.getHour() - 12;
-                    ctime = ctime + hour + ":" + time.getMinute() + ":" + time.getSecond() + " PM";
-                } else {
-                    ctime = ctime + time.getHour() + ":" + time.getMinute() + ":" + time.getSecond() + " AM";
-                }
-
-                message = (ctime);
-
-            } else if (message.contains("date") || message.contains("month") || message.contains("year") || message.contains("day")) {
-                String cdate = new String();
-                cdate = cdate + date.getDayOfWeek() + "," + date.getDayOfMonth() + " " + date.getMonth() + " " + date.getYear();
-                message = (cdate);
-
-            } else if (message.contains("good morning")) {
-                message = "Good morning,Have a nice day !";
-
-            } else if (message.contains("good night")) {
-                message = "Good night,Have a nice dreams !";
-
-            } else if (message.contains("good evening")) {
-                message = "Good Evening ...!";
-
-            } else if (message.contains("good") && message.contains("noon")) {
-                message = "Good Afternoon ...!";
-
-            } else if (message.contains("clear") && (message.contains("screen") || message.contains("chat"))) {
-                message = "wait a few second...";
-
-            } else{
-                message = "Sorry, but Im not able to response to this yet!";
-            }
+//            if (message.contains("how are you")) {
+//
+//                String[] responses = new String[]{"I'm fine !,What about you?","I am good, thanks for asking!","I'm great ,thanks for asking!"};
+//                message = responses[random.nextInt(3)];
+//
+//            } else if (message.contains("you") && (message.contains("smart") || message.contains("good"))) {
+//                message = "Thank you !";
+//
+//            } else if (message.contains("welcome")) {
+//                message = "You are so polite.How can i help you ?";
+//
+//            } else if (message.contains("hi") && message.charAt(0) == 'h' || message.contains("hello") || message.contains("hey")) {
+//                String[] responses = new String[]{"Hi!","Hello","Hey"};
+//                message = responses[random.nextInt(3)];
+//
+//            } else if (message.contains("by")) {
+//                message = "Byy,See you soon ..!";
+//
+//            }
+//            else if (message.contains("i am good") || message.contains("i am great") || message.contains("i am ") && message.contains("fine")) {
+//                message = "Good to hear.";
+//
+//            } else if (message.contains("thank")) {
+//                int num = random.nextInt(3);
+//                if (num == 0) {
+//                    message = "Welcome..";
+//                } else if (num == 1) {
+//                    message = "My plesure";
+//                } else {
+//                    message = "Happy to help";
+//                }
+//
+//            } else if (message.contains("what") && message.contains("name")) {
+//                if (message.contains("your")) {
+//                    message = "I'm Bot...;";
+//                }
+//                if (message.contains("my")) {
+//                    message = "Your name is .. maybe .. hmmm... IDK :<";
+//                }
+//
+//            } else if (message.contains("change")) {
+//                message = "Sorry,I can't change anything...";
+//
+//            } else if (message.contains("time")) {
+//                String ctime = "";
+//                if (time.getHour() > 12) {
+//                    int hour = time.getHour() - 12;
+//                    ctime = ctime + hour + ":" + time.getMinute() + ":" + time.getSecond() + " PM";
+//                } else {
+//                    ctime = ctime + time.getHour() + ":" + time.getMinute() + ":" + time.getSecond() + " AM";
+//                }
+//
+//                message = (ctime);
+//
+//            } else if (message.contains("date") || message.contains("month") || message.contains("year") || message.contains("day")) {
+//                String cdate = new String();
+//                cdate = cdate + date.getDayOfWeek() + "," + date.getDayOfMonth() + " " + date.getMonth() + " " + date.getYear();
+//                message = (cdate);
+//
+//            } else if (message.contains("good morning")) {
+//                message = "Good morning,Have a nice day !";
+//
+//            } else if (message.contains("good night")) {
+//                message = "Good night,Have a nice dreams !";
+//
+//            } else if (message.contains("good evening")) {
+//                message = "Good Evening ...!";
+//
+//            } else if (message.contains("good") && message.contains("noon")) {
+//                message = "Good Afternoon ...!";
+//
+//            } else if (message.contains("clear") && (message.contains("screen") || message.contains("chat"))) {
+//                message = "wait a few second...";
+//
+//            } else{
+//                message = "Sorry, but Im not able to response to this yet!";
+//            }
         }
         else{
             message = "Input something!";

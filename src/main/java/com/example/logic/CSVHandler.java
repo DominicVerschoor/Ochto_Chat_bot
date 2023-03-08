@@ -1,4 +1,4 @@
-package com.example.logic.newLogic;
+package com.example.logic;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -13,19 +13,6 @@ import java.util.List;
 import java.util.Map;
 
 public class CSVHandler {
-
-    //Example usage
-    public static void main(String[] args) {
-        CSVHandler handler = new CSVHandler();
-
-        //reading a skill from a csv file
-        Skill test = handler.readSkill("test.csv");
-        System.out.println(test.getAction("What lecture do I have on monday"));
-
-
-        //Saving a skill to a csv file
-        handler.writeSkill(test);
-    }
 
     /**
      * This method will translate a skill into CSV-representation and saves it to a file
@@ -62,10 +49,10 @@ public class CSVHandler {
      * @param fileName The name of the csv file containing the representation of the skill
      * @return The skill class
      */
-    public Skill readSkill(String fileName){
-        List<String> lines = new ArrayList<String>();
+    public static Skill readSkill(File fileName){
+        List<String> lines = new ArrayList<>();
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(new File(fileName)));
+            BufferedReader reader = new BufferedReader(new FileReader(fileName));
             String line;
             while ((line = reader.readLine()) != null) {
                 lines.add(line);
@@ -88,7 +75,8 @@ public class CSVHandler {
                 for(int j = 1; j < words.length; j+=2){
                     if(words[j].charAt(0) == '<' && words[j].charAt(words[j].length()-1) == '>'){
                         for(int k = 0; k < slotList.size(); k++){
-                            if(slotList.get(k).getSlotName().equalsIgnoreCase(words[j].substring(1, words[j].length()-1)) && slotList.get(k).getSlotContent().equalsIgnoreCase(words[j+1])){
+                            if(slotList.get(k).getSlotName().equalsIgnoreCase(words[j].substring(1, words[j].length()-1))
+                                    && slotList.get(k).getSlotContent().equalsIgnoreCase(words[j+1])){
                                 sb.append(String.valueOf(k)+"|");
                             }
                         }
