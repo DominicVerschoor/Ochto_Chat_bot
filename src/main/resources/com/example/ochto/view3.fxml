@@ -15,24 +15,14 @@
             <Image url="@pics/img_1.png" />
          </image>
       </ImageView>
-      <TextField fx:id="text_field1" layoutX="21.0" layoutY="35.0" prefHeight="34.0" prefWidth="290.0" promptText="Enter Question" />
-      <TextField fx:id="text_field3" layoutX="634.0" layoutY="35.0" prefHeight="34.0" prefWidth="290.0" promptText="Enter Actions" />
-      <TextField fx:id="text_field2" layoutX="324.0" layoutY="35.0" prefHeight="34.0" prefWidth="290.0" promptText="Enter Slots" />
-      <Button fx:id="questionButton" layoutX="135.0" layoutY="79.0" mnemonicParsing="false" onAction="#onQuestionButton" prefHeight="26.0" prefWidth="50.0" text="Add" />
-      <Button fx:id="slotActionButton" layoutX="553.0" layoutY="79.0" mnemonicParsing="false" onAction="#onSLotActionButton" prefHeight="26.0" prefWidth="134.0" text="Add Slot/Action Pair" />
-      <ScrollPane fx:id="scrollPane1" layoutX="15.0" layoutY="124.0" prefHeight="335.0" prefWidth="290.0">
+      <TextField fx:id="question_textfield" layoutX="21.0" layoutY="52.0" prefHeight="34.0" prefWidth="290.0" promptText="Enter Question" />
+      <TextField fx:id="action_textfield" layoutX="629.0" layoutY="52.0" prefHeight="34.0" prefWidth="290.0" promptText="Enter Actions" />
+      <TextField fx:id="slot_textfield" layoutX="325.0" layoutY="52.0" prefHeight="34.0" prefWidth="290.0" promptText="Enter Slots" />
+      <Button fx:id="questionButton" layoutX="119.0" layoutY="105.0" mnemonicParsing="false" onAction="#onQuestionButton" prefHeight="26.0" prefWidth="94.0" text="Add Questoin" />
+      <Button fx:id="actionButton" layoutX="553.0" layoutY="105.0" mnemonicParsing="false" onAction="#onSLotActionButton" prefHeight="26.0" prefWidth="138.0" text="Add Slot /Action Pair" />
+      <ScrollPane fx:id="scrollPane1" layoutX="20.0" layoutY="152.0" prefHeight="335.0" prefWidth="900.0">
          <content>
-            <VBox fx:id="vBox1" prefHeight="338.0" prefWidth="290.0" />
-         </content>
-      </ScrollPane>
-      <ScrollPane fx:id="scrollPane2" layoutX="324.0" layoutY="124.0" prefHeight="335.0" prefWidth="290.0">
-         <content>
-            <VBox fx:id="vBox2" prefHeight="338.0" prefWidth="290.0" />
-         </content>
-      </ScrollPane>
-      <ScrollPane fx:id="scrollPane3" layoutX="634.0" layoutY="124.0" prefHeight="335.0" prefWidth="290.0">
-         <content>
-            <VBox fx:id="vBox3" prefHeight="338.0" prefWidth="290.0" />
+            <VBox fx:id="mainVBox" prefHeight="335.0" prefWidth="900.0" />
          </content>
       </ScrollPane>
    </children>

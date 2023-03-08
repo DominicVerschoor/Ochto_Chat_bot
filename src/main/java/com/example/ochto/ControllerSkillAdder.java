@@ -22,105 +22,121 @@ public class ControllerSkillAdder implements Initializable{
     @FXML
     private Button slotActionButton;
     @FXML
+    private VBox mainVBox;
+    @FXML
     private Button questionButton;
     @FXML
     private ScrollPane scrollPane1;
     @FXML
-    private ScrollPane scrollPane2;
+    private TextField question_textfield;
     @FXML
-    private ScrollPane scrollPane3;
+    private TextField action_textfield;
     @FXML
-    private TextField text_field1;
-    @FXML
-    private TextField text_field2;
-    @FXML
-    private TextField text_field3;
-    @FXML
-    private VBox vBox1;
-    @FXML
-    private VBox vBox2;
-    @FXML
-    private VBox vBox3;
-
-    public ArrayList<String> questions;
+    private TextField slot_textfield;
+    
+    public ArrayList<ArrayList<ArrayList<String>>> allQuestions;
+    public ArrayList<ArrayList<String>> currentQuestion;
+    public ArrayList<String> question;
     public ArrayList<String> slots;
     public ArrayList<String> actions;
 
+    private HBox currentHBox;
+    private VBox currentQuestionVBox;
+    private VBox currentActionVBox;
+    private VBox currentSlotVBox;
+
     @FXML
     void onQuestionButton(ActionEvent event) {
-        String input = text_field1.getText();
+        String input = question_textfield.getText();
         if (!input.isEmpty()){
-            addInput(input, vBox1, text_field1);
-            questions.add(input);
+            currentHBox = new HBox();
+            mainVBox.getChildren().add(currentHBox);
+
+            currentQuestionVBox = new VBox();
+            currentQuestionVBox.setPrefWidth(300);
+            currentActionVBox = new VBox();
+            currentActionVBox.setPrefWidth(300);
+            currentSlotVBox = new VBox();
+            currentSlotVBox.setPrefWidth(300);
+            currentHBox.getChildren().addAll(currentQuestionVBox);
+            currentHBox.getChildren().addAll(currentSlotVBox);
+            currentHBox.getChildren().addAll(currentActionVBox);
+
+            Text text = new Text(input);
+            currentQuestionVBox.getChildren().addAll(text);
+
+            currentQuestion = new ArrayList<>();
+            question = new ArrayList<>();
+            actions = new ArrayList<>();
+            slots = new ArrayList<>();
+            question.add(input);
+            currentQuestion.add(question);
+            currentQuestion.add(slots);
+            currentQuestion.add(actions);
+            allQuestions.add(currentQuestion);
+
+            question_textfield.clear();
         }
         else{
             System.out.println("Input is Empty");
         }
     }
 
-    @FXML
-    void onSlotButton(ActionEvent event) {
-        String input = text_field2.getText();
-        if (!input.isEmpty()){
-            addInput(input, vBox2, text_field2);
-            slots.add(input);
+   @FXML 
+   void onSLotActionButton(ActionEvent event){
+        if (allQuestions.isEmpty()){
+            System.out.println("Enter a Question first");
         }
         else{
-            System.out.println("Input is Empty");
+            String slotInput = slot_textfield.getText();
+            String actionInput =action_textfield.getText();
+            if (!slotInput.isEmpty() && !actionInput.isEmpty()){
+                Text slotText = new Text(slotInput);
+                currentSlotVBox.getChildren().addAll(slotText);
+                slots.add(slotInput);
+                slot_textfield.clear();
+
+                Text actionText = new Text(actionInput);
+                currentActionVBox.getChildren().addAll(actionText);
+                actions.add(actionInput);
+                action_textfield.clear();
+            } else if (!slotInput.isEmpty() && actionInput.isEmpty()){
+                System.out.println("Action Input is Empty");
+            } else if (slotInput.isEmpty() && !actionInput.isEmpty()){
+                System.out.println("Slot Input is Empty");
+            } else{
+                System.out.println("Slot and Action Inputs are Empty");
+            }
         }
-    }
+   } 
 
-    @FXML
-    void onActionButton(ActionEvent event) {
-        String input = text_field3.getText();
-        if (!input.isEmpty()){
-            addInput(input, vBox3, text_field3);
-            actions.add(input);
-        }
-        else{
-            System.out.println("Input is Empty");
-        }
-    }
-
-    @FXML
-    void onSLotActionButton(ActionEvent event){
-        System.out.println("Button Clicked");
-        String slotInput = text_field2.getText();
-        String actionInput = text_field3.getText();
-        if (!slotInput.isEmpty() && !actionInput.isEmpty()){
-            System.out.println("inputs valid");
-
-            addInput(slotInput, vBox2, text_field2);
-            slots.add(slotInput);
-            addInput(actionInput, vBox3, text_field3);
-            actions.add(actionInput);
-
-        } else if (!slotInput.isEmpty() && actionInput.isEmpty()){
-            System.out.println("Action input is empty");
-        } else if (slotInput.isEmpty() && !actionInput.isEmpty()){
-            System.out.println("Slot input is empty");
-        } else{
-            System.out.println("Inputs are Empty");
-        }
-    }
-
-    public void addInput(String input, VBox vbox, TextField textfield){
-        HBox hBox = new HBox();
-        hBox.setAlignment(Pos.CENTER_LEFT);
-        hBox.setPadding(new Insets(0,0,0,5));
-    
-        Text text = new Text(input);
-        hBox.getChildren().addAll(text);
-        vbox.getChildren().add(hBox);
-    
-        textfield.clear();
-    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        questions = new ArrayList<String>();
-        actions = new ArrayList<String>();
-        slots = new ArrayList<String>();
+        allQuestions = new ArrayList<>();
+        currentHBox = new HBox();
+        mainVBox.getChildren().add(currentHBox);
+
+        currentQuestionVBox = new VBox();
+        currentQuestionVBox.setPrefWidth(300);
+        currentActionVBox = new VBox();
+        currentActionVBox.setPrefWidth(300);
+        currentSlotVBox = new VBox();
+        currentSlotVBox.setPrefWidth(300);
+        currentHBox.getChildren().addAll(currentQuestionVBox);
+        currentHBox.getChildren().addAll(currentSlotVBox);
+        currentHBox.getChildren().addAll(currentActionVBox);
+
+        Text questionText = new Text("What lecture do we have on <DAY> at <TIME>?");
+        currentQuestionVBox.getChildren().addAll(questionText);
+        Text slotText1 = new Text("<DAY> Monday <TIME> 11:00");
+        currentSlotVBox.getChildren().addAll(slotText1);
+        Text slotText2 = new Text("<DAY> Tuesday <TIME> 13:00");
+        currentSlotVBox.getChildren().addAll(slotText2);
+        Text actionText1 = new Text("Mathematical Modelling");
+        currentActionVBox.getChildren().addAll(actionText1);
+        Text actionText2 = new Text("Theoretical Computer Science");
+        currentActionVBox.getChildren().addAll(actionText2);
     }
 
 }
