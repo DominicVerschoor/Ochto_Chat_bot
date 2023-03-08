@@ -90,11 +90,13 @@ public class ControllerLogic implements Initializable {
         ImageView view = new ImageView(img);
         view.setFitHeight(23);
         view.setPreserveRatio(true);
-
+        
         text_field.setStyle("""
-                text-field {
-                 -fx-border-radius: 7 7 7 7;
-                 -fx-background-radius: 7 7 7 7;""");
+                    .text-field {
+                    -fx-border-radius: 7 7 7 7;
+                    -fx-background-radius: 7 7 7 7;""");
+        
+        
 
 
         Image im = new Image("file:src/main/resources/com/example/ochto/pics/img_6.png",false);
