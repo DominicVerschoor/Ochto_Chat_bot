@@ -62,6 +62,11 @@ public class ControllerLogic implements Initializable {
     Circle circle = new Circle();
     private String[] skills ={"Which lectures are there on DAY at TIME"};
     private final Stage stage2 = new Stage();
+    @FXML
+    private Button skillButton;
+    @FXML
+    private Button editSkillButton; 
+
 
 
     @Override
@@ -239,6 +244,26 @@ public class ControllerLogic implements Initializable {
     {
         try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("view3.fxml"));
+            Parent root = loader.load();
+
+            ControllerSkillAdder controller = new ControllerSkillAdder();
+            loader.setController(controller);
+
+            Scene scene = new Scene(root);
+            stage2.setScene(scene);
+            stage2.setTitle("Skill Adder");
+            stage2.setResizable(false);
+            stage2.centerOnScreen();
+            stage2.show();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void handleEditButton(ActionEvent newActionEvent){
+        try{
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("view4.fxml"));
             Parent root = loader.load();
 
             ControllerSkillEditor controller = new ControllerSkillEditor();
