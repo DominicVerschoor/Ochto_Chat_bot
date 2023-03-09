@@ -24,19 +24,18 @@ import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
-
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+
 
 
 public class ControllerLogic implements Initializable {
@@ -82,19 +81,17 @@ public class ControllerLogic implements Initializable {
                 Insets.EMPTY)));
 
         Image img = new Image("file:src/main/resources/com/example/ochto/pics/img.png");
-        //C:/Users/mielg/OneDrive/Documenten/GitHub/Project_2-2/src/main/resources/com/example/ochto/pics/img_5.png
         ImageView view = new ImageView(img);
         view.setFitHeight(23);
         view.setPreserveRatio(true);
 
-//        text_field.setStyle("""
-//                text-field {
-//                 -fx-border-radius: 7 7 7 7;
-//                 -fx-background-radius: 7 7 7 7;""");
+        text_field.setStyle("""
+                text-field {
+                 -fx-border-radius: 7 7 7 7;
+                 -fx-background-radius: 7 7 7 7;""");
 
 
         Image im = new Image("file:src/main/resources/com/example/ochto/pics/img_6.png",false);
-        //C:/Users/mielg/OneDrive/Documenten/GitHub/Project_2-2/src/main/resources/com/example/ochto/pics/img_6.png
         circle.setFill(new ImagePattern(im));
         theme_button.setStyle(
             "-fx-background-radius: 5em; " +
@@ -123,94 +120,14 @@ public class ControllerLogic implements Initializable {
             Skill currentSkill = skillHandler.findSkill(message);
 
             message = currentSkill.getAction(message);
-
-//            if (message.contains("how are you")) {
-//
-//                String[] responses = new String[]{"I'm fine !,What about you?","I am good, thanks for asking!","I'm great ,thanks for asking!"};
-//                message = responses[random.nextInt(3)];
-//
-//            } else if (message.contains("you") && (message.contains("smart") || message.contains("good"))) {
-//                message = "Thank you !";
-//
-//            } else if (message.contains("welcome")) {
-//                message = "You are so polite.How can i help you ?";
-//
-//            } else if (message.contains("hi") && message.charAt(0) == 'h' || message.contains("hello") || message.contains("hey")) {
-//                String[] responses = new String[]{"Hi!","Hello","Hey"};
-//                message = responses[random.nextInt(3)];
-//
-//            } else if (message.contains("by")) {
-//                message = "Byy,See you soon ..!";
-//
-//            }
-//            else if (message.contains("i am good") || message.contains("i am great") || message.contains("i am ") && message.contains("fine")) {
-//                message = "Good to hear.";
-//
-//            } else if (message.contains("thank")) {
-//                int num = random.nextInt(3);
-//                if (num == 0) {
-//                    message = "Welcome..";
-//                } else if (num == 1) {
-//                    message = "My plesure";
-//                } else {
-//                    message = "Happy to help";
-//                }
-//
-//            } else if (message.contains("what") && message.contains("name")) {
-//                if (message.contains("your")) {
-//                    message = "I'm Bot...;";
-//                }
-//                if (message.contains("my")) {
-//                    message = "Your name is .. maybe .. hmmm... IDK :<";
-//                }
-//
-//            } else if (message.contains("change")) {
-//                message = "Sorry,I can't change anything...";
-//
-//            } else if (message.contains("time")) {
-//                String ctime = "";
-//                if (time.getHour() > 12) {
-//                    int hour = time.getHour() - 12;
-//                    ctime = ctime + hour + ":" + time.getMinute() + ":" + time.getSecond() + " PM";
-//                } else {
-//                    ctime = ctime + time.getHour() + ":" + time.getMinute() + ":" + time.getSecond() + " AM";
-//                }
-//
-//                message = (ctime);
-//
-//            } else if (message.contains("date") || message.contains("month") || message.contains("year") || message.contains("day")) {
-//                String cdate = new String();
-//                cdate = cdate + date.getDayOfWeek() + "," + date.getDayOfMonth() + " " + date.getMonth() + " " + date.getYear();
-//                message = (cdate);
-//
-//            } else if (message.contains("good morning")) {
-//                message = "Good morning,Have a nice day !";
-//
-//            } else if (message.contains("good night")) {
-//                message = "Good night,Have a nice dreams !";
-//
-//            } else if (message.contains("good evening")) {
-//                message = "Good Evening ...!";
-//
-//            } else if (message.contains("good") && message.contains("noon")) {
-//                message = "Good Afternoon ...!";
-//
-//            } else if (message.contains("clear") && (message.contains("screen") || message.contains("chat"))) {
-//                message = "wait a few second...";
-//
-//            } else{
-//                message = "Sorry, but Im not able to response to this yet!";
-//            }
         }
         else{
             message = "Input something!";
         }
-
         TimerTask tt = new TimerTask() {
             @Override
             public void run() {
                 Platform.runLater(() -> {
-                    // UI update code goes here
                     addBMessage(message,vbox_message);
                 });
             };
@@ -235,7 +152,6 @@ public class ControllerLogic implements Initializable {
         text.setFont(Font.font("MathBold", FontWeight.BOLD, FontPosture.REGULAR, 15));
 
         ImageView imageView = new ImageView(new Image("file:src/main/resources/com/example/ochto/pics/senderIcon.png"));
-        //C:/Users/mielg/OneDrive/Documenten/GitHub/Project_2-2/src/main/resources/com/example/ochto/pics/senderIcon.png
         imageView.setFitHeight(25);
         imageView.setFitWidth(25);
 
@@ -262,7 +178,6 @@ public class ControllerLogic implements Initializable {
         text.setFont(Font.font("MathBold", FontWeight.BOLD, FontPosture.REGULAR, 15));
 
         ImageView imageView = new ImageView(new Image("file:src/main/resources/com/example/ochto/pics/octoIconChat.png"));
-        //C:/Users/mielg/OneDrive/Documenten/GitHub/Project_2-2/src/main/resources/com/example/ochto/pics/octoIconChat.png
         imageView.setFitHeight(25);
         imageView.setFitWidth(25);
 
