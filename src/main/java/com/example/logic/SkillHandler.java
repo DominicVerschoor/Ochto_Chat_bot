@@ -35,6 +35,27 @@ public class SkillHandler {
                 }
             }
         }
+        if(outputSkill == null){
+            Skill temp_outputSkill = null;
+            for (Skill skill : skills) {
+                String[] splitSkill = skill.getQuestion().split(" ");
+    
+                if (splitInput.length == splitSkill.length) {
+                    temp_outputSkill = skill;
+                    int incorrect_count = 0;
+                    for (int i = 0; i < splitInput.length; i++) {
+                        if(!(splitInput[i].equalsIgnoreCase(splitSkill[i]))){
+                            incorrect_count++;
+                        }
+      
+                    }
+                    if(incorrect_count <=  2){
+                        outputSkill = temp_outputSkill;
+                    }
+                }
+            }
+        }
+
         return outputSkill;
     }
 
