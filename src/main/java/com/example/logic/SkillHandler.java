@@ -35,6 +35,7 @@ public class SkillHandler {
                 }
             }
         }
+        
         if(outputSkill == null){
             Skill temp_outputSkill = null;
             for (Skill skill : skills) {
@@ -51,6 +52,31 @@ public class SkillHandler {
                     }
                     if(incorrect_count <=  2){
                         outputSkill = temp_outputSkill;
+                    }
+                    
+                }
+            }
+        }
+        
+        if(outputSkill == null)
+        {
+            String noAnswer = "No answer here";
+            splitInput = noAnswer.split(" ");
+            for (Skill skill : skills) {
+                //if (skill.getQuestion().equals("No answer")) {
+                //    return skill;
+                //}
+                String[] splitSkill = skill.getQuestion().split(" ");
+                if (splitInput.length == splitSkill.length) {
+                    outputSkill = skill;
+    
+                    for (int i = 0; i < splitInput.length; i++) {
+    
+                        if (!(splitSkill[i].contains("<") && splitSkill[i].contains(">"))
+                                && !splitInput[i].equalsIgnoreCase(splitSkill[i])) {
+                            outputSkill = null;
+                            break;
+                        }
                     }
                 }
             }
