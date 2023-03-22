@@ -2,6 +2,8 @@ package com.example.logic;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class SkillHandler {
     private static ArrayList<Skill> skills;
@@ -58,29 +60,40 @@ public class SkillHandler {
             }
         }
         
-        if(outputSkill == null)
-        {
-            String noAnswer = "No answer here";
-            splitInput = noAnswer.split(" ");
-            for (Skill skill : skills) {
-                //if (skill.getQuestion().equals("No answer")) {
-                //    return skill;
-                //}
-                String[] splitSkill = skill.getQuestion().split(" ");
-                if (splitInput.length == splitSkill.length) {
-                    outputSkill = skill;
-    
-                    for (int i = 0; i < splitInput.length; i++) {
-    
-                        if (!(splitSkill[i].contains("<") && splitSkill[i].contains(">"))
-                                && !splitInput[i].equalsIgnoreCase(splitSkill[i])) {
-                            outputSkill = null;
-                            break;
-                        }
-                    }
-                }
-            }
-        }
+//        if(outputSkill == null)
+//        {
+//            Skill temp = new Skill("Temp");
+//            HashMap<String, String> tempAns = new HashMap<>();
+//            List<Slot> tempSlot = new ArrayList<>();
+//
+//            tempSlot.add(new Slot("<NOTHING>", "nothing"));
+//            tempAns.put("0", "Sorry no answer");
+//
+//            temp.setSlots(tempSlot);
+//            temp.setActions(tempAns);
+//
+//            return temp;
+////            String noAnswer = "No answer here";
+////            splitInput = noAnswer.split(" ");
+////            for (Skill skill : skills) {
+////                //if (skill.getQuestion().equals("No answer")) {
+////                //    return skill;
+////                //}
+////                String[] splitSkill = skill.getQuestion().split(" ");
+////                if (splitInput.length == splitSkill.length) {
+////                    outputSkill = skill;
+////
+////                    for (int i = 0; i < splitInput.length; i++) {
+////
+////                        if (!(splitSkill[i].contains("<") && splitSkill[i].contains(">"))
+////                                && !splitInput[i].equalsIgnoreCase(splitSkill[i])) {
+////                            outputSkill = null;
+////                            break;
+////                        }
+////                    }
+////                }
+////            }
+//        }
 
         return outputSkill;
     }

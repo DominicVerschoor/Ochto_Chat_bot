@@ -49,7 +49,8 @@ public class Skill {
                 break;
             }
             else{
-                if(!qWord.equalsIgnoreCase(pWord) && (qWord.charAt(0) == '<' && qWord.charAt(qWord.length()-1) == '>')){
+                if(!qWord.equalsIgnoreCase(pWord)
+                        && (qWord.charAt(0) == '<' && qWord.charAt(qWord.length()-1) == '>')){
                     String slotName = qWord.substring(1, qWord.length()-1);
                     for(Slot slot : slots){
                         if(slot.getSlotName().equalsIgnoreCase(slotName) && slot.getSlotContent().equalsIgnoreCase(pWord)){
