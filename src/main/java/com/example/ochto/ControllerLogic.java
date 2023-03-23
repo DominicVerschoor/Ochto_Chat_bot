@@ -89,7 +89,7 @@ public class ControllerLogic implements Initializable {
         view.setPreserveRatio(true);
 
         text_field.setStyle("""
-                text-field {
+                .text-field {
                  -fx-border-radius: 7 7 7 7;
                  -fx-background-radius: 7 7 7 7;""");
 
