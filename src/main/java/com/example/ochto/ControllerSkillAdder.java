@@ -17,6 +17,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.geometry.Insets;
 
+import com.example.ochto.ControllerLogic;
+
 public class ControllerSkillAdder implements Initializable{
 
     @FXML
@@ -76,6 +78,7 @@ public class ControllerSkillAdder implements Initializable{
             allQuestions.add(currentQuestion);
 
             question_textfield.clear();
+            ControllerLogic.allQuestions = allQuestions;
         }
         else{
             System.out.println("Input is Empty");
@@ -100,6 +103,8 @@ public class ControllerSkillAdder implements Initializable{
                 currentActionVBox.getChildren().addAll(actionText);
                 actions.add(actionInput);
                 action_textfield.clear();
+
+                ControllerLogic.allQuestions = allQuestions;
             } else if (!slotInput.isEmpty() && actionInput.isEmpty()){
                 System.out.println("Action Input is Empty");
             } else if (slotInput.isEmpty() && !actionInput.isEmpty()){
