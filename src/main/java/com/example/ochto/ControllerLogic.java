@@ -125,7 +125,10 @@ public class ControllerLogic implements Initializable {
         addUMessage(message, vbox_message);
 
         if (!message.isEmpty()) {
+            double start = System.currentTimeMillis();
             message = skillHandler.findSkill(message);
+            double end = System.currentTimeMillis();
+            System.out.println("Time in ms: " + (double) (end-start));
 
         } else {
             message = "Input something!";
@@ -141,7 +144,7 @@ public class ControllerLogic implements Initializable {
             ;
         };
         int delay = 1;
-        timer.schedule(tt, delay * 2000);
+        timer.schedule(tt, delay * 500);
     }
 
     public void addUMessage(String message, VBox vbox) {

@@ -62,16 +62,16 @@ public class SkillHandler {
         String cleanInput = cleanWord(input);
         HashMap<Integer, String> spellStore = new HashMap<>();
 
-        for (Skill skill : skills) {
+        for (Skill skill : skills) { //O(w) w= number of skills
             String[] splitSkill = skill.getQuestion().split(" ");
 
             Set<String> allKeys = skill.getActions().keySet();
 
-            for (String key : allKeys) {
+            for (String key : allKeys) { // O(n) n=number of keys
                 String[] currentKey = key.split("[|]");
                 ArrayList<Integer> slotIndex = skill.getSlotIndex();
 
-                for (int i = 0; i < currentKey.length; i++) {
+                for (int i = 0; i < currentKey.length; i++) { //O(m) m=number of slots
                     Slot currentSlot = skill.getSlots().get(Integer.parseInt(currentKey[i]));
                     splitSkill[slotIndex.get(i)] = currentSlot.getSlotContent();
                 }
@@ -83,6 +83,7 @@ public class SkillHandler {
                 }else{
                     spellStore.put(differenceCounter(cleanQs, cleanInput), String.join(" ", splitSkill));
                 }
+                // O(wnm)
             }
         }
 
