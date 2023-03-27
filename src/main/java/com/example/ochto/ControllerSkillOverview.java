@@ -41,24 +41,12 @@ public class ControllerSkillOverview implements Initializable {
     private ScrollPane scrollPane1;
     private Button saveButton;
     private final Stage stage4 = new Stage();
-    public int innerI;
+    private ControllerLogic logic = new ControllerLogic();
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // ControllerLogic questionGetter = new ControllerLogic();
-        // allQuestions = questionGetter.getQuestionList();
         createQuestionList2();
-    }
-
-
-    public void printFullQuestion(ArrayList<ArrayList<String>> question) {
-        System.out.println("FULL QUESTION");
-        for (int f = 0; f < question.size(); f++) {
-            for (int x = 0; x < question.get(f).size(); x++) {
-                System.out.println(question.get(f).get(x) + " ");
-            }
-            System.out.println();
-        }
     }
 
 
@@ -102,11 +90,15 @@ public class ControllerSkillOverview implements Initializable {
 
                         ControllerSkillEditor controller = new ControllerSkillEditor();
                         controller.setFile(allQuestions.get(currentQuestion));
+                        controller.setLogic(logic);
 
                         loader.setController(controller); //initialize
                         Parent root = loader.load();
 
                         Scene scene = new Scene(root);
+                        Stage stage = (Stage) input.getScene().getWindow();
+                        stage.close();
+
                         stage4.setScene(scene);
                         stage4.setTitle("Skill Editor");
                         stage4.setResizable(false);
@@ -122,9 +114,14 @@ public class ControllerSkillOverview implements Initializable {
         }
     }
 
+    public void setLogic(ControllerLogic logic) {
+        this.logic = logic;
+    }
 
     @FXML
     void onSaveButton(ActionEvent event) {
-        System.out.println("save button clickeD");
+        logic.reloadAllSkills();
+        Stage stage = (Stage) mainVBox.getScene().getWindow();
+        stage.close();
     }
 }

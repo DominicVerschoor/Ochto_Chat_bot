@@ -70,27 +70,6 @@ public class Skill {
         return result;
     }
 
-    public String[] getSurroundWords(String target) {
-        String[] question = getQuestion().split(" ");
-        String[] output = new String[2];
-
-        for (int i = 0; i < question.length; i++) {
-            if (question[i].equalsIgnoreCase(target)) {
-
-                if (i == 0) {
-                    output[1] = question[i + 1];
-                } else if (i == question.length - 1) {
-                    output[0] = question[i - 1];
-                } else {
-                    output[0] = question[i - 1];
-                    output[1] = question[i + 1];
-                }
-            }
-        }
-
-        return output;
-    }
-
     public ArrayList<Integer> getSlotIndex() {
         ArrayList<Integer> output = new ArrayList<>();
         String[] qs = getQuestion().split(" ");
@@ -132,6 +111,10 @@ public class Skill {
         this.actions = actions;
     }
 
+    public void setActions(String key, String action){
+        this.actions.replace(key, action);
+    }
+
     public String translateKeys(String key){
         String[] currentKey = key.split("[|]");
         StringBuilder s = new StringBuilder();
@@ -143,6 +126,18 @@ public class Skill {
         s.append("\n");
 
         return s.toString();
+    }
+
+    public List<Slot> untralateKeys(String key){
+        List<Slot> output = new ArrayList<>();
+        String[] currentKey = key.split("[|]"); // "0|3"
+
+        for (String cur: currentKey) {
+            int id = Integer.parseInt(cur);
+            output.add(getSlots().get(id));
+        }
+
+        return output;
     }
 }
 

@@ -54,6 +54,7 @@ public class ControllerSkillAdder implements Initializable {
     private VBox currentQuestionVBox;
     private VBox currentActionVBox;
     private VBox currentSlotVBox;
+    private ControllerLogic logic = new ControllerLogic();
 
     @FXML
     void onQuestionButton(ActionEvent event) {
@@ -154,17 +155,18 @@ public class ControllerSkillAdder implements Initializable {
 
     @FXML
     void onSaveButton(ActionEvent event) {
-        for (ArrayList<ArrayList<String>> currQs: allQuestions) {
+        for (ArrayList<ArrayList<String>> currQs : allQuestions) {
             createCSV(currQs);
         }
 
+        logic.reloadAllSkills();
         Stage stage = (Stage) saveButton.getScene().getWindow();
         stage.close();
     }
 
     public ArrayList<String> seperateSlots(ArrayList<String> slots) {
         ArrayList<String> output = new ArrayList<>();
-        for (String slot: slots) {
+        for (String slot : slots) {
             String[] currentSlots = slot.split("<");
 
             output.addAll(Arrays.asList(currentSlots).subList(1, currentSlots.length));
@@ -172,6 +174,14 @@ public class ControllerSkillAdder implements Initializable {
         Collections.sort(output);
         output.replaceAll(s -> "<" + s);
 
+        return output;
+    }
+
+    public ArrayList<String> seperateSlots(String slots) {
+        String[] currentSlots = slots.split("<");
+        ArrayList<String> output = new ArrayList<>(Arrays.asList(currentSlots).subList(1, currentSlots.length));
+        //<s1> s1
+        output.replaceAll(s -> "<" + s);
         return output;
     }
 
@@ -183,11 +193,20 @@ public class ControllerSkillAdder implements Initializable {
 
         StringBuilder output = new StringBuilder();
         output.append(question).append("\n");
-        for (String currentSlot: slots) {
-            output.append(currentSlot).append("\n");
+        for (String currentSlot : slots) {
+            String[] split = currentSlot.split(">");
+            output.append("<").append(cleanWord(split[0])).append("> ");
+            output.append(cleanWord(split[1])).append(" ").append("\n");
         }
-        for (String currentAction: actions) {
-            output.append("Action ").append(currentAction).append("\n");
+        for (int i = 0; i < actions.size(); i++) {
+            ArrayList<String> currentSlot = seperateSlots(currentQuestion.get(1).get(i));
+            output.append("Action ");
+            for (String slot : currentSlot) {
+                String[] split = slot.split(">");
+                output.append("<").append(cleanWord(split[0])).append("> ");
+                output.append(cleanWord(split[1])).append(" ");
+            }
+            output.append(actions.get(i)).append("\n");
         }
 
 
@@ -203,8 +222,6 @@ public class ControllerSkillAdder implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
     }
 
     public int fileCount() {
@@ -219,5 +236,14 @@ public class ControllerSkillAdder implements Initializable {
         }
 
         return count;
+    }
+
+    public static String cleanWord(String input) {
+        return input.replaceAll("[^\\p{L}\\p{N}]+", "");
+    }
+
+
+    public void setLogic(ControllerLogic logic) {
+        this.logic = logic;
     }
 }

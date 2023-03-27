@@ -19,10 +19,9 @@ public class CSVHandler {
      *
      * @param skill A skill that you want to save to a csv file
      */
-    public void writeSkill(Skill skill) {
+    public static void writeSkill(Skill skill, String fileName) {
         try {
-            //TODO make sure that we select appropriate Filenames for each csv and save it to the correct folder
-            BufferedWriter writer = new BufferedWriter(new FileWriter("saveTest.csv"));
+            BufferedWriter writer = new BufferedWriter(new FileWriter("Questions/"+fileName));
             writer.write(skill.getQuestion() + "\n");
             for (Slot s : skill.getSlots()) {
                 writer.write("<" + s.getSlotName() + ">" + " " + s.getSlotContent() + "\n");
@@ -32,7 +31,7 @@ public class CSVHandler {
                 String key = entry.getKey();
                 String value = entry.getValue();
                 writer.write("Action ");
-                String[] indices = key.split("|");
+                String[] indices = key.split("[|]");
                 for (String idx : indices) {
                     Slot s = skill.getSlots().get(Integer.parseInt(idx));
                     writer.write("<" + s.getSlotName() + "> " + s.getSlotContent() + " ");

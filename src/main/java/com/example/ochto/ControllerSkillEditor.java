@@ -1,6 +1,6 @@
 package com.example.ochto;
 
-import java.io.File;
+import java.io.*;
 import java.net.URL;
 import java.util.*;
 
@@ -56,22 +56,29 @@ public class ControllerSkillEditor implements Initializable {
     public ArrayList<ArrayList<String>> currentQuestion;
     public String previousQuestion;
     private Button editButton;
-    private Button saveButton = new Button();
+    @FXML
+    private Button saveButton;
     private final Stage stage5 = new Stage();
     private final Stage stage7 = new Stage();
 
     public int innerJ;
     public ControllerSkillOverview overview;
     private Skill skill;
+    private String fileName;
+    private String newQuestion;
+    private ArrayList<String> newSlots = new ArrayList<>();
+    private ArrayList<String> newAction = new ArrayList<>();
+    private ControllerLogic logic = new ControllerLogic();
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        System.out.println("Initialized");
-
         questionVBox1.getChildren().clear();
         slotVBox.getChildren().clear();
         actionVBox.getChildren().clear();
+        saveButton = new Button();
 
+        newQuestion = skill.getQuestion();
         questionTable();
         slotActionTable();
     }
@@ -97,6 +104,7 @@ public class ControllerSkillEditor implements Initializable {
                 // set an action listener on the TextField to handle the text input
                 textField.setOnAction(actionEvent -> {
                     input.setText(textField.getText());
+                    skill.setQuestion(textField.getText());
                     parent.getChildren().set(parent.getChildren().indexOf(textField), input);
                 });
             }
@@ -132,6 +140,17 @@ public class ControllerSkillEditor implements Initializable {
                     // set an action listener on the TextField to handle the text input
                     textField.setOnAction(actionEvent -> {
                         slotInput.setText(textField.getText() + "\n");
+                        ArrayList<String> tempText = seperateSlots(textField.getText());
+                        List<Slot> tempSlots = skill.untralateKeys(key);
+
+                        if (tempSlots.size() != tempText.size()) {
+                            System.out.println("fuck off, do it right");
+                        } else {
+                            for (int i = 0; i < tempSlots.size(); i++) {
+                                tempSlots.get(i).setBoth(tempText.get(i));
+                            }
+                        }
+
                         parent.getChildren().set(parent.getChildren().indexOf(textField), slotInput);
                     });
                 }
@@ -153,6 +172,8 @@ public class ControllerSkillEditor implements Initializable {
                     // set an action listener on the TextField to handle the text input
                     textField.setOnAction(actionEvent -> {
                         actionInput.setText(textField.getText() + "\n");
+                        skill.setActions(key, textField.getText());
+
                         parent.getChildren().set(parent.getChildren().indexOf(textField), actionInput);
                     });
                 }
@@ -163,88 +184,29 @@ public class ControllerSkillEditor implements Initializable {
         }
     }
 
-//    public void drawTables2(int i){
-//        ArrayList<String> array = currentQuestion.get(i);
-//
-//        ArrayList<EditButtonInfo> buttonInfoList = new ArrayList<>();
-//        for (int j = 0; j < array.size(); j++){
-//            String itemName = array.get(j);
-//            EditButtonInfo buttonInfo = new EditButtonInfo(itemName, j);
-//            buttonInfoList.add(buttonInfo);
-//        }
-//
-//
-//        for (EditButtonInfo buttonInfo : buttonInfoList){
-//            Text input = new Text(buttonInfo.getString());
-//            input.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 21));
-//            Button editButton = new Button("Edit");
-//            editButton.setOnAction(new EventHandler<ActionEvent>() {
-//                @Override
-//                public void handle(ActionEvent event){
-//                    try{
-//                        FXMLLoader loader = new FXMLLoader(getClass().getResource("view6.fxml"));
-//
-//                        ControllerNewInput controller = new ControllerNewInput();
-//                        int index = buttonInfo.getIndex();
-//                        controller.setPrevious(array.get(index), i, currentQuestion);
-//                        controller.setAllQ(allQuestions);
-//                        loader.setController(controller); //initialize
-//                        Parent root = loader.load();
-//
-//                        Scene scene = new Scene(root);
-//                        stage5.setScene(scene);
-//                        stage5.setTitle("Edit");
-//                        stage5.setResizable(false);
-//                        stage5.centerOnScreen();
-//                        stage5.show();
-//                        Stage stage = (Stage) editButton.getScene().getWindow();
-//                        stage.close();
-//                        System.out.println("stage closed");
-//                    } catch (Exception e){
-//                        e.printStackTrace();
-//                    }
-//                    }
-//            });
-//
-//            switch(i){
-//                case 0:
-//                    questionVBox1.getChildren().addAll(input);
-//                    break;
-//                case 1:
-//                    slotVBox.getChildren().addAll(input);
-//                    break;
-//            case 2:
-//                    actionVBox.getChildren().addAll(input);
-//                    break;
-//
-//            }
-//        }
-//    }
-
-    public void setQuestion(ArrayList<ArrayList<String>> inputQ, String oldInputQ) {
-        currentQuestion = inputQ;
-        previousQuestion = oldInputQ;
-        System.out.println("Questions received");
-        System.out.println("previous question si " + previousQuestion);
-        System.out.println("new question is " + currentQuestion.get(0).get(0));
-    }
-
-    public void setAllQ(ArrayList<ArrayList<ArrayList<String>>> allQ) {
-        allQuestions = allQ;
-        System.out.println("size: " + allQuestions.size());
-        System.out.println("AllQ received in editor");
+    public ArrayList<String> seperateSlots(String slots) {
+        String[] currentSlots = slots.split("<");
+        ArrayList<String> output = new ArrayList<>(Arrays.asList(currentSlots).subList(1, currentSlots.length));
+        output.replaceAll(s -> "<" + s);
+        return output;
     }
 
     @FXML
     void onSaveButton(ActionEvent event) {
+        CSVHandler.writeSkill(skill, fileName);
+
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("view4.fxml"));
 
             ControllerSkillOverview controller = new ControllerSkillOverview();
             loader.setController(controller); //initialize
             Parent root = loader.load();
+            controller.setLogic(logic);
 
             Scene scene = new Scene(root);
+            Stage stage = (Stage) actionVBox.getScene().getWindow();
+            stage.close();
+
             stage7.setScene(scene);
             stage7.setTitle("Skill Overview");
             stage7.setResizable(false);
@@ -255,7 +217,12 @@ public class ControllerSkillEditor implements Initializable {
         }
     }
 
+    public void setLogic(ControllerLogic logic) {
+        this.logic = logic;
+    }
+
     public void setFile(File filePath) {
+        fileName = filePath.getName();
         skill = CSVHandler.readSkill(filePath);
     }
 }

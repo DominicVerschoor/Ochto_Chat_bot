@@ -213,6 +213,7 @@ public class ControllerLogic implements Initializable {
 
             ControllerSkillAdder controllerAdd = new ControllerSkillAdder();
             loader.setController(controllerAdd);
+            controllerAdd.setLogic(this);
 
             Scene scene = new Scene(root);
             stage2.setScene(scene);
@@ -233,6 +234,7 @@ public class ControllerLogic implements Initializable {
             ControllerSkillOverview controllerEdit = new ControllerSkillOverview();
             loader.setController(controllerEdit);
             Parent root = loader.load();
+            controllerEdit.setLogic(this);
 
             Scene scene = new Scene(root);
             stage3.setScene(scene);
@@ -244,7 +246,6 @@ public class ControllerLogic implements Initializable {
             e.printStackTrace();
         }
     }
-
 
     @FXML
     public void changeTheme(ActionEvent newActionEvent) {
@@ -264,6 +265,10 @@ public class ControllerLogic implements Initializable {
                     CornerRadii.EMPTY,
                     Insets.EMPTY)));
         }
+    }
+
+    public void reloadAllSkills(){
+        skillHandler = new SkillHandler();
     }
 
 }
