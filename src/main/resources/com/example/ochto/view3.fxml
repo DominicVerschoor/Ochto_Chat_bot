@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="488.0" prefWidth="939.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ochto.ControllerSkillAdder">
    <children>
@@ -15,16 +19,27 @@
             <Image url="@pics/img_1.png" />
          </image>
       </ImageView>
-      <TextField fx:id="question_textfield" layoutX="21.0" layoutY="52.0" prefHeight="34.0" prefWidth="290.0" promptText="Enter Question" />
-      <TextField fx:id="action_textfield" layoutX="629.0" layoutY="52.0" prefHeight="34.0" prefWidth="290.0" promptText="Enter Actions" />
-      <TextField fx:id="slot_textfield" layoutX="325.0" layoutY="52.0" prefHeight="34.0" prefWidth="290.0" promptText="Enter Slots" />
-      <Button fx:id="questionButton" layoutX="119.0" layoutY="105.0" mnemonicParsing="false" onAction="#onQuestionButton" prefHeight="26.0" prefWidth="94.0" text="Add Question" />
-      <Button fx:id="actionButton" layoutX="553.0" layoutY="105.0" mnemonicParsing="false" onAction="#onSLotActionButton" prefHeight="26.0" prefWidth="138.0" text="Add Slot /Action Pair" />
+      <TextField fx:id="question_textfield" layoutX="21.0" layoutY="69.0" prefHeight="34.0" prefWidth="290.0" promptText="Enter Question" />
+      <TextField fx:id="action_textfield" layoutX="629.0" layoutY="69.0" prefHeight="34.0" prefWidth="290.0" promptText="Enter Actions" />
+      <TextField fx:id="slot_textfield" layoutX="325.0" layoutY="69.0" prefHeight="34.0" prefWidth="290.0" promptText="Enter Slots" />
+      <Button fx:id="questionButton" layoutX="119.0" layoutY="114.0" mnemonicParsing="false" onAction="#onQuestionButton" prefHeight="26.0" prefWidth="94.0" text="Add Question" />
+      <Button fx:id="actionButton" layoutX="553.0" layoutY="114.0" mnemonicParsing="false" onAction="#onSLotActionButton" prefHeight="26.0" prefWidth="138.0" text="Add Slot /Action Pair" />
       <ScrollPane fx:id="scrollPane1" layoutX="20.0" layoutY="152.0" prefHeight="290.0" prefWidth="900.0">
          <content>
             <VBox fx:id="mainVBox" prefHeight="287.0" prefWidth="882.0" />
          </content>
       </ScrollPane>
-      <Button fx:id="saveButton" layoutX="443.0" layoutY="447.0" mnemonicParsing="false" onAction="#onSaveButton" prefHeight="26.0" prefWidth="54.0" text="Save" />
+      <Button fx:id="saveButton" layoutX="438.0" layoutY="447.0" mnemonicParsing="false" onAction="#onSaveButton" prefHeight="26.0" prefWidth="62.0" text="Save" />
+      <Label fx:id="label" alignment="CENTER" layoutX="20.0" layoutY="11.0" prefHeight="46.0" prefWidth="900.0" scaleShape="false" style="-fx-background-color: black;" text="Skill Adder" textAlignment="CENTER" textFill="#f2eded" textOverrun="WORD_ELLIPSIS">
+         <font>
+            <Font name="Arial Bold" size="25.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="NONE" />
+         </cursor>
+         <opaqueInsets>
+            <Insets top="1.0" />
+         </opaqueInsets>
+      </Label>
    </children>
 </AnchorPane>
