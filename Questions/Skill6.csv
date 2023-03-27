@@ -1,0 +1,10 @@
+At what room do I have <SUBJECT> at <TIME>
+<SUBJECT> Mathematical Modelling
+<SUBJECT> Theoretical Computer Science
+<SUBJECT> HCI
+<TIME> 8:30am
+<TIME> 4pm
+<TIME> 11am
+Action <SUBJECT> Mathematical Modelling <TIME> 8:30am C0.016
+Action <SUBJECT> Theoretical Computer Science <TIME> 4pm C0.020
+Action <SUBJECT> HCI <TIME> 11am C0.008
