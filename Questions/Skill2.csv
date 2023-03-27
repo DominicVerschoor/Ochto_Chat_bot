@@ -1,12 +1,17 @@
-What Lecture do I have on <DAY> at <TIME>
-<DAY> Saturday
-<DAY> Monday
-<DAY> Tuesday
-<DAY> Friday
-<TIME> 12am
-<TIME> 1pm
-<TIME> 16pm
-Action <DAY> Saturday No lectures
-Action <DAY> Monday <TIME> 12am MM 12 am
-Action <DAY> Tuesday <TIME> 16pm HCI 16 pm
-Action <DAY> Friday <TIME> 1pm TCS 1pm
+How to get from <CITY1> to <CITY2>
+<CITY1> Eindhoven
+<CITY1> Maastricht
+<CITY1> The Hague
+<CITY1> Amsterdam
+<CITY1> Groningen
+<CITY2> Eindhoven
+<CITY2> Maastricht
+<CITY2> The Hague
+<CITY2> Amsterdam
+<CITY2> Groningen
+Action <CITY1> Eindhoven <CITY2> Maastricht Take a bus from Eindhoven station at 12 am
+Action <CITY1> Maastricht <CITY2> Amsterdam Take a train from Maastricht station at 1 pm
+Action <CITY1> The Hague <CITY2> Groningen Take a train from Hague station at 3 pm
+Action <CITY1> Amsterdam <CITY2> Eindhoven Take a train from Amsterdam station at 4 pm
+Action <CITY1> Groningen <CITY2> Maastricht Take a train from Groningen station at 8 am
+Action <CITY1> The Hague <CITY2> Amsterdam Take a train from Hague station at 6 pm
