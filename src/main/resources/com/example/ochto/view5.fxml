@@ -53,22 +53,22 @@
       </Label>
       <ScrollPane fx:id="scrollPane1" layoutX="14.0" layoutY="53.0" prefHeight="380.0" prefWidth="250.0">
          <content>
-            <VBox fx:id="questionVBox1" prefHeight="402.0" prefWidth="246.0" />
+            <VBox fx:id="questionVBox1" prefHeight="378.0" prefWidth="246.0" />
          </content>
       </ScrollPane>
       <ScrollPane fx:id="scrollPane11" layoutX="319.0" layoutY="53.0" prefHeight="380.0" prefWidth="250.0">
          <content>
-            <VBox fx:id="slotVBox" prefHeight="380.0" prefWidth="246.0" />
+            <VBox fx:id="slotVBox" prefHeight="378.0" prefWidth="246.0" />
          </content>
       </ScrollPane>
       <ScrollPane fx:id="scrollPane12" layoutX="625.0" layoutY="53.0" prefHeight="380.0" prefWidth="250.0">
          <content>
-            <VBox fx:id="actionVBox" prefHeight="380.0" prefWidth="246.0" />
+            <VBox fx:id="actionVBox" prefHeight="378.0" prefWidth="246.0" />
          </content>
       </ScrollPane>
-      <VBox fx:id="editQuestionVBox" layoutX="264.0" layoutY="52.0" prefHeight="380.0" prefWidth="50.0" />
-      <VBox fx:id="editSlotVBox" layoutX="569.0" layoutY="53.0" prefHeight="410.0" prefWidth="50.0" />
-      <VBox fx:id="editActionVBox" layoutX="875.0" layoutY="53.0" prefHeight="380.0" prefWidth="50.0" />
-      <Button fx:id="saveButton" layoutX="373.0" layoutY="448.0" mnemonicParsing="false" onAction="#onSaveButton" prefHeight="30.0" prefWidth="142.0" text="Click To Save Changes" />
+      <VBox fx:id="editQuestionVBox" layoutX="270.0" layoutY="52.0" prefHeight="380.0" prefWidth="44.0" />
+      <VBox fx:id="editSlotVBox" layoutX="575.0" layoutY="53.0" prefHeight="380.0" prefWidth="44.0" />
+      <VBox fx:id="editActionVBox" layoutX="881.0" layoutY="53.0" prefHeight="380.0" prefWidth="44.0" />
+      <Button fx:id="saveButton" layoutX="397.0" layoutY="450.0" mnemonicParsing="false" onAction="#onSaveButton" prefHeight="26.0" prefWidth="94.0" text="Save Changes" />
    </children>
 </AnchorPane>

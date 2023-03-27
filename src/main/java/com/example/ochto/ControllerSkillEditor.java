@@ -19,6 +19,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.geometry.Insets;
@@ -92,6 +94,7 @@ public class ControllerSkillEditor implements Initializable{
 
         for (EditButtonInfo buttonInfo : buttonInfoList){
             Text input = new Text(buttonInfo.getString());
+            input.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 21));
             Button editButton = new Button("Edit");
             editButton.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
@@ -155,16 +158,6 @@ public class ControllerSkillEditor implements Initializable{
 
     @FXML
     void onSaveButton(ActionEvent event){
-        // System.out.println("Save Button Clicked"); 
-        // System.out.println("replacing " + previousQuestion);
-        // for (int j = 0; j < allQuestions.size(); j++){
-        //     System.out.println("checking question " + allQuestions.get(j).get(0).get(0));
-        //     if (allQuestions.get(j).get(0).get(0).equals(previousQuestion)){
-        //         System.out.println("Found question equal to old input at " + j);
-        //         allQuestions.set(j, currentQuestion);
-        //     }
-        // }
-        // System.out.println("closing new screen");
         try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("view4.fxml"));
 

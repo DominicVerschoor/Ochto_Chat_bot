@@ -18,6 +18,9 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.geometry.Insets;
@@ -33,7 +36,7 @@ public class ControllerSkillOverview implements Initializable{
     private VBox editVBox;
     @FXML
     private ScrollPane scrollPane1;
-    private Button editButton;
+    private Button saveButton;
     private final Stage stage4 = new Stage();
     public int innerI;
 
@@ -107,9 +110,15 @@ public class ControllerSkillOverview implements Initializable{
                     }
                 });
                 Text input = new Text(buttonInfo.getString());
+                input.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 21));
                 mainVBox.getChildren().addAll(input);
                 editVBox.getChildren().addAll(editButton);
             }
         }
+    }
+
+    @FXML
+    void onSaveButton(ActionEvent event) {
+        System.out.println("save button clickeD");
     }
 }
