@@ -28,6 +28,8 @@ public class ControllerSkillAdder implements Initializable{
     @FXML
     private Button questionButton;
     @FXML
+    private Button saveButton;
+    @FXML
     private ScrollPane scrollPane1;
     @FXML
     private TextField question_textfield;
@@ -43,6 +45,7 @@ public class ControllerSkillAdder implements Initializable{
     public ArrayList<String> actions;
 
     private HBox currentHBox;
+    private HBox lineHBox;
     private VBox currentQuestionVBox;
     private VBox currentActionVBox;
     private VBox currentSlotVBox;
@@ -51,8 +54,13 @@ public class ControllerSkillAdder implements Initializable{
     void onQuestionButton(ActionEvent event) {
         String input = question_textfield.getText();
         if (!input.isEmpty()){
+            lineHBox = new HBox();
             currentHBox = new HBox();
+            mainVBox.getChildren().add(lineHBox);
             mainVBox.getChildren().add(currentHBox);
+
+            Text line = new Text("____________________________________________________________________________________________________________________________________________________________________________________");
+            lineHBox.getChildren().addAll(line);
 
             currentQuestionVBox = new VBox();
             currentQuestionVBox.setPrefWidth(300);
@@ -115,7 +123,6 @@ public class ControllerSkillAdder implements Initializable{
         }
    } 
 
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         allQuestions = new ArrayList<>();
@@ -142,6 +149,11 @@ public class ControllerSkillAdder implements Initializable{
         currentActionVBox.getChildren().addAll(actionText1);
         Text actionText2 = new Text("Theoretical Computer Science");
         currentActionVBox.getChildren().addAll(actionText2);
+    }
+
+    @FXML
+    void onSaveButton(ActionEvent event) {
+        System.out.println("save button clicked");
     }
 
 }

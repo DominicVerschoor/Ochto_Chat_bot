@@ -20,10 +20,11 @@
       <TextField fx:id="slot_textfield" layoutX="325.0" layoutY="52.0" prefHeight="34.0" prefWidth="290.0" promptText="Enter Slots" />
       <Button fx:id="questionButton" layoutX="119.0" layoutY="105.0" mnemonicParsing="false" onAction="#onQuestionButton" prefHeight="26.0" prefWidth="94.0" text="Add Question" />
       <Button fx:id="actionButton" layoutX="553.0" layoutY="105.0" mnemonicParsing="false" onAction="#onSLotActionButton" prefHeight="26.0" prefWidth="138.0" text="Add Slot /Action Pair" />
-      <ScrollPane fx:id="scrollPane1" layoutX="20.0" layoutY="152.0" prefHeight="335.0" prefWidth="900.0">
+      <ScrollPane fx:id="scrollPane1" layoutX="20.0" layoutY="152.0" prefHeight="290.0" prefWidth="900.0">
          <content>
-            <VBox fx:id="mainVBox" prefHeight="335.0" prefWidth="900.0" />
+            <VBox fx:id="mainVBox" prefHeight="287.0" prefWidth="882.0" />
          </content>
       </ScrollPane>
+      <Button fx:id="saveButton" layoutX="443.0" layoutY="447.0" mnemonicParsing="false" onAction="#onSaveButton" prefHeight="26.0" prefWidth="54.0" text="Save" />
    </children>
 </AnchorPane>
