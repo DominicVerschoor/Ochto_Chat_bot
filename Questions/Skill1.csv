@@ -1,0 +1,12 @@
+What Lecture do I have on <DAY> at <TIME>
+<DAY> Saturday
+<DAY> Monday
+<DAY> Tuesday
+<DAY> Friday
+<TIME> 12am
+<TIME> 1pm
+<TIME> 16pm
+Action <DAY> Saturday No lectures
+Action <DAY> Monday <TIME> 12am MM 12 am
+Action <DAY> Tuesday <TIME> 16pm HCI 16 pm
+Action <DAY> Friday <TIME> 1pm TCS 1pm

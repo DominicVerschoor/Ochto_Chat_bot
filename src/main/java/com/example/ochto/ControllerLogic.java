@@ -119,14 +119,10 @@ public class ControllerLogic implements Initializable {
     public void handle(ActionEvent newActionEvent) {
         message = text_field.getText();
         addUMessage(message, vbox_message);
-        if (!message.isEmpty()) {
-            Skill currentSkill = skillHandler.findSkill(message);
 
-            if (currentSkill == null) {
-                message = "sry i duno";
-            } else {
-                message = currentSkill.getAction(message);
-            }
+        if (!message.isEmpty()) {
+            message = skillHandler.findSkill(message);
+
         } else {
             message = "Input something!";
         }
