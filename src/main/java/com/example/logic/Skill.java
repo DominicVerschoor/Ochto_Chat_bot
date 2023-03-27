@@ -131,6 +131,19 @@ public class Skill {
     public void setActions(HashMap<String, String> actions) {
         this.actions = actions;
     }
+
+    public String translateKeys(String key){
+        String[] currentKey = key.split("[|]");
+        StringBuilder s = new StringBuilder();
+
+        for (int i = 0; i < currentKey.length; i++) {
+            Slot currentSlot = getSlots().get(Integer.parseInt(currentKey[i]));
+            s.append("<").append(currentSlot.getSlotName()).append("> ").append(currentSlot.getSlotContent()).append(" ");
+        }
+        s.append("\n");
+
+        return s.toString();
+    }
 }
 
 

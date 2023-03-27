@@ -29,7 +29,7 @@ import javafx.stage.Stage;
 import javafx.geometry.Insets;
 
 
-public class ControllerSkillOverview implements Initializable{
+public class ControllerSkillOverview implements Initializable {
 
     @FXML
     private Label label;
@@ -44,17 +44,17 @@ public class ControllerSkillOverview implements Initializable{
     public int innerI;
 
     @Override
-    public void initialize(URL location, ResourceBundle resources) { 
+    public void initialize(URL location, ResourceBundle resources) {
         // ControllerLogic questionGetter = new ControllerLogic();
         // allQuestions = questionGetter.getQuestionList();
         createQuestionList2();
     }
 
 
-    public void printFullQuestion(ArrayList<ArrayList<String>> question){
+    public void printFullQuestion(ArrayList<ArrayList<String>> question) {
         System.out.println("FULL QUESTION");
-        for (int f = 0; f < question.size(); f++){
-            for (int x = 0; x < question.get(f).size(); x++){
+        for (int f = 0; f < question.size(); f++) {
+            for (int x = 0; x < question.get(f).size(); x++) {
                 System.out.println(question.get(f).get(x) + " ");
             }
             System.out.println();
@@ -62,9 +62,9 @@ public class ControllerSkillOverview implements Initializable{
     }
 
 
-    public HashMap<String, String> getAllQuestions(){
+    public HashMap<String, File> getAllQuestions() {
         String folderPath = "Questions";
-        HashMap<String, String> allFiles = new HashMap<>();
+        HashMap<String, File> allFiles = new HashMap<>();
 
         // Get a list of all the files in the folder
         File folder = new File(folderPath);
@@ -74,7 +74,7 @@ public class ControllerSkillOverview implements Initializable{
         for (File file : fileList) {
             try (BufferedReader br = new BufferedReader(new FileReader(file))) {
                 String firstLine = br.readLine();
-                allFiles.put(firstLine, file.getPath());
+                allFiles.put(firstLine, file);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -83,49 +83,45 @@ public class ControllerSkillOverview implements Initializable{
         return allFiles;
     }
 
-    public void createQuestionList2(){
-        HashMap<String, String> allQuestions = getAllQuestions(); // <Qs, path>
+    public void createQuestionList2() {
+        HashMap<String, File> allQuestions = getAllQuestions(); // <Qs, path>
 
-        if (allQuestions.isEmpty()){
-            System.out.println("No Questions Implemented");
-        }
-        else{
-            Text explanation = new Text("Double Click on a Question to Edit it");
-            explanation.setFont(Font.font("verdana", FontWeight.BLACK, FontPosture.REGULAR, 21));
-            mainVBox.getChildren().addAll(explanation);
-            Text line = new Text("____________________________________________________________________________________________________");
-            explanation.setFont(Font.font("verdana", FontWeight.BLACK, FontPosture.REGULAR, 21));
-            mainVBox.getChildren().addAll(line);
+        Text explanation = new Text("Double Click on a Question to Edit it");
+        explanation.setFont(Font.font("verdana", FontWeight.BLACK, FontPosture.REGULAR, 21));
+        mainVBox.getChildren().addAll(explanation);
+        Text line = new Text("________________________________________________________________________________________________________________");
+        explanation.setFont(Font.font("verdana", FontWeight.BLACK, FontPosture.REGULAR, 21));
+        mainVBox.getChildren().addAll(line);
 
-            for (String currentQuestion : allQuestions.keySet()){
-                Text input = new Text(currentQuestion);
-                input.setOnMouseClicked(event -> {
-                    if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2){
-                        try{
-                            FXMLLoader loader = new FXMLLoader(getClass().getResource("view5.fxml"));
+        for (String currentQuestion : allQuestions.keySet()) {
+            Text input = new Text(currentQuestion + "\n");
+            input.setOnMouseClicked(event -> {
+                if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
+                    try {
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("view5.fxml"));
 
-                            ControllerSkillEditor controller = new ControllerSkillEditor();
-                            controller.setFile(allQuestions.get(currentQuestion));
+                        ControllerSkillEditor controller = new ControllerSkillEditor();
+                        controller.setFile(allQuestions.get(currentQuestion));
 
-                            loader.setController(controller); //initialize
-                            Parent root = loader.load();
+                        loader.setController(controller); //initialize
+                        Parent root = loader.load();
 
-                            Scene scene = new Scene(root);
-                            stage4.setScene(scene);
-                            stage4.setTitle("Skill Editor");
-                            stage4.setResizable(false);
-                            stage4.centerOnScreen();
-                            stage4.show();
-                        } catch (Exception e){
-                            e.printStackTrace();
-                        }
+                        Scene scene = new Scene(root);
+                        stage4.setScene(scene);
+                        stage4.setTitle("Skill Editor");
+                        stage4.setResizable(false);
+                        stage4.centerOnScreen();
+                        stage4.show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                });
-                input.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 21));
-                mainVBox.getChildren().addAll(input);
-            }
+                }
+            });
+            input.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 15));
+            mainVBox.getChildren().addAll(input);
         }
     }
+
 
     @FXML
     void onSaveButton(ActionEvent event) {
