@@ -87,9 +87,22 @@ public class CSVHandler {
                 for (int j = 1; j < words.length; j += 2) {
                     if (words[j].contains("<") && words[j].contains(">")) {
                         for (int k = 0; k < slotList.size(); k++) {
-                            if (slotList.get(k).getSlotName().equalsIgnoreCase(words[j].substring(1, words[j].length() - 1))
-                                    && slotList.get(k).getSlotContent().equalsIgnoreCase(words[j + 1])) {
-                                sb.append(String.valueOf(k) + "|");
+                            if (slotList.get(k).getSlotName().equalsIgnoreCase(words[j].substring(1, words[j].length() - 1)))
+                            {
+                                if(slotList.get(k).getSlotContent().equalsIgnoreCase(words[j + 1])) { //the problem is here
+                                    sb.append(String.valueOf(k) + "|");
+                                }
+                                else
+                                {
+                                    String temp = words[j+1];
+                                    for (int i = j + 2; i < words.length; i++) {
+                                        temp += words[i];
+                                        if (slotList.get(k).getSlotContent().equalsIgnoreCase(temp)) {
+                                            sb.append(String.valueOf(k) + "|");
+                                            //might break
+                                        }
+                                    }
+                                }
                             }
                         }
                     } else {
