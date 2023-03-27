@@ -3,6 +3,7 @@ package com.example.ochto;
 import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 
 import javafx.event.ActionEvent;
@@ -42,8 +43,6 @@ public class ControllerSkillOverview implements Initializable{
     private final Stage stage4 = new Stage();
     public int innerI;
 
-    public ArrayList<ArrayList<ArrayList<String>>> allQuestions;
-
     @Override
     public void initialize(URL location, ResourceBundle resources) { 
         // ControllerLogic questionGetter = new ControllerLogic();
@@ -51,13 +50,6 @@ public class ControllerSkillOverview implements Initializable{
         createQuestionList2();
     }
 
-    public ArrayList<ArrayList<ArrayList<String>>> getQuestionList(){
-        return allQuestions;
-    }
-
-    public void setQuestions(ArrayList<ArrayList<ArrayList<String>>> allQuestions){
-        this.allQuestions = allQuestions;
-    }
 
     public void printFullQuestion(ArrayList<ArrayList<String>> question){
         System.out.println("FULL QUESTION");
@@ -70,8 +62,9 @@ public class ControllerSkillOverview implements Initializable{
     }
 
 
-    public void getAllQuestions(){
+    public HashMap<String, String> getAllQuestions(){
         String folderPath = "Questions";
+        HashMap<String, String> allFiles = new HashMap<>();
 
         // Get a list of all the files in the folder
         File folder = new File(folderPath);
@@ -81,14 +74,18 @@ public class ControllerSkillOverview implements Initializable{
         for (File file : fileList) {
             try (BufferedReader br = new BufferedReader(new FileReader(file))) {
                 String firstLine = br.readLine();
-                System.out.println(firstLine);
+                allFiles.put(firstLine, file.getPath());
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+
+        return allFiles;
     }
 
     public void createQuestionList2(){
+        HashMap<String, String> allQuestions = getAllQuestions(); // <Qs, path>
+
         if (allQuestions.isEmpty()){
             System.out.println("No Questions Implemented");
         }
@@ -100,26 +97,15 @@ public class ControllerSkillOverview implements Initializable{
             explanation.setFont(Font.font("verdana", FontWeight.BLACK, FontPosture.REGULAR, 21));
             mainVBox.getChildren().addAll(line);
 
-            ArrayList<EditButtonInfo> buttonInfoList = new ArrayList<>();
-            for (int i = 0; i < allQuestions.size(); i++){
-                String itemName = allQuestions.get(i).get(0).get(0);
-                EditButtonInfo buttonInfo = new EditButtonInfo(itemName, i);
-                buttonInfoList.add(buttonInfo);
-            }
-
-            for (EditButtonInfo buttonInfo : buttonInfoList){
-                Text input = new Text(buttonInfo.getString());
+            for (String currentQuestion : allQuestions.keySet()){
+                Text input = new Text(currentQuestion);
                 input.setOnMouseClicked(event -> {
                     if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2){
-                        System.out.println("double click detected");
                         try{
                             FXMLLoader loader = new FXMLLoader(getClass().getResource("view5.fxml"));
 
                             ControllerSkillEditor controller = new ControllerSkillEditor();
-                            int index = buttonInfo.getIndex();
-                            controller.setQuestion(allQuestions.get(index),"TEMP");
-                            controller.setAllQ(allQuestions);
-                            printFullQuestion(allQuestions.get(index));     
+                            controller.setFile(allQuestions.get(currentQuestion));
 
                             loader.setController(controller); //initialize
                             Parent root = loader.load();

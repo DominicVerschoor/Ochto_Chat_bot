@@ -176,4 +176,8 @@ public class ControllerSkillEditor implements Initializable{
             e.printStackTrace();
         }
     }
+
+    public void setFile(String filePath){
+
+    }
 }
