@@ -1,0 +1,11 @@
+How do I get from <CITY> to <CITY> at <TIME>
+<CITY> Maastricht
+<CITY> Heerlen
+<CITY> Sittard
+<CITY> Roterdam
+<TIME> 9am
+<TIME> 11am
+<TIME> 12am
+Action <CITY> Maastricht <CITY> Sittard By bike
+Action <CITY> Maastricht <CITY> Heerlen By car
+Action <CITY> Maastricht <CITY> Roterdam By train
