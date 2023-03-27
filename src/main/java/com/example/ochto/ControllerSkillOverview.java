@@ -1,5 +1,6 @@
 package com.example.ochto;
 
+import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -64,6 +65,25 @@ public class ControllerSkillOverview implements Initializable{
                 System.out.println(question.get(f).get(x) + " ");
             }
             System.out.println();
+        }
+    }
+
+
+    public void getAllQuestions(){
+        String folderPath = "Questions";
+
+        // Get a list of all the files in the folder
+        File folder = new File(folderPath);
+        File[] fileList = folder.listFiles();
+
+        // Loop over each file in the folder and read the first line
+        for (File file : fileList) {
+            try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+                String firstLine = br.readLine();
+                System.out.println(firstLine);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

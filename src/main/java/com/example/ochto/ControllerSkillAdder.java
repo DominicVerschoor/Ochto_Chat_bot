@@ -1,9 +1,13 @@
 package com.example.ochto;
 
+import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.ResourceBundle;
 
+import com.example.logic.Slot;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -18,8 +22,9 @@ import javafx.scene.text.Text;
 import javafx.geometry.Insets;
 
 import com.example.ochto.ControllerLogic;
+import javafx.stage.Stage;
 
-public class ControllerSkillAdder implements Initializable{
+public class ControllerSkillAdder implements Initializable {
 
     @FXML
     private Button slotActionButton;
@@ -37,7 +42,7 @@ public class ControllerSkillAdder implements Initializable{
     private TextField action_textfield;
     @FXML
     private TextField slot_textfield;
-    
+
     public ArrayList<ArrayList<ArrayList<String>>> allQuestions;
     public ArrayList<ArrayList<String>> currentQuestion;
     public ArrayList<String> question;
@@ -53,7 +58,7 @@ public class ControllerSkillAdder implements Initializable{
     @FXML
     void onQuestionButton(ActionEvent event) {
         String input = question_textfield.getText();
-        if (!input.isEmpty()){
+        if (!input.isEmpty()) {
             lineHBox = new HBox();
             currentHBox = new HBox();
             mainVBox.getChildren().add(lineHBox);
@@ -87,21 +92,19 @@ public class ControllerSkillAdder implements Initializable{
 
             question_textfield.clear();
             ControllerLogic.allQuestions = allQuestions;
-        }
-        else{
+        } else {
             System.out.println("Input is Empty");
         }
     }
 
-   @FXML 
-   void onSLotActionButton(ActionEvent event){
-        if (allQuestions.isEmpty()){
+    @FXML
+    void onSLotActionButton(ActionEvent event) {
+        if (allQuestions.isEmpty()) {
             System.out.println("Enter a Question first");
-        }
-        else{
+        } else {
             String slotInput = slot_textfield.getText();
-            String actionInput =action_textfield.getText();
-            if (!slotInput.isEmpty() && !actionInput.isEmpty()){
+            String actionInput = action_textfield.getText();
+            if (!slotInput.isEmpty() && !actionInput.isEmpty()) {
                 Text slotText = new Text(slotInput);
                 currentSlotVBox.getChildren().addAll(slotText);
                 slots.add(slotInput);
@@ -113,15 +116,15 @@ public class ControllerSkillAdder implements Initializable{
                 action_textfield.clear();
 
                 ControllerLogic.allQuestions = allQuestions;
-            } else if (!slotInput.isEmpty() && actionInput.isEmpty()){
+            } else if (!slotInput.isEmpty() && actionInput.isEmpty()) {
                 System.out.println("Action Input is Empty");
-            } else if (slotInput.isEmpty() && !actionInput.isEmpty()){
+            } else if (slotInput.isEmpty() && !actionInput.isEmpty()) {
                 System.out.println("Slot Input is Empty");
-            } else{
+            } else {
                 System.out.println("Slot and Action Inputs are Empty");
             }
         }
-   } 
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -153,7 +156,70 @@ public class ControllerSkillAdder implements Initializable{
 
     @FXML
     void onSaveButton(ActionEvent event) {
-        System.out.println("save button clicked");
+        for (ArrayList<ArrayList<String>> currQs: allQuestions) {
+            createCSV(currQs);
+        }
+
+        Stage stage = (Stage) saveButton.getScene().getWindow();
+        stage.close();
     }
 
+    public ArrayList<String> seperateSlots(ArrayList<String> slots) {
+        ArrayList<String> output = new ArrayList<>();
+        for (String slot: slots) {
+            String[] currentSlots = slot.split("<");
+
+            output.addAll(Arrays.asList(currentSlots).subList(1, currentSlots.length));
+        }
+        Collections.sort(output);
+        output.replaceAll(s -> "<" + s);
+
+        return output;
+    }
+
+    public void createCSV(ArrayList<ArrayList<String>> currentQuestion) {
+        String fileName = "Questions/Skill" + (fileCount());
+        String question = currentQuestion.get(0).get(0);
+        ArrayList<String> slots = seperateSlots(currentQuestion.get(1));
+        ArrayList<String> actions = currentQuestion.get(2);
+
+        StringBuilder output = new StringBuilder();
+        output.append(question).append("\n");
+        for (String currentSlot: slots) {
+            output.append(currentSlot).append("\n");
+        }
+        for (String currentAction: actions) {
+            output.append("Action ").append(currentAction).append("\n");
+        }
+
+
+        try {
+            FileWriter fw = new FileWriter(fileName);
+            BufferedWriter bw = new BufferedWriter(fw);
+            PrintWriter pw = new PrintWriter(bw);
+
+            pw.write(String.valueOf(output));
+
+            pw.flush();
+            pw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    public int fileCount() {
+        File folder = new File("Questions/");
+        int count = 0;
+        File[] files = folder.listFiles();
+        assert files != null;
+        for (File file : files) {
+            if (file.isFile()) {
+                count++;
+            }
+        }
+
+        return count;
+    }
 }
