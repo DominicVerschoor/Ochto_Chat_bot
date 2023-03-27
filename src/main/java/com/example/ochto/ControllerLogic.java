@@ -59,6 +59,7 @@ public class ControllerLogic implements Initializable {
     Circle circle = new Circle();
     private String[] skills = {"Which lectures are there on DAY at TIME"};
     private final Stage stage2 = new Stage();
+    private final Stage stage3 = new Stage();
     @FXML
     private Button theme_button = new Button();
     private boolean isDarkTheme = true;
@@ -69,6 +70,9 @@ public class ControllerLogic implements Initializable {
     @FXML
     private ImageView main_image_view = new ImageView();
     private SkillHandler skillHandler = new SkillHandler();
+    @FXML
+    private Button editButton;
+    private Button skillButton;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -201,24 +205,46 @@ public class ControllerLogic implements Initializable {
     }
 
     @FXML
-    public void handleButton(ActionEvent newActionEvent) {
-        try {
+    public void handleAddButton(ActionEvent newActionEvent)
+    {
+        try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("view3.fxml"));
             Parent root = loader.load();
 
-            ControllerSkillEditor controller = new ControllerSkillEditor();
-            loader.setController(controller);
+            ControllerSkillAdder controllerAdd = new ControllerSkillAdder();
+            loader.setController(controllerAdd);
 
             Scene scene = new Scene(root);
             stage2.setScene(scene);
-            stage2.setTitle("Skill Editor");
+            stage2.setTitle("Skill Adder");
             stage2.setResizable(false);
             stage2.centerOnScreen();
             stage2.show();
-        } catch (Exception e) {
+        } catch (Exception e){
             e.printStackTrace();
         }
     }
+
+    @FXML
+    public void handleEditButton(ActionEvent newActionEvent){
+        try{
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("view4.fxml"));
+
+            ControllerSkillOverview controllerEdit = new ControllerSkillOverview();
+            loader.setController(controllerEdit);
+            Parent root = loader.load();
+
+            Scene scene = new Scene(root);
+            stage3.setScene(scene);
+            stage3.setTitle("Skill Overview");
+            stage3.setResizable(false);
+            stage3.centerOnScreen();
+            stage3.show();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
 
     @FXML
     public void changeTheme(ActionEvent newActionEvent) {

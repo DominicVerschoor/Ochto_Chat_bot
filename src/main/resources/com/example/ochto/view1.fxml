@@ -70,7 +70,8 @@
       <Circle fill="#42e610" layoutX="90.0" layoutY="80.0" radius="9.0" stroke="BLACK" strokeType="INSIDE">
 
       </Circle>
-      <Button fx:id="skillButton" layoutX="800.0" layoutY="323.0" mnemonicParsing="false" onAction="#handleButton" text="Add Skill" />
+      <Button fx:id="skillButton" layoutX="800.0" layoutY="323.0" mnemonicParsing="false" onAction="#handleAddButton" text="Add Skill" />
       <Button fx:id="theme_button" layoutX="806.0" layoutY="406.0" mnemonicParsing="false" onAction="#changeTheme" />
+      <Button fx:id="editButton" layoutX="798.0" layoutY="358.0" mnemonicParsing="false" onAction="#handleEditButton" text="Edit Skills" />
    </children>
 </AnchorPane>

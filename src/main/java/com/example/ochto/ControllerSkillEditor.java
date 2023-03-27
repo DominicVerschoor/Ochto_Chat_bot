@@ -32,12 +32,6 @@ public class ControllerSkillEditor implements Initializable{
     @FXML
     private VBox actionVBox;
     @FXML
-    private VBox editActionVBox;
-    @FXML
-    private VBox editQuestionVBox;
-    @FXML
-    private VBox editSlotVBox;
-    @FXML
     private Label label;
     @FXML
     private Label label1;
@@ -70,11 +64,8 @@ public class ControllerSkillEditor implements Initializable{
         System.out.println("Initialized");
 
         questionVBox1.getChildren().clear();
-        editQuestionVBox.getChildren().clear();
         slotVBox.getChildren().clear();
-        editSlotVBox.getChildren().clear();
         actionVBox.getChildren().clear();
-        editActionVBox.getChildren().clear();
 
         drawTables2(0);
         drawTables2(1);
@@ -127,15 +118,12 @@ public class ControllerSkillEditor implements Initializable{
             switch(i){
                 case 0:
                     questionVBox1.getChildren().addAll(input);
-                    editQuestionVBox.getChildren().addAll(editButton);
                     break;
                 case 1:
                     slotVBox.getChildren().addAll(input);
-                    editSlotVBox.getChildren().addAll(editButton);
                     break;
             case 2:
                     actionVBox.getChildren().addAll(input);
-                    editActionVBox.getChildren().addAll(editButton);
                     break;
 
             }
@@ -162,7 +150,6 @@ public class ControllerSkillEditor implements Initializable{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("view4.fxml"));
 
             ControllerSkillOverview controller = new ControllerSkillOverview();
-            controller.setQuestions(allQuestions);
             loader.setController(controller); //initialize
             Parent root = loader.load();
 
