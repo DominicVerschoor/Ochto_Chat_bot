@@ -93,7 +93,7 @@ public class ControllerLogic implements Initializable {
         view.setPreserveRatio(true);
 
         text_field.setStyle("""
-                .text-field {
+                .}text-field {
                  -fx-border-radius: 7 7 7 7;
                  -fx-background-radius: 7 7 7 7;""");
 
@@ -125,10 +125,10 @@ public class ControllerLogic implements Initializable {
         addUMessage(message, vbox_message);
 
         if (!message.isEmpty()) {
-            double start = System.currentTimeMillis();
+            float start = System.currentTimeMillis();
             message = skillHandler.findSkill(message);
-            double end = System.currentTimeMillis();
-            System.out.println("Time in ms: " + (double) (end-start));
+            float end = System.currentTimeMillis();
+            System.out.println("Time in ms: " + (end-start));
 
         } else {
             message = "Input something!";
