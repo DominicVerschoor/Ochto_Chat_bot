@@ -85,7 +85,7 @@ public class CSVHandler {
             } else {
                 StringBuilder sb = new StringBuilder();
                 for (int j = 1; j < words.length; j += 2) {
-                    if (words[j].charAt(0) == '<' && words[j].charAt(words[j].length() - 1) == '>') {
+                    if (words[j].contains("<") && words[j].contains(">")) {
                         for (int k = 0; k < slotList.size(); k++) {
                             if (slotList.get(k).getSlotName().equalsIgnoreCase(words[j].substring(1, words[j].length() - 1))
                                     && slotList.get(k).getSlotContent().equalsIgnoreCase(words[j + 1])) {

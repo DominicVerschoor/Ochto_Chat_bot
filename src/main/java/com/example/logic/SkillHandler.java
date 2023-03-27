@@ -59,9 +59,8 @@ public class SkillHandler {
     }
 
     public String findSkill(String input) {
-        String finalKey = "";
-//        String[] splitInput = input.split(" ");
         String cleanInput = cleanWord(input);
+        HashMap<Integer, String> spellStore = new HashMap<>();
 
         for (Skill skill : skills) {
             String[] splitSkill = skill.getQuestion().split(" ");
@@ -69,64 +68,45 @@ public class SkillHandler {
             Set<String> allKeys = skill.getActions().keySet();
 
             for (String key : allKeys) {
-                String[] currentKey = key.split("[|]"); //currentKey[0] = 0, currentKey[1] = 4
+                String[] currentKey = key.split("[|]");
                 ArrayList<Integer> slotIndex = skill.getSlotIndex();
-                // slotIndex[0] = 6 = <DAY> = currentKey[0] = 0 = Monday
 
-                for (int i = 0; i < slotIndex.size(); i++) {
+                for (int i = 0; i < currentKey.length; i++) {
                     Slot currentSlot = skill.getSlots().get(Integer.parseInt(currentKey[i]));
                     splitSkill[slotIndex.get(i)] = currentSlot.getSlotContent();
                 }
 
                 String cleanQs = cleanWord(String.join("", splitSkill));
-                // WhatLecturedoIhaveonMondayat12am
 
                 if (cleanInput.equalsIgnoreCase(cleanQs)) {
                     return skill.getActions().get(key);
+                }else{
+                    spellStore.put(differenceCounter(cleanQs, cleanInput), String.join(" ", splitSkill));
                 }
             }
-
-//            for (int i = 0; i < splitSkill.length; i++) {
-//
-////                if (splitSkill[i].contains("<") && splitSkill[i].contains(">")){
-////                    surround = skill.getSurroundWords(splitSkill[i]);
-////
-////                }
-////
-////
-////                if (!(splitSkill[i].contains("<") && splitSkill[i].contains(">"))
-////                        && !splitInput[i].equalsIgnoreCase(splitSkill[i])) {
-////                    outputSkill = null;
-////                    break;
-////                }
-//            }
         }
 
+        int min = 999999999;
+        for (Integer diff: spellStore.keySet()) {
+            if (diff < min){
+                min = diff;
+            }
+        }
 
-//        if (outputSkill == null) {
-//            Skill temp_outputSkill = null;
-//            for (Skill skill : skills) {
-//                String[] splitSkill = skill.getQuestion().split(" ");
-//
-//                if (splitInput.length == splitSkill.length) {
-//                    temp_outputSkill = skill;
-//                    int incorrect_count = 0;
-//                    for (int i = 0; i < splitInput.length; i++) {
-//                        if (!(splitInput[i].equalsIgnoreCase(splitSkill[i]))) {
-//                            incorrect_count++;
-//                        }
-//
-//                    }
-//                    if (incorrect_count <= 2) {
-//                        outputSkill = temp_outputSkill;
-//                    }
-//
-//                }
-//            }
-//        }
+        return "Did you mean: " + spellStore.get(min);
+    }
 
+    public int differenceCounter(String s1, String s2){
+        int count = 0;
+        int length = Math.min(s1.length(), s2.length());
+        for (int i = 0; i < length; i++) {
+            if (s1.charAt(i) != s2.charAt(i)) { // Compare the characters at each index
+                count++;
+            }
+        }
 
-        return "SRY";
+        count += Math.abs(s1.length() - s2.length());
+        return count;
     }
 
     public void loadSkills() {
