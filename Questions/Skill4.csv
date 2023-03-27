@@ -1,0 +1,9 @@
+What is my grade on <SUBJECT>
+<SUBJECT> TheoreticalComputerScience
+<SUBJECT> MathematicalModelling
+<SUBJECT> DiscreteMathematics
+<SUBJECT> ComputerScience
+<SUBJECT> ICTandKnowledgeManagement
+Action <SUBJECT> TheoreticalComputerScience 5.5
+Action <SUBJECT> MathematicalModelling 9
+Action <SUBJECT> DiscreteMathematics 7.5

@@ -1,0 +1,13 @@
+Are there free spots in the <LIBRARY> library on <DAY> at <TIME>
+<LIBRARY> Randwyck
+<LIBRARY> Inner city
+<TIME> 9am
+<TIME> 10am
+<TIME> 8pm
+<DAY> Monday
+<DAY> Tuesday
+<DAY> Wednesday
+Action <LIBRARY> Inner city <DAY> Tuesday <TIME> 9am Yes
+Action <LIBRARY> Inner city <DAY> Monday <TIME> 10am No
+Action <LIBRARY> Randwyck <DAY> Wednesday <TIME> 8 pm No
+Action <LIBRARY> Randwyck <DAY> Monday <TIME> 9am Yes
