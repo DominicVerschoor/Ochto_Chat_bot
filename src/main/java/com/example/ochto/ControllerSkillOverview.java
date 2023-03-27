@@ -17,6 +17,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -92,6 +93,13 @@ public class ControllerSkillOverview implements Initializable{
             System.out.println("No Questions Implemented");
         }
         else{
+            Text explanation = new Text("Double Click on a Question to Edit it");
+            explanation.setFont(Font.font("verdana", FontWeight.BLACK, FontPosture.REGULAR, 21));
+            mainVBox.getChildren().addAll(explanation);
+            Text line = new Text("____________________________________________________________________________________________________");
+            explanation.setFont(Font.font("verdana", FontWeight.BLACK, FontPosture.REGULAR, 21));
+            mainVBox.getChildren().addAll(line);
+
             ArrayList<EditButtonInfo> buttonInfoList = new ArrayList<>();
             for (int i = 0; i < allQuestions.size(); i++){
                 String itemName = allQuestions.get(i).get(0).get(0);
@@ -100,10 +108,10 @@ public class ControllerSkillOverview implements Initializable{
             }
 
             for (EditButtonInfo buttonInfo : buttonInfoList){
-                Button editButton = new Button("Edit");
-                editButton.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent event){
+                Text input = new Text(buttonInfo.getString());
+                input.setOnMouseClicked(event -> {
+                    if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2){
+                        System.out.println("double click detected");
                         try{
                             FXMLLoader loader = new FXMLLoader(getClass().getResource("view5.fxml"));
 
@@ -122,17 +130,13 @@ public class ControllerSkillOverview implements Initializable{
                             stage4.setResizable(false);
                             stage4.centerOnScreen();
                             stage4.show();
-                            Stage stage = (Stage) editButton.getScene().getWindow();
-                            stage.close();
                         } catch (Exception e){
                             e.printStackTrace();
                         }
                     }
                 });
-                Text input = new Text(buttonInfo.getString());
                 input.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 21));
                 mainVBox.getChildren().addAll(input);
-                editVBox.getChildren().addAll(editButton);
             }
         }
     }
