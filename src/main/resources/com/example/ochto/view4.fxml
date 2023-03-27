@@ -18,12 +18,11 @@
             <Image url="@pics/img_1.png" />
          </image>
       </ImageView>
-      <ScrollPane fx:id="scrollPane1" layoutX="20.0" layoutY="76.0" prefHeight="370.0" prefWidth="500.0">
+      <ScrollPane fx:id="scrollPane1" layoutX="20.0" layoutY="76.0" prefHeight="370.0" prefWidth="576.0">
          <content>
-            <VBox fx:id="mainVBox" prefHeight="366.0" prefWidth="498.0" />
+            <VBox fx:id="mainVBox" prefHeight="366.0" prefWidth="574.0" />
          </content>
       </ScrollPane>
-      <VBox fx:id="editVBox" layoutX="531.0" layoutY="76.0" prefHeight="382.0" prefWidth="66.0" />
       <Label fx:id="label" alignment="CENTER" layoutX="20.0" layoutY="15.0" prefHeight="46.0" prefWidth="576.0" scaleShape="false" style="-fx-background-color: black;" text="Skill Overview" textAlignment="CENTER" textFill="#f2eded" textOverrun="WORD_ELLIPSIS">
          <font>
             <Font name="Arial Bold" size="25.0" />
