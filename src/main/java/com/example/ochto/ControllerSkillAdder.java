@@ -113,6 +113,7 @@ public class ControllerSkillAdder implements Initializable {
                 currentActionVBox.getChildren().addAll(actionText);
                 actions.add(actionInput);
                 action_textfield.clear();
+
             } else if (!slotInput.isEmpty() && actionInput.isEmpty()) {
                 System.out.println("Action Input is Empty");
             } else if (slotInput.isEmpty() && !actionInput.isEmpty()) {
