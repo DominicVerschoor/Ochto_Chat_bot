@@ -11,11 +11,6 @@ public class SkillHandler {
         loadSkills();
     }
 
-    public static void main(String[] args) {
-        SkillHandler skh = new SkillHandler();
-        System.out.println(skh.findSkill("How to get from Eindhoven to maastricht"));
-    }
-
     public String findSkill(String input){
         String cleanedInput = cleanWord(input);
         for(Skill skill: skills){
@@ -35,7 +30,41 @@ public class SkillHandler {
                 }
             }
         }
-        return "Sorry, I do not know how to answer that";
+        return findClosestMatch(input);
+    }
+
+    private String findClosestMatch(String input){
+        String cleanInput = cleanWord(input);
+        HashMap<Integer, String> spellStore = new HashMap<>();
+
+        for (Skill skill : skills) { //O(w) w= number of skills
+            String[] splitSkill = skill.getQuestion().split(" ");
+            Set<String> allKeys = skill.getActions().keySet();
+
+            for (String key : allKeys) { // O(n) n=number of keys
+                String[] currentKey = key.split("[|]");
+                ArrayList<Integer> slotIndex = skill.getSlotIndex();
+
+                for (int i = 0; i < currentKey.length; i++) { //O(m) m=number of slots
+                    Slot currentSlot = skill.getSlots().get(Integer.parseInt(currentKey[i]));
+                    splitSkill[slotIndex.get(i)] = currentSlot.getSlotContent();
+                }
+
+                String cleanQs = cleanWord(String.join("", splitSkill));
+
+                spellStore.put(differenceCounter(cleanQs, cleanInput), String.join(" ", splitSkill));
+                // O(wnm)
+            }
+        }
+
+        int min = Integer.MAX_VALUE;
+        for (Integer diff: spellStore.keySet()) {
+            if (diff < min){
+                min = diff;
+            }
+        }
+
+        return "Did you mean: " + spellStore.get(min) + ". Please type it.";
     }
 
     private ArrayList<Slot> extractSlotsFromInput(Skill skill, String cleanedInput){
