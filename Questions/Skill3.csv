@@ -6,6 +6,6 @@ How do I get from <CITY> to <CITY> at <TIME>
 <TIME> 9am
 <TIME> 11am
 <TIME> 12am
-Action <CITY> Maastricht <CITY> Sittard By bike
-Action <CITY> Maastricht <CITY> Heerlen By car
-Action <CITY> Maastricht <CITY> Roterdam By train
+Action <CITY> Maastricht <CITY> Sittard <TIME> 10am By bike
+Action <CITY> Maastricht <CITY> Heerlen <TIME> 11pm By car
+Action <CITY> Maastricht <CITY> Roterdam <TIME> 8am By train
