@@ -5,6 +5,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.BufferedReader;
@@ -29,6 +32,18 @@ public class App extends Application {
             stage.getIcons().add(image);
             stage.setResizable(false);
             Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.centerOnScreen();
+            stage.show();
+        } else {
+            FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("view2.fxml"));
+            Scene scene = new Scene(fxmlLoader.load());
+            AnchorPane anchorPane = new AnchorPane();
+            anchorPane.setBackground(Background.fill(Color.DARKGRAY));
+            stage.setTitle("OCTO");
+            Image image = new Image("file:src/main/resources/com/example/ochto/pics/img_5.png");
+            stage.getIcons().add(image);
+            stage.setResizable(false);
             stage.setScene(scene);
             stage.centerOnScreen();
             stage.show();
