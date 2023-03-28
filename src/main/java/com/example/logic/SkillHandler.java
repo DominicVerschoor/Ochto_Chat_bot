@@ -94,7 +94,7 @@ public class SkillHandler {
             }
         }
 
-        return "Did you mean: " + spellStore.get(min);
+        return "Did you mean: " + spellStore.get(min) + ". Please type it.";
     }
 
     public int differenceCounter(String s1, String s2){
