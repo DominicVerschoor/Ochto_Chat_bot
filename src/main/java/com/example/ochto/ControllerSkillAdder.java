@@ -2,10 +2,7 @@ package com.example.ochto;
 
 import java.io.*;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import com.example.logic.Slot;
 import javafx.event.ActionEvent;
@@ -56,9 +53,40 @@ public class ControllerSkillAdder implements Initializable {
     private VBox currentSlotVBox;
     private ControllerLogic logic = new ControllerLogic();
 
+    public ArrayList<String> getAllQuestions() {
+        String folderPath = "Questions";
+        ArrayList<String> allQs = new ArrayList<>();
+
+        // Get a list of all the files in the folder
+        File folder = new File(folderPath);
+        File[] fileList = folder.listFiles();
+
+        // Loop over each file in the folder and read the first line
+        for (File file : fileList) {
+            try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+                String firstLine = br.readLine();
+                allQs.add(firstLine);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return allQs;
+    }
+
+
     @FXML
     void onQuestionButton(ActionEvent event) {
+        ArrayList<String> allQs = getAllQuestions();
         String input = question_textfield.getText();
+
+        for (String qs: allQs) {
+            if (input.equalsIgnoreCase(qs)){
+                input = "";
+                System.out.println("Question already exists");
+            }
+        }
+
         if (!input.isEmpty()) {
             lineHBox = new HBox();
             currentHBox = new HBox();
