@@ -13,7 +13,7 @@ public class SkillHandler {
 
     public static void main(String[] args) {
         SkillHandler skh = new SkillHandler();
-        System.out.println(skh.findSkill("How to get from Maastricht to Eindhoven"));
+        System.out.println(skh.findSkill("How to get from Eindhoven to maastricht"));
     }
 
     public String findSkill(String input){
@@ -91,7 +91,7 @@ public class SkillHandler {
     }
 
     public static String cleanWord(String input) {
-        return input.replaceAll("[^\\p{L}\\p{N}]+", "");
+        return input.replaceAll("[^\\p{L}\\p{N}]+", "").toLowerCase();
     }
 
     public String getBetweenWords(String input, String[] surrounding) {

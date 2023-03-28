@@ -1,7 +1,7 @@
 Is there an exam for <SUBJECT>
-<SUBJECT> Mathematical Modelling
-<SUBJECT> Theoretical Computer Science
+<SUBJECT> MathematicalModelling
+<SUBJECT> TheoreticalComputer Science
 <SUBJECT> HCI
-Action <SUBJECT> Mathematical Modelling Yes
-Action <SUBJECT> Theoretical Computer Science Yes
+Action <SUBJECT> MathematicalModelling Yes
+Action <SUBJECT> TheoreticalComputer Science Yes
 Action <SUBJECT> HCI No
