@@ -11,6 +11,81 @@ public class SkillHandler {
         loadSkills();
     }
 
+    public static void main(String[] args) {
+        SkillHandler skh = new SkillHandler();
+        System.out.println(skh.findSkill("How to get from Maastricht to Eindhoven"));
+    }
+
+    public String findSkill(String input){
+        String cleanedInput = cleanWord(input);
+        for(Skill skill: skills){
+            ArrayList<Slot> inputSlots = extractSlotsFromInput(skill, cleanedInput);
+            if(inputSlots.size() > 0){
+                List<Slot> slots = skill.getSlots();
+                String[] keys = new String[inputSlots.size()];
+                for(int i = 0; i < keys.length; i++){
+                    keys[i] = String.valueOf(slots.indexOf(inputSlots.get(i)));
+                }
+                String key = String.join("|", keys);
+                if(skill.getActions().get(key) != null){
+                    return skill.getActions().get(key);
+                }
+                else if(skill.getActions().get("-1") != null){
+                    return skill.getActions().get("-1");
+                }
+            }
+        }
+        return "Sorry, I do not know how to answer that";
+    }
+
+    private ArrayList<Slot> extractSlotsFromInput(Skill skill, String cleanedInput){
+        ArrayList<Slot> matchedSlots = new ArrayList<Slot>();
+        ArrayList<Integer> slotIndices = skill.getSlotIndex();
+        String[] splitQuestion = skill.getQuestion().split(" ");
+        for(int i = 0; i < splitQuestion.length; i++){
+            splitQuestion[i] = cleanWord(splitQuestion[i]);
+        }
+        ArrayList<String> slotNames = new ArrayList<String>();
+        for(Integer idx : slotIndices){
+            slotNames.add(splitQuestion[idx]);
+        }
+        List<Slot> slots = skill.getSlots();
+        // For each slot Location
+        for(int i = 0; i < slotIndices.size(); i++){
+            // Test for each slot from the skill
+            for(Slot slot : slots){
+                boolean contained = false;
+                // If it is the right kind of slot (slotname matches)
+                if(cleanWord(slot.getSlotName()).equals(slotNames.get(i))){
+                    contained = true;
+                    // substitute the slot content in the location
+                    splitQuestion[slotIndices.get(i)] = cleanWord(slot.getSlotContent());
+
+                    //For each word in the question up until the slot location
+                    int cc = 0;
+                    int idx = 0;
+                    while(contained && idx <= slotIndices.get(i)){
+                        for(int j = 0; j < splitQuestion[idx].length(); j++){
+                            if(cc > cleanedInput.length()-1 || cleanedInput.charAt(cc) != splitQuestion[idx].charAt(j)){
+                                contained = false;
+                                break;
+                            }
+                            cc++;
+                        }
+                        idx++;
+                    }
+                }
+                if(contained){
+                    matchedSlots.add(slot);
+                    break;
+                }
+            }
+        }
+
+
+        return matchedSlots;
+    }
+
     public ArrayList<Skill> getSkills() {
         return skills;
     }
@@ -58,7 +133,7 @@ public class SkillHandler {
         return output;
     }
 
-    public String findSkill(String input) {
+    public String findASkill(String input) {
         String cleanInput = cleanWord(input);
         HashMap<Integer, String> spellStore = new HashMap<>();
 
