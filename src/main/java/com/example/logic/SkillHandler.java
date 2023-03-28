@@ -68,13 +68,13 @@ public class SkillHandler {
     }
 
     private ArrayList<Slot> extractSlotsFromInput(Skill skill, String cleanedInput){
-        ArrayList<Slot> matchedSlots = new ArrayList<Slot>();
+        ArrayList<Slot> matchedSlots = new ArrayList<>();
         ArrayList<Integer> slotIndices = skill.getSlotIndex();
         String[] splitQuestion = skill.getQuestion().split(" ");
         for(int i = 0; i < splitQuestion.length; i++){
             splitQuestion[i] = cleanWord(splitQuestion[i]);
         }
-        ArrayList<String> slotNames = new ArrayList<String>();
+        ArrayList<String> slotNames = new ArrayList<>();
         for(Integer idx : slotIndices){
             slotNames.add(splitQuestion[idx]);
         }
