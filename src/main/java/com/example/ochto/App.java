@@ -17,7 +17,7 @@ public class App extends Application {
         BufferedReader out = new BufferedReader(new InputStreamReader(proc.getInputStream()));
         name = out.readLine();
         System.out.println(name);
-        if (!(getName().isEmpty())){
+        if (!(getName() == null)){
             FXMLLoader loader = new FXMLLoader(getClass().getResource("view1.fxml"));
             Parent root = loader.load();
             ControllerLogic controller = loader.getController();
