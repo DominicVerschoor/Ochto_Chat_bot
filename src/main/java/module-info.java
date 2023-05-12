@@ -4,6 +4,7 @@ module com.example.ochto {
     requires java.datatransfer;
     requires java.desktop;
     requires java.sql;
+    requires jython.slim;
 
 
     opens com.example.ochto to javafx.fxml;

@@ -19,6 +19,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.*;
 import javafx.scene.text.Font;
 
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -43,6 +44,8 @@ import javafx.scene.control.TextField;
 public class ControllerLogic implements Initializable {
     @FXML
     private TextField text_field;
+    @FXML
+    private App app= new App();
     @FXML
     private VBox vbox_message;
     @FXML
@@ -203,8 +206,8 @@ public class ControllerLogic implements Initializable {
         vbox.getChildren().add(hBox);
     }
 
-    public void setName(String s) {
-        addBMessage("Hi " + s.toUpperCase() + "! How can i assist you?", vbox_message);
+    public void setName(String s){
+        addBMessage("Hi "+s.toUpperCase()+"!  How can i assist you?", vbox_message);
     }
 
     @FXML
