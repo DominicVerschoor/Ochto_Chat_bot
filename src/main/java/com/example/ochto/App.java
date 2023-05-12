@@ -13,7 +13,7 @@ public class App extends Application {
     private String name;
     @Override
     public void start(Stage stage) throws IOException {
-        Process proc = Runtime.getRuntime().exec("python python/recognition.py");
+        Process proc = Runtime.getRuntime().exec("python python/camDetector.py");
         BufferedReader out = new BufferedReader(new InputStreamReader(proc.getInputStream()));
         name = out.readLine();
         System.out.println(name);
@@ -21,7 +21,7 @@ public class App extends Application {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("view1.fxml"));
             Parent root = loader.load();
             ControllerLogic controller = loader.getController();
-            controller.setName(getName());
+            controller.setName("User");
             stage.setTitle("OCTO");
             Image image = new Image("file:src/main/resources/com/example/ochto/pics/img_5.png");
             stage.getIcons().add(image);
@@ -33,7 +33,6 @@ public class App extends Application {
             stage.show();
         }
     }
-    // read the person name and pass it to the logic class
     public String getName() {
         String output = name;
         return output;
