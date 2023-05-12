@@ -27,6 +27,7 @@ public class App extends Application {
             stage.getIcons().add(image);
             stage.setResizable(false);
             Scene scene = new Scene(root);
+
             stage.setScene(scene);
             stage.centerOnScreen();
             stage.show();
