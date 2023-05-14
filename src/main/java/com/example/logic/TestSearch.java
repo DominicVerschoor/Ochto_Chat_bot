@@ -12,11 +12,11 @@ public class TestSearch {
         categories.put("Color", new HashSet<>(Arrays.asList("red", "green", "blue")));
         categories.put("Time", new HashSet<>(Arrays.asList("16am", "4pm", "noon")));
 
-        Set<String> categoryDictionary = new HashSet<>();
+        Set<String> dictionary = new HashSet<>();
         for (Map.Entry<String, Set<String>> entry : categories.entrySet()) {
             String category = entry.getKey();
             Set<String> categoryWords = entry.getValue();
-            categoryDictionary.addAll(categoryWords);
+            dictionary.addAll(categoryWords);
         }
 
         // Get user input
@@ -34,23 +34,23 @@ public class TestSearch {
         }
 
         // Check which categories are present in the user's input
-        Set<String> usedCategories = new HashSet<>();
-        for (Map.Entry<String, Set<String>> entry : categories.entrySet()) {
-            String category = entry.getKey();
-            Set<String> categoryWords = entry.getValue();
+        String[] usedCategories = new String[words.length];
+        Arrays.fill(usedCategories, "W");
+
+        for (Map.Entry<String, Set<String>> currentCategory : categories.entrySet()) {
+            String category = currentCategory.getKey();
+            Set<String> categoryWords = currentCategory.getValue();
             for (String categoryWord : categoryWords) {
-                if (containsWord(words, categoryWord, categoryDictionary)) {
-                    usedCategories.add(category);
-                    break; // No need to check other words in this category
+                int wordIndex = containsWord(words, categoryWord, dictionary);
+                if (wordIndex != -1){
+                    usedCategories[wordIndex] = category;
                 }
             }
         }
 
         // Print the categories that were used in the user's input
-        if (usedCategories.isEmpty()) {
-            System.out.println("No categories were used in the input.");
-        } else {
-            System.out.println("Categories used in the input: " + usedCategories);
+        for (String usedCategory : usedCategories) {
+            System.out.print(usedCategory + " ");
         }
     }
 
@@ -66,7 +66,7 @@ public class TestSearch {
         return word;
     }
 
-    private static boolean containsWord(String[] words, String target, Set<String> dictionary) {
+    private static int containsWord(String[] words, String target, Set<String> dictionary) {
         SpellChecker spellChecker = new SpellChecker(dictionary);
 
         for (int currentId = 0; currentId < words.length; currentId++) {
@@ -74,34 +74,28 @@ public class TestSearch {
             if (spellChecker.isCorrectlySpelled(words[currentId])) {
 
                 if (words[currentId].equals(target)) {
-                    return true;
+                    return currentId;
                 } else {
                     StringBuilder extendedWord = new StringBuilder(words[currentId]);
                     for (int adjId = currentId + 1; adjId < words.length; adjId++) {
                         extendedWord.append(words[adjId]);
                         if (extendedWord.toString().equals(target)) {
-                            return true;
+                            return currentId;
                         }
                     }
                 }
             } else {
-//                StringBuilder sentence = new StringBuilder(Arrays.toString(words));
-//                for (String word : words) {
-//                    sentence.append(word);
-//                }
-
-
                 List<String> suggestions = spellChecker.getSuggestions(words[currentId]);
                 if (!suggestions.isEmpty()) {
                     for (String suggestion : suggestions) {
                         if (suggestion.equals(target)) {
-                            return true;
+                            return currentId;
                         } else {
                             StringBuilder extendedWord = new StringBuilder(suggestion);
                             for (int adjId = currentId + 1; adjId < words.length; adjId++) {
                                 extendedWord.append(words[adjId]);
                                 if (extendedWord.toString().equals(target)) {
-                                    return true;
+                                    return currentId;
                                 }
                             }
                         }
@@ -110,6 +104,6 @@ public class TestSearch {
             }
         }
 
-        return false;
+        return -1;
     }
 }

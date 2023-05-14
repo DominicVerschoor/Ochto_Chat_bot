@@ -19,21 +19,25 @@ public class SpellChecker {
     public List<String> getSuggestions(String word) {
         List<String> suggestions = new ArrayList<>();
 
-        // Check Levenshtein distance
-        int minDistance = Integer.MAX_VALUE;
-        for (String dictWord : dictionary) {
-            int distance = getLevenshteinDistance(word, dictWord);
-            if (distance < minDistance) {
-                minDistance = distance;
-                suggestions.clear();
-                suggestions.add(dictWord);
-            } else if (distance == minDistance) {
-                suggestions.add(dictWord);
+        // If its a single letter word dont check
+        if (!(word.length() < 3 && word.matches("[a-zA-Z]+"))) {
+
+            // Check Levenshtein distance
+            int minDistance = Integer.MAX_VALUE;
+            for (String dictWord : dictionary) {
+                int distance = getLevenshteinDistance(word, dictWord);
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    suggestions.clear();
+                    suggestions.add(dictWord);
+                } else if (distance == minDistance) {
+                    suggestions.add(dictWord);
+                }
             }
+            if (minDistance > 3){suggestions.clear();}
+//            System.out.println(minDistance);
         }
 
-        System.out.println(minDistance);
-        if (minDistance > 3){suggestions.clear();}
         return suggestions;
     }
 
