@@ -14,6 +14,13 @@ import java.util.Map;
 
 public class CSVHandler {
 
+    public static void main(String[] args) {
+        File CFG = new File("Questions/CFG.csv");
+        CSVHandler handler = new CSVHandler();
+        HashMap<String, ArrayList<String>> map = handler.getRules(CFG);
+        System.out.println("end");
+    }
+
     /**
      * This method will translate a skill into CSV-representation and saves it to a file
      *
@@ -120,6 +127,33 @@ public class CSVHandler {
         }
         result.setSlots(slotList);
         result.setActions(actions);
+        return result;
+    }
+
+    public static HashMap<String, ArrayList<String>> getRules(File fileName){
+        HashMap<String, ArrayList<String>> result = new HashMap<String, ArrayList<String>>();
+        List<String> lines = new ArrayList<>();
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(fileName));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                lines.add(line);
+            }
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        for(String line : lines){
+            String[] words = line.split(" ");
+            String cleanLine = line.substring(6+words[1].length(), line.length());
+            if(words[0].equalsIgnoreCase("Rule")){
+                String[] entries = cleanLine.split("[|]");
+                ArrayList<String> newEntries = new ArrayList<String>(Arrays.asList(entries));
+                //TODO Postprocess the entries arraylist to replace non-slots with W and remove spaces
+                result.put(words[1].substring(1, words[1].length()-1), newEntries);
+            }
+        }
         return result;
     }
 
