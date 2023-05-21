@@ -59,7 +59,6 @@ public class TestSearch {
             }
             
         }
-
         int replaceCounter = 0;
         for (int i = 0; i < words.length; i++){
             if (markedWords[i] == "NULL"){
@@ -70,19 +69,52 @@ public class TestSearch {
                 replaceCounter++;
             }
         }
+
         int newlength = words.length-replaceCounter;
         String[] filteredWords = new String[newlength];
         String[] filteredCategories = new String[newlength];
 
+        int replaceCounter2 = 0;
         for (int i = 0; i < newlength; i++){
-            filteredWords[i] = words[i];
-            filteredCategories[i] = usedCategories[i];
+            int index = i - replaceCounter2;
+            if (usedCategories[i] != "W" && usedCategories[i] != "DONE"){
+                filteredWords[i - replaceCounter2] = words[i];
+                filteredCategories[i - replaceCounter2] = usedCategories[i];
+            }
+            else if (usedCategories[i] != "DONE"){
+                usedCategories[i] = "DONE";
+                filteredCategories[i - replaceCounter2] = "W";
+                filteredWords[i - replaceCounter2] = words[i];
+                if (i != newlength-1){
+                    for (int j = i+1; j < newlength; j++){
+                        if (usedCategories[j] == "W"){
+                            usedCategories[j] = "DONE";
+                            replaceCounter2++;
+                            filteredWords[j-replaceCounter2] = filteredWords[j-replaceCounter2] + " " + words[j];
+                        } else break;
+                    }
+                }
+            }
         }
 
-        for (String category : filteredCategories) {
-            System.out.print(category + " ");
+        int newnewlength = newlength - replaceCounter2;
+        String[] finalWords = new String[newnewlength];
+        String[] finalCategories = new String[newnewlength];
+        for (int i = 0; i < newnewlength; i++){
+            finalWords[i] = filteredWords[i];
+            finalCategories[i] = filteredCategories[i];
         }
-        System.out.println();   
+
+        
+        for (String word: finalWords){
+            System.out.print(word + " ");
+        }
+        System.out.println();
+        
+        for (String cat : finalCategories){
+            System.out.print(cat + " ");
+        }
+        System.out.println();
     }
 
     private static String normalizeWord(String word) {
@@ -104,7 +136,7 @@ public class TestSearch {
         for (int currentId = 0; currentId < words.length; currentId++) {
 
 
-            if (markedWords[currentId] != "Marked"){
+            if (markedWords[currentId] != "WordExtention"){
                 // Check whether current word is in the dictionary and spelled correctly
                 if (spellChecker.isCorrectlySpelled(words[currentId])) {
 
@@ -122,14 +154,14 @@ public class TestSearch {
                 } else if (currentId != words.length-1 && spellChecker.isCorrectlySpelled(words[currentId] + words[currentId + 1])){
                     String wordsCombined = words[currentId] + words[currentId + 1];
                     if (wordsCombined.equals(target)) {
-                        markedWords[currentId + 1] = "Marked";
+                        markedWords[currentId + 1] = "WordExtention";
                         return currentId;
                     } else {
                         StringBuilder extendedWord = new StringBuilder(wordsCombined);
                         for (int adjId = currentId + 1; adjId < words.length; adjId++) {
                             extendedWord.append(words[adjId]);
                             if (extendedWord.toString().equals(target)) {
-                                markedWords[currentId + 1] = "Marked";
+                                markedWords[currentId + 1] = "WordExtention";
                                 return currentId;
                             }
                         }
