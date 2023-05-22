@@ -14,13 +14,6 @@ import java.util.Map;
 
 public class CSVHandler {
 
-    public static void main(String[] args) {
-        File CFG = new File("Questions/CFG.csv");
-        CSVHandler handler = new CSVHandler();
-        HashMap<String, ArrayList<String>> map = handler.getRules(CFG);
-        System.out.println("end");
-    }
-
     /**
      * This method will translate a skill into CSV-representation and saves it to a file
      *
@@ -150,18 +143,34 @@ public class CSVHandler {
             if(words[0].equalsIgnoreCase("Rule")){
                 String[] entries = cleanLine.split("[|]");
                 ArrayList<String> newEntries = new ArrayList<String>(Arrays.asList(entries));
-                //TODO Fix postprocessing
-                for(String s : newEntries){
-                    String[] entryWords = s.split(" ");
-                    for(String w : entryWords){
-                        if(w.charAt(0) == '<'){
-                            w = w.substring(1, w.length()-1);
+                for(int i = 0; i < newEntries.size(); i++){
+                    if(newEntries.get(i).charAt(0) == ' '){
+                        newEntries.set(i, newEntries.get(i).substring(1, newEntries.get(i).length()));
+                    }
+                    if(newEntries.get(i).charAt(newEntries.get(i).length()-1) == ' '){
+                        newEntries.set(i, newEntries.get(i).substring(0, newEntries.get(i).length()-1));
+                    }
+                }
+                for(int i = 0; i< newEntries.size(); i++){
+                    String[] entryWords = newEntries.get(i).split(" ");
+                    for(int j = 0; j < entryWords.length; j++){
+                        String word = entryWords[j].replaceAll("\\s", "");
+                        if(word.charAt(0) == '<'){
+                            word = word.substring(1, word.length()-1);
                         }
                         else{
-                            w = "W";
+                            word = "W";
+                        }
+                        entryWords[j] = word;
+                    }
+                    ArrayList<String> temp = new ArrayList<String>(Arrays.asList(entryWords));
+                    for(int j = 0; j < temp.size()-1; j++){
+                        if(temp.get(j).equalsIgnoreCase("W") && temp.get(j+1).equalsIgnoreCase("W")){
+                            temp.remove(j);
                         }
                     }
-                    s = String.join("", entryWords);
+                    entryWords = temp.toArray(new String[temp.size()]);
+                    newEntries.set(i, String.join("", entryWords));
                 }
                 result.put(words[1].substring(1, words[1].length()-1), newEntries);
             }
