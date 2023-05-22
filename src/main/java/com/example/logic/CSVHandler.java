@@ -150,7 +150,19 @@ public class CSVHandler {
             if(words[0].equalsIgnoreCase("Rule")){
                 String[] entries = cleanLine.split("[|]");
                 ArrayList<String> newEntries = new ArrayList<String>(Arrays.asList(entries));
-                //TODO Postprocess the entries arraylist to replace non-slots with W and remove spaces
+                //TODO Fix postprocessing
+                for(String s : newEntries){
+                    String[] entryWords = s.split(" ");
+                    for(String w : entryWords){
+                        if(w.charAt(0) == '<'){
+                            w = w.substring(1, w.length()-1);
+                        }
+                        else{
+                            w = "W";
+                        }
+                    }
+                    s = String.join("", entryWords);
+                }
                 result.put(words[1].substring(1, words[1].length()-1), newEntries);
             }
         }
