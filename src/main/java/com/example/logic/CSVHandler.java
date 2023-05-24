@@ -14,6 +14,12 @@ import java.util.Map;
 
 public class CSVHandler {
 
+    public static void main(String[] args) {
+        CSVHandler handler = new CSVHandler();
+        HashMap<String, ArrayList<String>> map = CSVHandler.getRules(new File("Questions/CFG.csv"));
+        System.out.println("Done");
+    }
+
     /**
      * This method will translate a skill into CSV-representation and saves it to a file
      *
@@ -153,15 +159,17 @@ public class CSVHandler {
                 }
                 for(int i = 0; i< newEntries.size(); i++){
                     String[] entryWords = newEntries.get(i).split(" ");
-                    for(int j = 0; j < entryWords.length; j++){
-                        String word = entryWords[j].replaceAll("\\s", "");
-                        if(word.charAt(0) == '<'){
-                            word = word.substring(1, word.length()-1);
+                    if(entryWords.length > 1 || entryWords[0].charAt(0) == '<'){
+                        for(int j = 0; j < entryWords.length; j++){
+                            String word = entryWords[j].replaceAll("\\s", "");
+                            if(word.charAt(0) == '<'){
+                                word = word.substring(1, word.length()-1);
+                            }
+                            else{
+                                word = "W";
+                            }
+                            entryWords[j] = word;
                         }
-                        else{
-                            word = "W";
-                        }
-                        entryWords[j] = word;
                     }
                     ArrayList<String> temp = new ArrayList<String>(Arrays.asList(entryWords));
                     for(int j = 0; j < temp.size()-1; j++){
