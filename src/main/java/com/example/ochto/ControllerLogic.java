@@ -1,6 +1,8 @@
 package com.example.ochto;
 
 import com.example.logic.SkillHandler;
+
+import com.example.logic.GetCategories;
 import com.example.logic.Skill;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -22,10 +24,14 @@ import javafx.scene.text.Font;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.*;
 
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -122,11 +128,38 @@ public class ControllerLogic implements Initializable {
     @FXML
     public void handle(ActionEvent newActionEvent) {
         message = text_field.getText();
+
+
+
         addUMessage(message, vbox_message);
 
         if (!message.isEmpty()) {
             float start = System.currentTimeMillis();
-            message = skillHandler.findSkill(message);
+
+            //message = skillHandler.findSkill(message);
+            Map<String, Set<String>> categories = new HashMap<>();
+            categories.put("Fruit", new HashSet<>(Arrays.asList("apple", "banana", "orange")));
+            categories.put("Color", new HashSet<>(Arrays.asList("red", "green", "blue")));
+            categories.put("Time", new HashSet<>(Arrays.asList("16am", "4pm", "noon")));
+            
+            String[] tempCategories = GetCategories.Search(message, categories);
+            ArrayList<String> finalCategories = new ArrayList<>(Arrays.asList(tempCategories));
+            ArrayList<String> entries = GetCategories.getEntries();
+
+            for (int i = 0; i < finalCategories.size(); i++){
+                System.out.print(finalCategories.get(i) + " ");
+            }
+
+            System.out.println();
+            for (int i = 0; i < entries.size(); i++){
+                System.out.print(entries.get(i) + " ");
+            }
+
+
+            //CYK cyk = new CYK(finalCategories, )
+
+
+
             float end = System.currentTimeMillis();
             System.out.println("Time in ms: " + (end-start));
 
