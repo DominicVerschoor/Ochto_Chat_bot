@@ -194,4 +194,8 @@ public class CYK {
         }
         return terminals;
     }
+
+    public String getFinalValue() {
+        return table.get(table.size() - 1).get(0);
+    }
 }
