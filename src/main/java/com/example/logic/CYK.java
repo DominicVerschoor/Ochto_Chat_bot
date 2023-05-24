@@ -58,7 +58,7 @@ public class CYK {
         testRules.put(ninthKey, ninthValue);
         testRules.put(tenthKey, tenthValue);
 
-        ArrayList<String> input = new ArrayList<>(Arrays.asList("W", "W", "W", "W", "W", "Day", "Time"));
+        ArrayList<String> input = new ArrayList<>(Arrays.asList("W", "Day", "Time"));
         CYK cyk = new CYK(input, testRules);
     }
     public CYK(ArrayList<String> input, HashMap<String, ArrayList<String>> rules/*, ArrayList<String> orderOfRules*/)
@@ -77,7 +77,7 @@ public class CYK {
         ArrayList<String> row =  new ArrayList<>();
         //i = how many elements we should remove  on the row
         row  = generateLastRow(row, input, this.rules);
-        table.add(row);
+        table.add(input);
         for (int i = 1; i < input.size(); i++) {
             ArrayList<String> currentrow =  new ArrayList<>();
             //i = how many elements we should remove  on the row
