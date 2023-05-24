@@ -47,7 +47,8 @@ public class GetCategories {
         // Check which categories are present in the user's input
         String[] usedCategories = new String[words.length];
         Arrays.fill(usedCategories, "W");
-        
+
+        entries = new ArrayList<>();
 
         for (Map.Entry<String, Set<String>> currentCategory : categories.entrySet()) {
             String category = currentCategory.getKey();
@@ -109,15 +110,7 @@ public class GetCategories {
         }
 
         
-        for (String word: finalWords){
-            System.out.print(word + " ");
-        }
-        System.out.println();
-        
-        for (String cat : finalCategories){
-            System.out.print(cat + " ");
-        }
-        System.out.println();
+
 
         return finalCategories;
     }
