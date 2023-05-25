@@ -8,7 +8,7 @@ public class SkillHandler {
 
     public SkillHandler() {
         skills = new ArrayList<>();
-        loadSkills();
+//        loadSkills();
     }
 
     public String findSkill(String input){

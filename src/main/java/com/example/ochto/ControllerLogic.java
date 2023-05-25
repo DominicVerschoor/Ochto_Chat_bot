@@ -301,8 +301,6 @@ public class ControllerLogic implements Initializable {
                     Insets.EMPTY)));
         }
     }
-
-
 }
 
 
