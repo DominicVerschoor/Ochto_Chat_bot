@@ -61,8 +61,9 @@ public class ControllerSkillOverview implements Initializable {
         // Loop over each file in the folder and read the first line
         for (File file : fileList) {
             try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-                String firstLine = br.readLine();
-                allFiles.put(firstLine, file);
+                br.readLine();
+                String secondLine = br.readLine();
+                allFiles.put(secondLine, file);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -74,7 +75,7 @@ public class ControllerSkillOverview implements Initializable {
     public void createQuestionList2() {
         HashMap<String, File> allQuestions = getAllQuestions(); // <Qs, path>
 
-        Text explanation = new Text("Double Click on a Question to Edit it");
+        Text explanation = new Text("Double Click on an Action to Edit it");
         explanation.setFont(Font.font("verdana", FontWeight.BLACK, FontPosture.REGULAR, 21));
         mainVBox.getChildren().addAll(explanation);
         Text line = new Text("________________________________________________________________________________________________________________");

@@ -75,7 +75,6 @@ public class ControllerLogic implements Initializable {
     private Image light_theme_background = new Image("file:src/main/resources/com/example/ochto/pics/White_full.png");
     @FXML
     private ImageView main_image_view = new ImageView();
-    private SkillHandler skillHandler = new SkillHandler();
     @FXML
     private Button editButton;
     private Button skillButton;
@@ -302,11 +301,6 @@ public class ControllerLogic implements Initializable {
                     Insets.EMPTY)));
         }
     }
-
-    public void reloadAllSkills(){
-        skillHandler = new SkillHandler();
-    }
-
 }
 
 

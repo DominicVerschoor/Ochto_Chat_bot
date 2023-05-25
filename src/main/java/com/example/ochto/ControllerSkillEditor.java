@@ -4,37 +4,29 @@ import java.io.*;
 import java.net.URL;
 import java.util.*;
 
-import com.example.logic.CSVHandler;
-import com.example.logic.Skill;
-import com.example.logic.Slot;
+import com.example.logic.CSVReader;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.geometry.Insets;
-
-import com.example.ochto.ControllerSkillOverview;
 
 public class ControllerSkillEditor implements Initializable {
 
     @FXML
-    private VBox actionVBox;
+    private VBox responseVBox;
     @FXML
     private Label label;
     @FXML
@@ -42,7 +34,7 @@ public class ControllerSkillEditor implements Initializable {
     @FXML
     private Label label2;
     @FXML
-    private VBox questionVBox1;
+    private VBox actionVBox;
     @FXML
     private ScrollPane scrollPane1;
     @FXML
@@ -50,42 +42,29 @@ public class ControllerSkillEditor implements Initializable {
     @FXML
     private ScrollPane scrollPane12;
     @FXML
-    private VBox slotVBox;
+    private VBox ruleVBox;
 
-    public ArrayList<ArrayList<ArrayList<String>>> allQuestions;
-    public ArrayList<ArrayList<String>> currentQuestion;
-    public String previousQuestion;
-    private Button editButton;
+    public CSVReader reader;
     @FXML
     private Button saveButton;
-    private final Stage stage5 = new Stage();
     private final Stage stage7 = new Stage();
-
-    public int innerJ;
-    public ControllerSkillOverview overview;
-    private Skill skill;
-    private String fileName;
-    private String newQuestion;
-    private ArrayList<String> newSlots = new ArrayList<>();
-    private ArrayList<String> newAction = new ArrayList<>();
     private ControllerLogic logic = new ControllerLogic();
+    private String filename;
 
+    private String[] updates;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        questionVBox1.getChildren().clear();
-        slotVBox.getChildren().clear();
-        actionVBox.getChildren().clear();
         saveButton = new Button();
 
-        newQuestion = skill.getQuestion();
-        questionTable();
-        slotActionTable();
+        actionTable();
+        ruleTable();
+        responseTable();
     }
 
-    public void questionTable() {
-        String question = skill.getQuestion();
-        Text input = new Text(question);
+    public void actionTable() {
+        String action = reader.getAction();
+        Text input = new Text(action);
         input.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 15));
 
         input.setOnMouseClicked(event -> {
@@ -104,34 +83,30 @@ public class ControllerSkillEditor implements Initializable {
                 // set an action listener on the TextField to handle the text input
                 textField.setOnAction(actionEvent -> {
                     input.setText(textField.getText());
-                    skill.setQuestion(textField.getText());
+                    updates[1] = "Rule" + textField.getText();
                     parent.getChildren().set(parent.getChildren().indexOf(textField), input);
                 });
             }
         });
 
-        questionVBox1.getChildren().addAll(input);
+        actionVBox.getChildren().addAll(input);
     }
 
-    public void slotActionTable() {
-        HashMap<String, String> hashAns = skill.getActions();
-        Set<String> keys = hashAns.keySet();
+    public void ruleTable() {
+        ArrayList<String> rules = reader.getRules();
 
-        for (String key : keys) {
-            Text slotInput = new Text(skill.translateKeys(key));
-            Text actionInput = new Text(hashAns.get(key) + "\n");
+        for (String currentRule: rules) {
+            Text ruleInput = new Text(currentRule);
+            ruleInput.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 15));
 
-            slotInput.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 15));
-            actionInput.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 15));
-
-            slotInput.setOnMouseClicked(event -> {
+            ruleInput.setOnMouseClicked(event -> {
                 if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
                     // create a new TextField and set its initial value to the Text object's text
-                    TextField textField = new TextField(slotInput.getText());
+                    TextField textField = new TextField(ruleInput.getText());
 
                     // replace the Text object with the TextField in the VBox
-                    VBox parent = (VBox) slotInput.getParent();
-                    parent.getChildren().set(parent.getChildren().indexOf(slotInput), textField);
+                    VBox parent = (VBox) ruleInput.getParent();
+                    parent.getChildren().set(parent.getChildren().indexOf(ruleInput), textField);
 
                     // request focus and select all text in the TextField
                     textField.requestFocus();
@@ -139,31 +114,38 @@ public class ControllerSkillEditor implements Initializable {
 
                     // set an action listener on the TextField to handle the text input
                     textField.setOnAction(actionEvent -> {
-                        slotInput.setText(textField.getText() + "\n");
-                        ArrayList<String> tempText = seperateSlots(textField.getText());
-                        List<Slot> tempSlots = skill.untralateKeys(key);
 
-                        if (tempSlots.size() != tempText.size()) {
-                            System.out.println("fuck off, do it right");
-                        } else {
-                            for (int i = 0; i < tempSlots.size(); i++) {
-                                tempSlots.get(i).setBoth(tempText.get(i));
+                        for (int i = 2; i < updates.length; i++) {
+                            if (updates[i].substring(4).equals(ruleInput.getText())){
+                                updates[i] = "Rule" + textField.getText();
                             }
                         }
 
-                        parent.getChildren().set(parent.getChildren().indexOf(textField), slotInput);
+                        ruleInput.setText(textField.getText() + "\n");
+
+                        parent.getChildren().set(parent.getChildren().indexOf(textField), ruleInput);
                     });
                 }
             });
+            ruleVBox.getChildren().addAll(ruleInput);
+        }
+    }
 
-            actionInput.setOnMouseClicked(event -> {
+    public void responseTable() {
+        ArrayList<String> responses = reader.getResponses();
+
+        for (String currentResponse: responses) {
+            Text responseInput = new Text(currentResponse);
+            responseInput.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 15));
+
+            responseInput.setOnMouseClicked(event -> {
                 if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
                     // create a new TextField and set its initial value to the Text object's text
-                    TextField textField = new TextField(actionInput.getText());
+                    TextField textField = new TextField(responseInput.getText());
 
                     // replace the Text object with the TextField in the VBox
-                    VBox parent = (VBox) actionInput.getParent();
-                    parent.getChildren().set(parent.getChildren().indexOf(actionInput), textField);
+                    VBox parent = (VBox) responseInput.getParent();
+                    parent.getChildren().set(parent.getChildren().indexOf(responseInput), textField);
 
                     // request focus and select all text in the TextField
                     textField.requestFocus();
@@ -171,29 +153,49 @@ public class ControllerSkillEditor implements Initializable {
 
                     // set an action listener on the TextField to handle the text input
                     textField.setOnAction(actionEvent -> {
-                        actionInput.setText(textField.getText() + "\n");
-                        skill.setActions(key, textField.getText());
 
-                        parent.getChildren().set(parent.getChildren().indexOf(textField), actionInput);
+                        for (int i = 2; i < updates.length; i++) {
+                            if (updates[i].substring(6).equals(responseInput.getText())){
+                                updates[i] = "Action" + textField.getText();
+                            }
+                        }
+
+                        responseInput.setText(textField.getText() + "\n");
+
+                        parent.getChildren().set(parent.getChildren().indexOf(textField), responseInput);
                     });
                 }
             });
-
-            slotVBox.getChildren().addAll(slotInput);
-            actionVBox.getChildren().addAll(actionInput);
+            responseVBox.getChildren().addAll(responseInput);
         }
     }
 
-    public ArrayList<String> seperateSlots(String slots) {
-        String[] currentSlots = slots.split("<");
-        ArrayList<String> output = new ArrayList<>(Arrays.asList(currentSlots).subList(1, currentSlots.length));
-        output.replaceAll(s -> "<" + s);
-        return output;
+    public void createCSV(String[] updates) {
+        String fileName = "Questions/" + filename;
+
+        StringBuilder output = new StringBuilder();
+
+        for (String currentUpdate: updates) {
+            output.append(currentUpdate).append("\n");
+        }
+
+        try {
+            FileWriter fw = new FileWriter(fileName);
+            BufferedWriter bw = new BufferedWriter(fw);
+            PrintWriter pw = new PrintWriter(bw);
+
+            pw.write(String.valueOf(output));
+
+            pw.flush();
+            pw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
     void onSaveButton(ActionEvent event) {
-        CSVHandler.writeSkill(skill, fileName);
+        createCSV(updates);
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("view4.fxml"));
@@ -204,7 +206,7 @@ public class ControllerSkillEditor implements Initializable {
             controller.setLogic(logic);
 
             Scene scene = new Scene(root);
-            Stage stage = (Stage) actionVBox.getScene().getWindow();
+            Stage stage = (Stage) responseVBox.getScene().getWindow();
             stage.close();
 
             stage7.setScene(scene);
@@ -222,7 +224,8 @@ public class ControllerSkillEditor implements Initializable {
     }
 
     public void setFile(File filePath) {
-        fileName = filePath.getName();
-        skill = CSVHandler.readSkill(filePath);
+        filename = filePath.getName();
+        reader = new CSVReader(filePath);
+        updates = reader.getEverything();
     }
 }

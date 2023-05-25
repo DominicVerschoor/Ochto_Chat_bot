@@ -4,56 +4,55 @@ import java.io.*;
 import java.net.URL;
 import java.util.*;
 
-import com.example.logic.Slot;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.geometry.Insets;
+import javafx.scene.paint.Color;
 
-import com.example.ochto.ControllerLogic;
 import javafx.stage.Stage;
 
 public class ControllerSkillAdder implements Initializable {
 
     @FXML
-    private Button slotActionButton;
-    @FXML
     private VBox mainVBox;
     @FXML
-    private Button questionButton;
+    private Button actionButton;
+    @FXML
+    private Button ruleButton;
+    @FXML
+    private Button responseButton;
     @FXML
     private Button saveButton;
     @FXML
     private ScrollPane scrollPane1;
     @FXML
-    private TextField question_textfield;
+    private TextField actionTextfield;
     @FXML
-    private TextField action_textfield;
+    private TextField ruleTextfield;
     @FXML
-    private TextField slot_textfield;
+    private TextField responseTextfield;
 
-    public ArrayList<ArrayList<ArrayList<String>>> allQuestions;
-    public ArrayList<ArrayList<String>> currentQuestion;
-    public ArrayList<String> question;
-    public ArrayList<String> slots;
-    public ArrayList<String> actions;
+    public ArrayList<ArrayList<ArrayList<String>>> allActions;
+    public ArrayList<ArrayList<String>> currentAction;
+    public ArrayList<String> action;
+    public ArrayList<String> rules;
+    public ArrayList<String> responses;
 
     private HBox currentHBox;
     private HBox lineHBox;
-    private VBox currentQuestionVBox;
-    private VBox currentActionVBox;
-    private VBox currentSlotVBox;
+    private VBox currentActionVbox;
+    private VBox currentRuleResponseVbox;
+    private VBox ruleVbox;
+    private VBox responseVbox;
     private ControllerLogic logic = new ControllerLogic();
 
-    public ArrayList<String> getAllQuestions() {
+    public ArrayList<String> getAllActions() {
         String folderPath = "Questions";
         ArrayList<String> allQs = new ArrayList<>();
 
@@ -64,8 +63,9 @@ public class ControllerSkillAdder implements Initializable {
         // Loop over each file in the folder and read the first line
         for (File file : fileList) {
             try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-                String firstLine = br.readLine();
-                allQs.add(firstLine);
+                br.readLine();
+                String secondLine = br.readLine();
+                allQs.add(secondLine);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -76,14 +76,14 @@ public class ControllerSkillAdder implements Initializable {
 
 
     @FXML
-    void onQuestionButton(ActionEvent event) {
-        ArrayList<String> allQs = getAllQuestions();
-        String input = question_textfield.getText();
+    void onActionButton(ActionEvent event) {
+        ArrayList<String> allQs = getAllActions();
+        String input = actionTextfield.getText();
 
         for (String qs: allQs) {
             if (input.equalsIgnoreCase(qs)){
                 input = "";
-                System.out.println("Question already exists");
+                System.out.println("Action already exists");
             }
         }
 
@@ -96,147 +96,147 @@ public class ControllerSkillAdder implements Initializable {
             Text line = new Text("____________________________________________________________________________________________________________________________________________________________________________________");
             lineHBox.getChildren().addAll(line);
 
-            currentQuestionVBox = new VBox();
-            currentQuestionVBox.setPrefWidth(300);
-            currentActionVBox = new VBox();
-            currentActionVBox.setPrefWidth(300);
-            currentSlotVBox = new VBox();
-            currentSlotVBox.setPrefWidth(300);
-            currentHBox.getChildren().addAll(currentQuestionVBox);
-            currentHBox.getChildren().addAll(currentSlotVBox);
-            currentHBox.getChildren().addAll(currentActionVBox);
+            currentActionVbox = new VBox();
+            currentActionVbox.setPrefWidth(300);
+            currentRuleResponseVbox = new VBox();
+            currentRuleResponseVbox.setPrefWidth(600);
+            ruleVbox = new VBox();
+            ruleVbox.setPrefWidth(600);
+            responseVbox = new VBox();
+            responseVbox.setPrefWidth(600);
+
+            currentHBox.getChildren().addAll(currentActionVbox);
+            currentHBox.getChildren().addAll(currentRuleResponseVbox);
+
+            currentRuleResponseVbox.getChildren().addAll(ruleVbox);
+            currentRuleResponseVbox.getChildren().addAll(responseVbox);
 
             Text text = new Text(input);
-            currentQuestionVBox.getChildren().addAll(text);
+            currentActionVbox.getChildren().addAll(text);
 
-            currentQuestion = new ArrayList<>();
-            question = new ArrayList<>();
-            actions = new ArrayList<>();
-            slots = new ArrayList<>();
-            question.add(input);
-            currentQuestion.add(question);
-            currentQuestion.add(slots);
-            currentQuestion.add(actions);
-            allQuestions.add(currentQuestion);
+            Text ruleText = new Text("RULES:");
+            ruleText.setFill(Color.BLUE);
+            Text responseText = new Text("\nRESPONSES:");
+            responseText.setFill(Color.BLUE);
 
-            question_textfield.clear();
+            ruleVbox.getChildren().addAll(ruleText);
+            responseVbox.getChildren().addAll(responseText);
+
+            currentAction = new ArrayList<>();
+            action = new ArrayList<>();
+            responses = new ArrayList<>();
+            rules = new ArrayList<>();
+            action.add(input);
+            currentAction.add(action);
+            currentAction.add(rules);
+            currentAction.add(responses);
+            allActions.add(currentAction);
+
+            actionTextfield.clear();
         } else {
             System.out.println("Input is Empty");
         }
     }
 
     @FXML
-    void onSLotActionButton(ActionEvent event) {
-        if (allQuestions.isEmpty()) {
-            System.out.println("Enter a Question first");
+    void onRuleButton(ActionEvent event) {
+        if (allActions.isEmpty()) {
+            System.out.println("Enter an action first");
         } else {
-            String slotInput = slot_textfield.getText();
-            String actionInput = action_textfield.getText();
-            if (!slotInput.isEmpty() && !actionInput.isEmpty()) {
-                Text slotText = new Text(slotInput);
-                currentSlotVBox.getChildren().addAll(slotText);
-                slots.add(slotInput);
-                slot_textfield.clear();
+            String ruleInput = ruleTextfield.getText();
+            if (!ruleInput.isEmpty()) {
+                Text ruleText = new Text(ruleInput);
+                ruleVbox.getChildren().addAll(ruleText);
+                rules.add(ruleInput);
+                ruleTextfield.clear();
 
-                Text actionText = new Text(actionInput);
-                currentActionVBox.getChildren().addAll(actionText);
-                actions.add(actionInput);
-                action_textfield.clear();
-
-            } else if (!slotInput.isEmpty() && actionInput.isEmpty()) {
-                System.out.println("Action Input is Empty");
-            } else if (slotInput.isEmpty() && !actionInput.isEmpty()) {
-                System.out.println("Slot Input is Empty");
             } else {
-                System.out.println("Slot and Action Inputs are Empty");
+                System.out.println("Rule Inputs are Empty");
+            }
+        }
+    }
+
+    @FXML
+    void onResponseButton(ActionEvent event) {
+        if (allActions.isEmpty()) {
+            System.out.println("Enter an action first");
+        } else {
+            String responseInput = responseTextfield.getText();
+            if (!responseInput.isEmpty()) {
+                Text responseText = new Text(responseInput);
+                responseVbox.getChildren().addAll(responseText);
+                responses.add(responseInput);
+                responseTextfield.clear();
+
+            } else {
+                System.out.println("Response Inputs are Empty");
             }
         }
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        allQuestions = new ArrayList<>();
+        allActions = new ArrayList<>();
         currentHBox = new HBox();
         mainVBox.getChildren().add(currentHBox);
 
-        currentQuestionVBox = new VBox();
-        currentQuestionVBox.setPrefWidth(300);
-        currentActionVBox = new VBox();
-        currentActionVBox.setPrefWidth(300);
-        currentSlotVBox = new VBox();
-        currentSlotVBox.setPrefWidth(300);
-        currentHBox.getChildren().addAll(currentQuestionVBox);
-        currentHBox.getChildren().addAll(currentSlotVBox);
-        currentHBox.getChildren().addAll(currentActionVBox);
+        currentActionVbox = new VBox();
+        currentActionVbox.setPrefWidth(300);
+        currentRuleResponseVbox = new VBox();
+        currentRuleResponseVbox.setPrefWidth(600);
+        ruleVbox = new VBox();
+        ruleVbox.setPrefWidth(600);
+        responseVbox = new VBox();
+        responseVbox.setPrefWidth(600);
 
-        Text questionText = new Text("What lecture do we have on <DAY> at <TIME>?");
-        currentQuestionVBox.getChildren().addAll(questionText);
-        Text slotText1 = new Text("<DAY> Monday <TIME> 11:00");
-        currentSlotVBox.getChildren().addAll(slotText1);
-        Text slotText2 = new Text("<DAY> Tuesday <TIME> 13:00");
-        currentSlotVBox.getChildren().addAll(slotText2);
-        Text actionText1 = new Text("Mathematical Modelling");
-        currentActionVBox.getChildren().addAll(actionText1);
-        Text actionText2 = new Text("Theoretical Computer Science");
-        currentActionVBox.getChildren().addAll(actionText2);
+        currentRuleResponseVbox.getChildren().addAll(ruleVbox);
+        currentRuleResponseVbox.getChildren().addAll(responseVbox);
+
+        currentHBox.getChildren().addAll(currentActionVbox);
+        currentHBox.getChildren().addAll(currentRuleResponseVbox);
+
+        Text ruleText = new Text("RULES:");
+        ruleText.setFill(Color.BLUE);
+        Text responseText = new Text("\nRESPONSES:");
+        responseText.setFill(Color.BLUE);
+
+        Text actionText = new Text("<LOCATION> | <SCHEDULE>");
+        currentActionVbox.getChildren().addAll(actionText);
+        Text ruleText1 = new Text("<LOCATION> Where is <ROOM> | Where is <ROOM> located");
+        ruleVbox.getChildren().addAll(ruleText, ruleText1);
+        Text ruleText2 = new Text("<ROOM> DeepSpace | SpaceBox");
+        ruleVbox.getChildren().addAll(ruleText2);
+        Text responseText1 = new Text("<LOCATION> * <ROOM> DeepSpace DeepSpace is the first room after the entrance");
+        responseVbox.getChildren().addAll(responseText ,responseText1);
+        Text responseText2 = new Text("<LOCATION> * <ROOM> SpaceBox SpaceBox is on the first floor");
+        responseVbox.getChildren().addAll(responseText2);
     }
 
     @FXML
     void onSaveButton(ActionEvent event) {
-        for (ArrayList<ArrayList<String>> currQs : allQuestions) {
+        for (ArrayList<ArrayList<String>> currQs : allActions) {
             createCSV(currQs);
         }
 
-        logic.reloadAllSkills();
         Stage stage = (Stage) saveButton.getScene().getWindow();
         stage.close();
     }
 
-    public ArrayList<String> seperateSlots(ArrayList<String> slots) {
-        ArrayList<String> output = new ArrayList<>();
-        for (String slot : slots) {
-            String[] currentSlots = slot.split("<");
-
-            output.addAll(Arrays.asList(currentSlots).subList(1, currentSlots.length));
-        }
-        Collections.sort(output);
-        output.replaceAll(s -> "<" + s);
-
-        return output;
-    }
-
-    public ArrayList<String> seperateSlots(String slots) {
-        String[] currentSlots = slots.split("<");
-        ArrayList<String> output = new ArrayList<>(Arrays.asList(currentSlots).subList(1, currentSlots.length));
-        //<s1> s1
-        output.replaceAll(s -> "<" + s);
-        return output;
-    }
-
-    public void createCSV(ArrayList<ArrayList<String>> currentQuestion) {
+    public void createCSV(ArrayList<ArrayList<String>> currentAction) {
         String fileName = "Questions/Skill" + (fileCount());
-        String question = currentQuestion.get(0).get(0);
-        ArrayList<String> slots = seperateSlots(currentQuestion.get(1));
-        ArrayList<String> actions = currentQuestion.get(2);
+        String action = currentAction.get(0).get(0);
+        ArrayList<String> rules = currentAction.get(1);
+        ArrayList<String> responses = currentAction.get(2);
 
         StringBuilder output = new StringBuilder();
-        output.append(question).append("\n");
-        for (String currentSlot : slots) {
-            String[] split = currentSlot.split(">");
-            output.append("<").append(cleanWord(split[0])).append("> ");
-            output.append(cleanWord(split[1])).append(" ").append("\n");
+        output.append("Rule <S> <ACTION>").append("\n");
+        output.append("Rule <ACTION> ").append(action).append("\n");
+        for (String currentRule : rules) {
+            output.append("Rule ").append(currentRule).append("\n");
         }
-        for (int i = 0; i < actions.size(); i++) {
-            ArrayList<String> currentSlot = seperateSlots(currentQuestion.get(1).get(i));
-            output.append("Action ");
-            for (String slot : currentSlot) {
-                String[] split = slot.split(">");
-                output.append("<").append(cleanWord(split[0])).append("> ");
-                output.append(cleanWord(split[1])).append(" ");
-            }
-            output.append(actions.get(i)).append("\n");
+        for (String currentResponse : responses) {
+            output.append("Action ").append(currentResponse).append("\n");
         }
-
 
         try {
             FileWriter fw = new FileWriter(fileName);
