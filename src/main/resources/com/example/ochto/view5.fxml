@@ -18,7 +18,7 @@
             <Image url="@pics/img_1.png" />
          </image>
       </ImageView>
-      <Label fx:id="label" alignment="CENTER" layoutX="14.0" layoutY="61.0" prefHeight="36.0" prefWidth="229.0" scaleShape="false" style="-fx-background-color: black;" text="Question" textAlignment="CENTER" textFill="#f2eded" textOverrun="WORD_ELLIPSIS">
+      <Label fx:id="label" alignment="CENTER" layoutX="14.0" layoutY="61.0" prefHeight="36.0" prefWidth="229.0" scaleShape="false" style="-fx-background-color: black;" text="Action" textAlignment="CENTER" textFill="#f2eded" textOverrun="WORD_ELLIPSIS">
          <font>
             <Font name="Arial Bold" size="25.0" />
          </font>
@@ -29,7 +29,7 @@
             <Insets top="1.0" />
          </opaqueInsets>
       </Label>
-      <Label fx:id="label1" alignment="CENTER" layoutX="14.0" layoutY="106.0" prefHeight="30.0" prefWidth="450.0" scaleShape="false" style="-fx-background-color: black;" text="Slots" textAlignment="CENTER" textFill="#f2eded" textOverrun="WORD_ELLIPSIS">
+      <Label fx:id="label1" alignment="CENTER" layoutX="14.0" layoutY="106.0" prefHeight="30.0" prefWidth="450.0" scaleShape="false" style="-fx-background-color: black;" text="Rules" textAlignment="CENTER" textFill="#f2eded" textOverrun="WORD_ELLIPSIS">
          <font>
             <Font name="Arial Bold" size="25.0" />
          </font>
@@ -40,7 +40,7 @@
             <Insets top="1.0" />
          </opaqueInsets>
       </Label>
-      <Label fx:id="label2" alignment="CENTER" layoutX="475.0" layoutY="106.0" prefHeight="30.0" prefWidth="450.0" scaleShape="false" style="-fx-background-color: black;" text="Actions" textAlignment="CENTER" textFill="#f2eded" textOverrun="WORD_ELLIPSIS">
+      <Label fx:id="label2" alignment="CENTER" layoutX="475.0" layoutY="106.0" prefHeight="30.0" prefWidth="450.0" scaleShape="false" style="-fx-background-color: black;" text="Responses" textAlignment="CENTER" textFill="#f2eded" textOverrun="WORD_ELLIPSIS">
          <font>
             <Font name="Arial Bold" size="25.0" />
          </font>
@@ -53,17 +53,17 @@
       </Label>
       <ScrollPane fx:id="scrollPane1" layoutX="244.0" layoutY="61.0" prefHeight="36.0" prefWidth="681.0">
          <content>
-            <VBox fx:id="questionVBox1" prefHeight="34.0" prefWidth="680.0" />
+            <VBox fx:id="actionVBox" prefHeight="34.0" prefWidth="680.0" />
          </content>
       </ScrollPane>
       <ScrollPane fx:id="scrollPane11" layoutX="14.0" layoutY="143.0" prefHeight="293.0" prefWidth="450.0">
          <content>
-            <VBox fx:id="slotVBox" prefHeight="291.0" prefWidth="434.0" />
+            <VBox fx:id="ruleVBox" prefHeight="291.0" prefWidth="434.0" />
          </content>
       </ScrollPane>
       <ScrollPane fx:id="scrollPane12" layoutX="475.0" layoutY="143.0" prefHeight="294.0" prefWidth="450.0">
          <content>
-            <VBox fx:id="actionVBox" prefHeight="291.0" prefWidth="434.0" />
+            <VBox fx:id="responseVBox" prefHeight="291.0" prefWidth="434.0" />
          </content>
       </ScrollPane>
       <Button fx:id="saveButton" layoutX="422.0" layoutY="447.0" mnemonicParsing="false" onAction="#onSaveButton" prefHeight="26.0" prefWidth="94.0" text="Save Changes" />

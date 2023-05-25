@@ -19,11 +19,10 @@
             <Image url="@pics/img_1.png" />
          </image>
       </ImageView>
-      <TextField fx:id="question_textfield" layoutX="21.0" layoutY="69.0" prefHeight="34.0" prefWidth="290.0" promptText="Enter Question" />
-      <TextField fx:id="action_textfield" layoutX="629.0" layoutY="69.0" prefHeight="34.0" prefWidth="290.0" promptText="Enter Actions" />
-      <TextField fx:id="slot_textfield" layoutX="325.0" layoutY="69.0" prefHeight="34.0" prefWidth="290.0" promptText="Enter Slots" />
-      <Button fx:id="questionButton" layoutX="119.0" layoutY="114.0" mnemonicParsing="false" onAction="#onQuestionButton" prefHeight="26.0" prefWidth="94.0" text="Add Question" />
-      <Button fx:id="actionButton" layoutX="553.0" layoutY="114.0" mnemonicParsing="false" onAction="#onSLotActionButton" prefHeight="26.0" prefWidth="138.0" text="Add Slot /Action Pair" />
+      <TextField fx:id="actionTextfield" layoutX="21.0" layoutY="69.0" prefHeight="34.0" prefWidth="290.0" promptText="Enter Action" />
+      <TextField fx:id="responseTextfield" layoutX="629.0" layoutY="69.0" prefHeight="34.0" prefWidth="290.0" promptText="Enter Response" />
+      <TextField fx:id="ruleTextfield" layoutX="325.0" layoutY="69.0" prefHeight="34.0" prefWidth="290.0" promptText="Enter Rule" />
+      <Button fx:id="actionButton" layoutX="119.0" layoutY="114.0" mnemonicParsing="false" onAction="#onQuestionButton" prefHeight="26.0" prefWidth="94.0" text="Add Action" />
       <ScrollPane fx:id="scrollPane1" layoutX="20.0" layoutY="152.0" prefHeight="290.0" prefWidth="900.0">
          <content>
             <VBox fx:id="mainVBox" prefHeight="287.0" prefWidth="882.0" />
@@ -41,5 +40,7 @@
             <Insets top="1.0" />
          </opaqueInsets>
       </Label>
+      <Button fx:id="ruleButton" layoutX="422.0" layoutY="114.0" mnemonicParsing="false" onAction="#onQuestionButton" prefHeight="26.0" prefWidth="94.0" text="Add Rule" />
+      <Button fx:id="responseButton" layoutX="727.0" layoutY="114.0" mnemonicParsing="false" onAction="#onQuestionButton" prefHeight="26.0" prefWidth="94.0" text="Add Response" />
    </children>
 </AnchorPane>
