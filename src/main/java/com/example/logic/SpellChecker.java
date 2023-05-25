@@ -20,7 +20,7 @@ public class SpellChecker {
         List<String> suggestions = new ArrayList<>();
 
         // If its a single letter word dont check
-        if (!(word.length() < 3 && word.matches("[a-zA-Z]+"))) {
+        if (!(word.length() <= 3 && word.matches("[a-zA-Z]+"))) {
 
             // Check Levenshtein distance
             int minDistance = Integer.MAX_VALUE;
@@ -34,7 +34,7 @@ public class SpellChecker {
                     suggestions.add(dictWord);
                 }
             }
-            if (minDistance > 3){suggestions.clear();}
+            if (minDistance > -1){suggestions.clear();}
 //            System.out.println(minDistance);
         }
 

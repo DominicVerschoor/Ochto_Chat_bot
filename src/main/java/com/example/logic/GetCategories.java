@@ -11,7 +11,7 @@ public class GetCategories {
     public static String[] markedWords;
     public static ArrayList<String> entries;
 
-    public static String[] Search(String userInput, Map<String, Set<String>> categories) {
+    public static String[] Search(String userInput, Map<String, ArrayList<String>> categories) {
         //Create a map to store the categories and their associated words
         // categories = new HashMap<>();
         // categories.put("Fruit", new HashSet<>(Arrays.asList("apple", "banana", "orange")));
@@ -19,9 +19,9 @@ public class GetCategories {
         // categories.put("Time", new HashSet<>(Arrays.asList("16am", "4pm", "noon")));
 
         Set<String> dictionary = new HashSet<>();
-        for (Map.Entry<String, Set<String>> entry : categories.entrySet()) {
-            String category = entry.getKey();
-            Set<String> categoryWords = entry.getValue();
+        for (Map.Entry<String, ArrayList<String>> entry : categories.entrySet()) {
+            ArrayList<String> categoryWords = entry.getValue();
+            categoryWords.replaceAll(String::toLowerCase);
             dictionary.addAll(categoryWords);
         }
 
@@ -50,9 +50,9 @@ public class GetCategories {
 
         entries = new ArrayList<>();
 
-        for (Map.Entry<String, Set<String>> currentCategory : categories.entrySet()) {
+        for (Map.Entry<String, ArrayList<String>> currentCategory : categories.entrySet()) {
             String category = currentCategory.getKey();
-            Set<String> categoryWords = currentCategory.getValue();
+            ArrayList<String> categoryWords = currentCategory.getValue();
 
             for (String categoryWord : categoryWords) {
                 int wordIndex = containsWord(words, categoryWord, dictionary);

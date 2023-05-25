@@ -1,7 +1,0 @@
-<GREETING>
-<GREETING> Hi
-<GREETING> Hey
-<GREETING> Hello
-Action <GREETING> Hi Hello
-Action <GREETING> Hey Hi
-Action <GREETING> Hello Hey there

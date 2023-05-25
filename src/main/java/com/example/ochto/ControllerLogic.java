@@ -1,9 +1,7 @@
 package com.example.ochto;
 
-import com.example.logic.SkillHandler;
+import com.example.logic.*;
 
-import com.example.logic.GetCategories;
-import com.example.logic.Skill;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -21,6 +19,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.*;
 import javafx.scene.text.Font;
 
+import java.io.File;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -75,7 +74,6 @@ public class ControllerLogic implements Initializable {
     private Image light_theme_background = new Image("file:src/main/resources/com/example/ochto/pics/White_full.png");
     @FXML
     private ImageView main_image_view = new ImageView();
-    private SkillHandler skillHandler = new SkillHandler();
     @FXML
     private Button editButton;
     private Button skillButton;
@@ -137,22 +135,23 @@ public class ControllerLogic implements Initializable {
             float start = System.currentTimeMillis();
 
             //message = skillHandler.findSkill(message);
-            Map<String, Set<String>> categories = new HashMap<>();
-            categories.put("Fruit", new HashSet<>(Arrays.asList("apple", "banana", "orange")));
-            categories.put("Color", new HashSet<>(Arrays.asList("red", "green", "blue")));
-            categories.put("Time", new HashSet<>(Arrays.asList("16am", "4pm", "noon")));
-            
-            String[] tempCategories = GetCategories.Search(message, categories);
-            ArrayList<String> finalCategories = new ArrayList<>(Arrays.asList(tempCategories));
-            ArrayList<String> entries = GetCategories.getEntries();
+            //Map<String, Set<String>> categories = new HashMap<>();
+            // Create a File object for the folder
+            File folder = new File("Questions/");
 
-            for (int i = 0; i < finalCategories.size(); i++){
-                System.out.print(finalCategories.get(i) + " ");
-            }
+            // Get a list of all the files in the folder
+            File[] files = folder.listFiles();
 
-            System.out.println();
-            for (int i = 0; i < entries.size(); i++){
-                System.out.print(entries.get(i) + " ");
+            // Loop through the list of files
+            assert files != null;
+            for (File file : files) {
+                HashMap<String, ArrayList<String>> categories =CSVHandler.getTerminals(file);
+                String[] tempCategories = GetCategories.Search(message, categories);
+                ArrayList<String> finalCategories = new ArrayList<>(Arrays.asList(tempCategories));
+                ArrayList<String> entries = GetCategories.getEntries();
+                HashMap<String, ArrayList<String>> rules = CSVHandler.getRules(file);
+                CYK cyk = new CYK(finalCategories, rules);
+                System.out.println(cyk.getFinalValue());
             }
 
 
@@ -303,9 +302,6 @@ public class ControllerLogic implements Initializable {
         }
     }
 
-    public void reloadAllSkills(){
-        skillHandler = new SkillHandler();
-    }
 
 }
 
