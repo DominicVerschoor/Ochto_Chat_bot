@@ -121,7 +121,7 @@ public class ControllerSkillOverview implements Initializable {
 
     @FXML
     void onSaveButton(ActionEvent event) {
-        logic.reloadAllSkills();
+//        logic.reloadAllSkills();
         Stage stage = (Stage) mainVBox.getScene().getWindow();
         stage.close();
     }
