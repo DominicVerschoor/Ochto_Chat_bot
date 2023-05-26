@@ -261,26 +261,26 @@ public class ControllerLogic implements Initializable {
         }
     }
 
-    @FXML
-    public void handleEditButton(ActionEvent newActionEvent){
-        try{
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("view4.fxml"));
-
-            ControllerSkillOverview controllerEdit = new ControllerSkillOverview();
-            loader.setController(controllerEdit);
-            Parent root = loader.load();
-            controllerEdit.setLogic(this);
-
-            Scene scene = new Scene(root);
-            stage3.setScene(scene);
-            stage3.setTitle("Skill Overview");
-            stage3.setResizable(false);
-            stage3.centerOnScreen();
-            stage3.show();
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-    }
+//    @FXML
+//    public void handleEditButton(ActionEvent newActionEvent){
+//        try{
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource("view4.fxml"));
+//
+//            ControllerSkillOverview controllerEdit = new ControllerSkillOverview();
+//            loader.setController(controllerEdit);
+//            Parent root = loader.load();
+//            controllerEdit.setLogic(this);
+//
+//            Scene scene = new Scene(root);
+//            stage3.setScene(scene);
+//            stage3.setTitle("Skill Overview");
+//            stage3.setResizable(false);
+//            stage3.centerOnScreen();
+//            stage3.show();
+//        } catch (Exception e){
+//            e.printStackTrace();
+//        }
+//    }
 
     @FXML
     public void changeTheme(ActionEvent newActionEvent) {
