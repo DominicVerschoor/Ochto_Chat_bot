@@ -15,7 +15,7 @@ public class App extends Application {
     private String name;
     @Override
     public void start(Stage stage) throws IOException {
-        Process proc = Runtime.getRuntime().exec("python Python_facial_recognition/model_1/recognition.py");
+        Process proc = Runtime.getRuntime().exec("python Python_facial_recognition/model_2/camDetector.py");
         BufferedReader out = new BufferedReader(new InputStreamReader(proc.getInputStream()));
         name = out.readLine();
         System.out.println(name);
