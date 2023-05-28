@@ -77,6 +77,7 @@ public class ControllerLogic implements Initializable {
     @FXML
     private Button editButton;
     private Button skillButton;
+    private CYKHandler handler;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -121,6 +122,7 @@ public class ControllerLogic implements Initializable {
         light_theme_ImageView.setPreserveRatio(true);
         theme_button.setGraphic(light_theme_ImageView);
         main_image_view.setImage(dark_theme_background);
+        handler = new CYKHandler();
     }
 
     @FXML
@@ -134,29 +136,7 @@ public class ControllerLogic implements Initializable {
         if (!message.isEmpty()) {
             float start = System.currentTimeMillis();
 
-            //message = skillHandler.findSkill(message);
-            //Map<String, Set<String>> categories = new HashMap<>();
-            // Create a File object for the folder
-            File folder = new File("Questions/");
-
-            // Get a list of all the files in the folder
-            File[] files = folder.listFiles();
-
-            // Loop through the list of files
-            assert files != null;
-            for (File file : files) {
-                HashMap<String, ArrayList<String>> categories =CSVHandler.getTerminals(file);
-                String[] tempCategories = GetCategories.Search(message, categories);
-                ArrayList<String> finalCategories = new ArrayList<>(Arrays.asList(tempCategories));
-                ArrayList<String> entries = GetCategories.getEntries();
-                HashMap<String, ArrayList<String>> rules = CSVHandler.getRules(file);
-                CYK cyk = new CYK(finalCategories, rules);
-                System.out.println(cyk.getFinalValue());
-            }
-
-
-            //CYK cyk = new CYK(finalCategories, )
-
+            message = handler.retrieveAnswer(message);
 
 
             float end = System.currentTimeMillis();

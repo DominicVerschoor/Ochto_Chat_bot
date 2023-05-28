@@ -128,6 +128,37 @@ public class CSVHandler {
         return result;
     }
 
+    public static ArrayList<Action> getActions(File fileName){
+        ArrayList<Action> result = new ArrayList<Action>();
+        List<String> lines = new ArrayList<>();
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(fileName));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                lines.add(line);
+            }
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        for(String line : lines){
+            String[] words = line.split(" ");
+            if(words[0].equalsIgnoreCase("Action")){
+                Action action = new Action(words[1]);
+                String[] cleanWords = Arrays.copyOfRange(words, 3, words.length);
+                int idx = 0;
+                while(cleanWords[idx].charAt(0) == '<'){
+                    action.addSlot(new String[]{cleanWords[idx], cleanWords[idx+1]});
+                    idx += 2;
+                }
+                action.setAction(String.join(" ", Arrays.copyOfRange(cleanWords, idx, cleanWords.length)));
+                result.add(action);
+            }
+        }
+        return result;
+    }
+
     public static HashMap<String, ArrayList<String>> getRules(File fileName){
         HashMap<String, ArrayList<String>> result = new HashMap<String, ArrayList<String>>();
         List<String> lines = new ArrayList<>();
@@ -156,91 +187,7 @@ public class CSVHandler {
                         newEntries.set(i, newEntries.get(i).substring(0, newEntries.get(i).length()-1));
                     }
                 }
-                for(int i = 0; i< newEntries.size(); i++){
-                    String[] entryWords = newEntries.get(i).split(" ");
-                    if(entryWords.length > 1 || entryWords[0].charAt(0) == '<'){
-                        for(int j = 0; j < entryWords.length; j++){
-                            String word = entryWords[j].replaceAll("\\s", "");
-                            if(word.charAt(0) == '<'){
-                                word = word.substring(1, word.length()-1);
-                            }
-                            else{
-                                word = "W";
-                            }
-                            entryWords[j] = word;
-                        }
-                    }
-                    ArrayList<String> temp = new ArrayList<String>(Arrays.asList(entryWords));
-                    for(int j = 0; j < temp.size()-1; j++){
-                        if(temp.get(j).equalsIgnoreCase("W") && temp.get(j+1).equalsIgnoreCase("W")){
-                            temp.remove(j);
-                        }
-                    }
-                    entryWords = temp.toArray(new String[temp.size()]);
-                    newEntries.set(i, String.join("", entryWords));
-                }
-                result.put(words[1].substring(1, words[1].length()-1), newEntries);
-            }
-        }
-        return result;
-    }
-
-    public static HashMap<String, ArrayList<String>> getTerminals(File fileName){
-        HashMap<String, ArrayList<String>> result = new HashMap<String, ArrayList<String>>();
-        List<String> lines = new ArrayList<>();
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(fileName));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                lines.add(line);
-            }
-            reader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        
-        for(String line : lines){
-            String[] words = line.split(" ");
-            String cleanLine = line.substring(6+words[1].length(), line.length());
-            if(words[0].equalsIgnoreCase("Rule")){
-                boolean terminal = false;
-                String[] entries = cleanLine.split("[|]");
-                ArrayList<String> newEntries = new ArrayList<String>(Arrays.asList(entries));
-                for(int i = 0; i < newEntries.size(); i++){
-                    if(newEntries.get(i).charAt(0) == ' '){
-                        newEntries.set(i, newEntries.get(i).substring(1, newEntries.get(i).length()));
-                    }
-                    if(newEntries.get(i).charAt(newEntries.get(i).length()-1) == ' '){
-                        newEntries.set(i, newEntries.get(i).substring(0, newEntries.get(i).length()-1));
-                    }
-                }
-                for(int i = 0; i< newEntries.size(); i++){
-                    String[] entryWords = newEntries.get(i).split(" ");
-                    if(entryWords.length > 1 || entryWords[0].charAt(0) == '<'){
-                        for(int j = 0; j < entryWords.length; j++){
-                            String word = entryWords[j].replaceAll("\\s", "");
-                            if(word.charAt(0) == '<'){
-                                word = word.substring(1, word.length()-1);
-                            }
-                            else{
-                                word = "W";
-                                terminal = false;
-                            }
-                            entryWords[j] = word;
-                        }
-                    }
-                    ArrayList<String> temp = new ArrayList<String>(Arrays.asList(entryWords));
-                    for(int j = 0; j < temp.size()-1; j++){
-                        if(temp.get(j).equalsIgnoreCase("W") && temp.get(j+1).equalsIgnoreCase("W")){
-                            temp.remove(j);
-                        }
-                    }
-                    entryWords = temp.toArray(new String[temp.size()]);
-                    newEntries.set(i, String.join("", entryWords));
-                }
-                if(terminal){
-                    result.put(words[1].substring(1, words[1].length()-1), newEntries);
-                }
+                result.put(words[1], newEntries);
             }
         }
         return result;

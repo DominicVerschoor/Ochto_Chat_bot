@@ -1,201 +1,163 @@
 package com.example.logic;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class CYK {
-    private ArrayList<ArrayList<String>> table;
-    private HashMap<String, ArrayList<String>> rules;
-    //private ArrayList<String> orderOfRules;
-    public static void main(String[] args) {
-        /*
-        HashMap<String, ArrayList<String>> testRules = new HashMap<>();
-        String firstKey = "S";
-        ArrayList firstValue = new ArrayList<>(Arrays.asList("AB", "BC"));
-        String secondKey = "A";
-        ArrayList secondValue = new ArrayList<>(Arrays.asList("BA", "a"));
-        String thirdKey = "B";
-        ArrayList thirdValue = new ArrayList<>(Arrays.asList("CC", "b"));
-        String forthKey = "C";
-        ArrayList forthValue = new ArrayList<>(Arrays.asList("AB", "a"));
-        testRules.put(firstKey, firstValue);
-        testRules.put(secondKey, secondValue);
-        testRules.put(thirdKey, thirdValue);
-        testRules.put(forthKey, forthValue);
-         */
 
-        HashMap<String, ArrayList<String>> testRules = new HashMap<>();
-        String firstKey = "S";
-        ArrayList firstValue = new ArrayList<>(Arrays.asList("Action"));
-        String secondKey = "Action";
-        ArrayList secondValue = new ArrayList<>(Arrays.asList("Location", "Schedule"));
-        String thirdKey = "Schedule";
-        ArrayList thirdValue = new ArrayList<>(Arrays.asList("WTimeExp", "TimeExpW"));
-        String forthKey = "TimeExp";
-        ArrayList forthValue = new ArrayList<>(Arrays.asList("DayTime", "TimeDay"));
-        String fifthKey = "Location";
-        ArrayList fifthValue = new ArrayList<>(Arrays.asList("WRoom", "WProWRoom", "WRoomW"));
-        String sixthKey = "Time";
-        ArrayList sixthValue = new ArrayList<>(Arrays.asList("9", "12"));
-        String seventhKey = "Pro";
-        ArrayList seventhValue = new ArrayList<>(Arrays.asList("I", "you", "she", "he"));
-        String eighthKey = "Room";
-        ArrayList eighthValue = new ArrayList<>(Arrays.asList("DS", "SP"));
-        String ninthKey = "Day";
-        ArrayList ninthValue = new ArrayList<>(Arrays.asList("Monday", "Sunday"));
-        String tenthKey = "W";
-        ArrayList tenthValue = new ArrayList<>(Arrays.asList("Which", "lectures", "are", "there", "on", "at"));
-        testRules.put(firstKey, firstValue);
-        testRules.put(secondKey, secondValue);
-        testRules.put(thirdKey, thirdValue);
-        testRules.put(forthKey, forthValue);
-        testRules.put(fifthKey, fifthValue);
-        testRules.put(sixthKey, sixthValue);
-        testRules.put(seventhKey, seventhValue);
-        testRules.put(eighthKey, eighthValue);
-        testRules.put(ninthKey, ninthValue);
-        testRules.put(tenthKey, tenthValue);
+    boolean[][][] P;
+    ArrayList<int[]>[][][] back;
+    HashMap<String, ArrayList<String>> rules;
+    final String[] words;
+    private boolean belongs;
+    private ArrayList<String[]> labels;
+    private ArrayList<Action> actions;
 
-        ArrayList<String> input = new ArrayList<>(Arrays.asList("W", "Day", "Time"));
-        CYK cyk = new CYK(input, testRules);
-    }
-    public CYK(ArrayList<String> input, HashMap<String, ArrayList<String>> rules/*, ArrayList<String> orderOfRules*/)
-    {
-        //this.orderOfRules = orderOfRules;
-        table = new ArrayList<>();
-        /*
-        for (int i = 0; i < input.size() - 1; i++) {
-            ArrayList<String> currentRow = new ArrayList<>();
-            table.add(currentRow);
-        }
-        */
-
+    public CYK(HashMap<String, ArrayList<String>> rules, ArrayList<Action> actions, String sentence){
         this.rules = rules;
-
-        ArrayList<String> row =  new ArrayList<>();
-        //i = how many elements we should remove  on the row
-        row  = generateLastRow(row, input, this.rules);
-        table.add(input);
-        for (int i = 1; i < input.size(); i++) {
-            ArrayList<String> currentrow =  new ArrayList<>();
-            //i = how many elements we should remove  on the row
-            currentrow  = generateRow(currentrow, input, this.rules, i);
-            table.add(currentrow);
-        }
-    }
-
-    private ArrayList<String> generateRow(ArrayList<String> currentrow, ArrayList<String> input, HashMap<String, ArrayList<String>> rules, int i) {
-        //go through every cell in the row
-        for (int j = 0; j < input.size() - i; j++) {
-            ArrayList<String> currentCell = generateCurrentCell(i,j,rules);
-            String finalFormatForTerminals = getFormatForTerminals(currentCell);
-            currentrow.add(finalFormatForTerminals);
-        }
-        return  currentrow;
-    }
-
-    private ArrayList<String> generateCurrentCell(int i, int j, HashMap<String, ArrayList<String>> rules) {
-        ArrayList<String> currentCell = new ArrayList<>();
-        ArrayList<String> firstList = new ArrayList<>();
-        for (int k = 0; k < i; k++) {
-            String first = table.get(k).get(j);
-            firstList.add(first);
-        }
-        int l = j + 1;
-        ArrayList<String> secondList = new ArrayList<>();
-        for (int k = i - 1; k >= 0; k--) {
-            String second = table.get(k).get(l);
-            l+=1;
-            secondList.add(second);
-        }
-        for (int k = 0; k < firstList.size(); k++) {
-            ArrayList<String> dotProduct = getDotProduct(firstList.get(k), secondList.get(k));
-            for (int m = 0; m < dotProduct.size(); m++) {
-                ArrayList<String> terminals = findTerminalsVersion2(dotProduct.get(m));
-                for (int n = 0; n < terminals.size(); n++) {
-                    currentCell.add(terminals.get(n));
-                }
-
-            }
-        }
-        
-        
-        return currentCell;
-    }
-
-    private ArrayList<String> findTerminalsVersion2(String s) {
-        ArrayList<String> terminals = new ArrayList<>();
-        for (Map.Entry<String, ArrayList<String>> entry : rules.entrySet()) {
-            String key = entry.getKey();
-            ArrayList<String> value = entry.getValue();
-            for (String currentTerminal: value) {
-                if (currentTerminal.equals(s))
-                {
-                    terminals.add(key);
+        this.actions = actions;
+        this.words = sentence.split(" ");
+        this.P = new boolean[words.length][words.length][rules.size()];
+        this.back = new ArrayList[words.length][words.length][rules.size()];
+        for(int i = 0; i < back.length; i++){
+            for(int j = 0; j < back[0].length; j++){
+                for(int k = 0; k < back[0][0].length; k++){
+                    back[i][j][k] = new ArrayList<int[]>();
                 }
             }
         }
-        return terminals;
+        runCYK();
+        this.belongs = P[P.length-1][0][indexOfNT("<s>")];
+        if(belongs){
+            this.labels = getLabels(words.length-1, 0, indexOfNT("<s>"));
+        }
     }
 
-    private ArrayList<String> getDotProduct(String s, String s1) {
-        String[] firstArray = s.split(",");
-        String[] secondArray = s1.split(",");
-        ArrayList<String> finalArray = new ArrayList<>();
-        for (int i = 0; i < firstArray.length; i++) {
-            for (int j = 0; j < secondArray.length; j++) {
-                String current = firstArray[i] + secondArray[j];
-                finalArray.add(current);
+
+    public boolean belongs(){
+        return belongs;
+    }
+
+    private void runCYK(){
+        for(int i = 0; i < P.length; i++){
+            int j = 0;
+            for(Map.Entry<String, ArrayList<String>> entry : rules.entrySet()){
+                ArrayList<String> rhs = entry.getValue();
+                for(String s : rhs){
+                    if(words[i].equalsIgnoreCase(s)){
+                        P[0][i][j] = true;
+
+                    }
+                }
+                j++;
             }
         }
-        return finalArray;
-    }
 
-
-    private ArrayList<String> generateLastRow(ArrayList<String> row, ArrayList<String> input, HashMap<String, ArrayList<String>> rules)
-    {
-        for (int i = 0; i < input.size(); i++) {
-            ArrayList<String> terminals = findTerminals(i, input, rules);
-            String finalFormatForTerminals = getFormatForTerminals(terminals);
-            row.add(finalFormatForTerminals);
-        }
-        return row;
-    }
-
-    private String getFormatForTerminals(ArrayList<String> terminals) {
-        String finalFormat = "";
-        if (terminals.size() == 0)
-        {
-            return "";
-        }
-        for (int i = 0; i < terminals.size(); i++) {
-            finalFormat += terminals.get(i);
-            if (i != terminals.size() - 1) {
-                finalFormat += ",";
-            }
-        }
-        return  finalFormat;
-    }
-
-    private ArrayList<String> findTerminals(int elementIndex, ArrayList<String> input, HashMap<String, ArrayList<String>> rules) {
-        String inputElement = input.get(elementIndex);
-        ArrayList<String> terminals = new ArrayList<>();
-        for (Map.Entry<String, ArrayList<String>> entry : rules.entrySet()) {
-            String key = entry.getKey();
-            ArrayList<String> value = entry.getValue();
-            for (String currentTerminal: value) {
-                if (currentTerminal.equals(inputElement))
-                {
-                    terminals.add(key);
+        for(int l = 1; l < P.length; l++){
+            for(int s = 0; s < P.length-l; s++){
+                for(int p = 0; p < l; p++){
+                    for(Map.Entry<String, ArrayList<String>> entry : rules.entrySet()){
+                        ArrayList<String> rhs = entry.getValue();
+                        for(String i : rhs){
+                            String[] ruleWords = i.split(" ");
+                            if(ruleWords.length == 2){
+                                if(P[p][s][indexOfNT(ruleWords[0])] && P[l-(p+1)][s+p+1][indexOfNT(ruleWords[1])]){
+                                    P[l][s][indexOfNT(entry.getKey())] = true;
+                                    int[] backTriplet = {p, indexOfNT(ruleWords[0]), indexOfNT(ruleWords[1])};
+                                    back[l][s][indexOfNT(entry.getKey())].add(backTriplet);
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
-        return terminals;
     }
 
-    public String getFinalValue() {
-        return table.get(table.size() - 1).get(0);
+    public ArrayList<String[]> labels (){
+        return labels;
     }
+    
+    private ArrayList<String[]> getLabels (int row, int col, int rule){
+        ArrayList<String[]> result = new ArrayList<String[]>();
+        if(row == 0){
+            Set<String> keySet = rules.keySet();
+            List<String> keyList = new ArrayList<>(keySet);
+            result.add(new String[]{keyList.get(rule), words[col]});
+            return result;
+        }
+        int[] node = back[row][col][rule].get(0);
+        result.addAll(getLabels(node[0], col, node[1]));
+        result.addAll(getLabels(row-(node[0]+1), col+node[0]+1, node[2]));
+        return result;
+    }   
+
+    private String getKey(int ruleIndexOne, int ruleIndexTwo){
+        Set<String> keySet = rules.keySet();
+        List<String> keyList = new ArrayList<>(keySet);
+        String value = String.join(" ", new String[]{keyList.get(ruleIndexOne), keyList.get(ruleIndexTwo)});
+        for(Map.Entry<String, ArrayList<String>> entry : rules.entrySet()){
+            if(!entry.getKey().equalsIgnoreCase("<s>") && !entry.getKey().equalsIgnoreCase("<action>")){
+                for(String s : entry.getValue()){
+                    if(s.equalsIgnoreCase(value)){
+                        return entry.getKey();
+                    }
+                }
+            }
+        }
+        return "";
+    }
+
+
+    public String getAction(){
+        String key = getKey(back[words.length-1][0][indexOfNT("<s>")].get(0)[1], back[words.length-1][0][indexOfNT("<s>")].get(0)[2]);
+        ArrayList<String[]> slots = extractSlots();
+        for(Action action : actions){
+            if(key.equalsIgnoreCase(action.getKey()) && slotsMatch(slots, action.getSlots())){
+                return action.getAction();
+            }
+        }
+        return "";
+    }
+
+    private boolean slotsMatch(ArrayList<String[]> cykSlots, ArrayList<String[]> skillSlots){
+        for(String[] cykPair : cykSlots){
+            boolean slotFound = false;
+            for(String[] skillPair : skillSlots){
+                if(skillPair[1].equalsIgnoreCase(cykPair[1])){
+                    slotFound = true;
+                    break;
+                }
+            }
+            if(!slotFound){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private ArrayList<String[]> extractSlots(){
+        ArrayList<String[]> result = new ArrayList<String[]>();
+        for(String[] pair : labels){
+            if((pair[0].length() >= 6 && !pair[0].substring(pair[0].length()-4, pair[0].length()-1).equals("EXT")) && !pair[0].substring(pair[0].length()-2, pair[0].length()-1).equals("T")){
+                result.add(pair);
+            }
+        }
+        return result;
+    }
+
+    private int indexOfNT(String nonTerminal){
+        int index = 0;
+        for (String key : rules.keySet()) {
+            if (key.equalsIgnoreCase(nonTerminal)) {
+                return index;
+            }
+            index++;
+        }
+        return -1;
+    }
+
 }
