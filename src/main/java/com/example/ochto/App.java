@@ -6,18 +6,20 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 
 public class App extends Application {
     private String name;
     @Override
     public void start(Stage stage) throws IOException {
-        //Process proc = Runtime.getRuntime().exec("python Python_facial_recognition/model_2/camDetector.py");
-        //BufferedReader out = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-        //name = out.readLine();
+        Process proc = Runtime.getRuntime().exec("python Python_facial_recognition/model_2/camDetector.py");
+        BufferedReader out = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+        name = out.readLine();
         System.out.println(name);
-        name = "Dominic";
         if (!(getName() == null)){
             FXMLLoader loader = new FXMLLoader(getClass().getResource("view1.fxml"));
             Parent root = loader.load();

@@ -71,6 +71,7 @@ public class ChatScreen implements Initializable {
     private ImageView main_image_view = new ImageView();
     @FXML
     private Button editButton;
+    @FXML
     private Button skillButton;
     private CYKHandler handler;
     private SpellChecker spellChecker;

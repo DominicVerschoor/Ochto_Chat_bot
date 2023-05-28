@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
@@ -15,8 +14,7 @@
 <?import javafx.scene.paint.Stop?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
-
-<AnchorPane fx:id="anchor_pane" cache="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="488.0" prefWidth="939.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ochto.ControllerLogic">
+<AnchorPane fx:id="anchor_pane" cache="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="488.0" prefWidth="939.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ochto.ChatScreen">
    <children>
       <ImageView fx:id="main_image_view" fitHeight="631.0" fitWidth="940.0" layoutX="-1.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -68,7 +66,6 @@
          </fill>
       </Circle>
       <Circle fill="#42e610" layoutX="90.0" layoutY="80.0" radius="9.0" stroke="BLACK" strokeType="INSIDE">
-
       </Circle>
       <Button fx:id="skillButton" layoutX="800.0" layoutY="323.0" mnemonicParsing="false" onAction="#handleAddButton" text="Add Skill" />
       <Button fx:id="theme_button" layoutX="806.0" layoutY="406.0" mnemonicParsing="false" onAction="#changeTheme" />
