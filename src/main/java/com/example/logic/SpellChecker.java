@@ -5,11 +5,28 @@ import java.util.*;
 public class SpellChecker {
     private Set<String> dictionary;
     private Map<Character, List<Character>> keyboardMap;
+    private String userInput;
+    private String terminalInput;
 
     public SpellChecker(Set<String> dictionary) {
         this.dictionary = dictionary;
         this.keyboardMap = new HashMap<>();
         createKeyboardMap();
+    }
+
+    public SpellChecker(){
+        this.keyboardMap = new HashMap<>();
+        createKeyboardMap();
+    }
+
+    public boolean checkSingleWord(String userInput, String terminalInput){
+        if (userInput.length() < 3 && userInput.matches("[a-zA-Z]+")) {
+            return false;
+        }
+
+        int distance = getLevenshteinDistance(userInput.toLowerCase(), terminalInput.toLowerCase());
+
+        return distance <= 3;
     }
 
     public boolean isCorrectlySpelled(String word) {
@@ -20,7 +37,7 @@ public class SpellChecker {
         List<String> suggestions = new ArrayList<>();
 
         // If its a single letter word dont check
-        if (!(word.length() <= 3 && word.matches("[a-zA-Z]+"))) {
+        if (!(word.length() < 3 && word.matches("[a-zA-Z]+"))) {
 
             // Check Levenshtein distance
             int minDistance = Integer.MAX_VALUE;
@@ -34,7 +51,7 @@ public class SpellChecker {
                     suggestions.add(dictWord);
                 }
             }
-            if (minDistance > -1){suggestions.clear();}
+            if (minDistance > 3){suggestions.clear();}
 //            System.out.println(minDistance);
         }
 

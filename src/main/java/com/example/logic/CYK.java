@@ -1,10 +1,6 @@
 package com.example.logic;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class CYK {
 
@@ -15,8 +11,10 @@ public class CYK {
     private boolean belongs;
     private ArrayList<String[]> labels;
     private ArrayList<Action> actions;
+    private SpellChecker spellChecker;
 
     public CYK(HashMap<String, ArrayList<String>> rules, ArrayList<Action> actions, String sentence){
+        spellChecker = new SpellChecker();
         this.rules = rules;
         this.actions = actions;
         this.words = sentence.split(" ");
@@ -47,9 +45,8 @@ public class CYK {
             for(Map.Entry<String, ArrayList<String>> entry : rules.entrySet()){
                 ArrayList<String> rhs = entry.getValue();
                 for(String s : rhs){
-                    if(words[i].equalsIgnoreCase(s)){
+                    if(spellChecker.checkSingleWord(words[i], s)){
                         P[0][i][j] = true;
-
                     }
                 }
                 j++;
@@ -120,7 +117,7 @@ public class CYK {
                 return action.getAction();
             }
         }
-        return "";
+        return "I dunno :P";
     }
 
     private boolean slotsMatch(ArrayList<String[]> cykSlots, ArrayList<String[]> skillSlots){

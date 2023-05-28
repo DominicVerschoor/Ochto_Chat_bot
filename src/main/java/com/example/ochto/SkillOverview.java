@@ -2,34 +2,28 @@ package com.example.ochto;
 
 import java.io.*;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.geometry.Insets;
 
 
-public class ControllerSkillOverview implements Initializable {
+public class SkillOverview implements Initializable {
 
     @FXML
     private Label label;
@@ -41,7 +35,7 @@ public class ControllerSkillOverview implements Initializable {
     private ScrollPane scrollPane1;
     private Button saveButton;
     private final Stage stage4 = new Stage();
-    private ControllerLogic logic = new ControllerLogic();
+    private ChatScreen logic = new ChatScreen();
 
 
     @Override
@@ -89,7 +83,7 @@ public class ControllerSkillOverview implements Initializable {
                     try {
                         FXMLLoader loader = new FXMLLoader(getClass().getResource("view5.fxml"));
 
-                        ControllerSkillEditor controller = new ControllerSkillEditor();
+                        SkillEditor controller = new SkillEditor();
                         controller.setFile(allQuestions.get(currentQuestion));
                         controller.setLogic(logic);
 
@@ -115,7 +109,7 @@ public class ControllerSkillOverview implements Initializable {
         }
     }
 
-    public void setLogic(ControllerLogic logic) {
+    public void setLogic(ChatScreen logic) {
         this.logic = logic;
     }
 

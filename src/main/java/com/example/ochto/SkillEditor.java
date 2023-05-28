@@ -23,7 +23,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-public class ControllerSkillEditor implements Initializable {
+public class SkillEditor implements Initializable {
 
     @FXML
     private VBox responseVBox;
@@ -48,7 +48,7 @@ public class ControllerSkillEditor implements Initializable {
     @FXML
     private Button saveButton;
     private final Stage stage7 = new Stage();
-    private ControllerLogic logic = new ControllerLogic();
+    private ChatScreen logic = new ChatScreen();
     private String filename;
 
     private String[] updates;
@@ -83,7 +83,7 @@ public class ControllerSkillEditor implements Initializable {
                 // set an action listener on the TextField to handle the text input
                 textField.setOnAction(actionEvent -> {
                     input.setText(textField.getText());
-                    updates[1] = "Rule" + textField.getText();
+                    updates[1] = textField.getText();
                     parent.getChildren().set(parent.getChildren().indexOf(textField), input);
                 });
             }
@@ -172,6 +172,7 @@ public class ControllerSkillEditor implements Initializable {
 
     public void createCSV(String[] updates) {
         String fileName = "Questions/" + filename;
+        updates[1] = "Rule" + updates[1];
 
         StringBuilder output = new StringBuilder();
 
@@ -200,7 +201,7 @@ public class ControllerSkillEditor implements Initializable {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("view4.fxml"));
 
-            ControllerSkillOverview controller = new ControllerSkillOverview();
+            SkillOverview controller = new SkillOverview();
             loader.setController(controller); //initialize
             Parent root = loader.load();
             controller.setLogic(logic);
@@ -219,7 +220,7 @@ public class ControllerSkillEditor implements Initializable {
         }
     }
 
-    public void setLogic(ControllerLogic logic) {
+    public void setLogic(ChatScreen logic) {
         this.logic = logic;
     }
 

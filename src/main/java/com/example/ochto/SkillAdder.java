@@ -17,7 +17,7 @@ import javafx.scene.paint.Color;
 
 import javafx.stage.Stage;
 
-public class ControllerSkillAdder implements Initializable {
+public class SkillAdder implements Initializable {
 
     @FXML
     private VBox mainVBox;
@@ -50,7 +50,7 @@ public class ControllerSkillAdder implements Initializable {
     private VBox currentRuleResponseVbox;
     private VBox ruleVbox;
     private VBox responseVbox;
-    private ControllerLogic logic = new ControllerLogic();
+    private ChatScreen logic = new ChatScreen();
 
     public ArrayList<String> getAllActions() {
         String folderPath = "Questions";
@@ -223,7 +223,7 @@ public class ControllerSkillAdder implements Initializable {
     }
 
     public void createCSV(ArrayList<ArrayList<String>> currentAction) {
-        String fileName = "Questions/Skill" + (fileCount());
+        String fileName = "Questions/CFG" + (fileCount());
         String action = currentAction.get(0).get(0);
         ArrayList<String> rules = currentAction.get(1);
         ArrayList<String> responses = currentAction.get(2);
@@ -271,7 +271,7 @@ public class ControllerSkillAdder implements Initializable {
     }
 
 
-    public void setLogic(ControllerLogic logic) {
+    public void setLogic(ChatScreen logic) {
         this.logic = logic;
     }
 }

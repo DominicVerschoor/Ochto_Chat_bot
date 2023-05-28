@@ -19,18 +19,13 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.*;
 import javafx.scene.text.Font;
 
-import java.io.File;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.*;
 
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -45,7 +40,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 
 
-public class ControllerLogic implements Initializable {
+public class ChatScreen implements Initializable {
     @FXML
     private TextField text_field;
     @FXML
@@ -78,6 +73,7 @@ public class ControllerLogic implements Initializable {
     private Button editButton;
     private Button skillButton;
     private CYKHandler handler;
+    private SpellChecker spellChecker;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -122,7 +118,6 @@ public class ControllerLogic implements Initializable {
         light_theme_ImageView.setPreserveRatio(true);
         theme_button.setGraphic(light_theme_ImageView);
         main_image_view.setImage(dark_theme_background);
-        handler = new CYKHandler();
     }
 
     @FXML
@@ -130,17 +125,17 @@ public class ControllerLogic implements Initializable {
         message = text_field.getText();
 
 
-
         addUMessage(message, vbox_message);
 
         if (!message.isEmpty()) {
             float start = System.currentTimeMillis();
 
+            handler = new CYKHandler();
             message = handler.retrieveAnswer(message);
 
 
             float end = System.currentTimeMillis();
-            System.out.println("Time in ms: " + (end-start));
+            System.out.println("Time in ms: " + (end - start));
 
         } else {
             message = "Input something!";
@@ -220,13 +215,12 @@ public class ControllerLogic implements Initializable {
     }
 
     @FXML
-    public void handleAddButton(ActionEvent newActionEvent)
-    {
-        try{
+    public void handleAddButton(ActionEvent newActionEvent) {
+        try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("view3.fxml"));
             Parent root = loader.load();
 
-            ControllerSkillAdder controllerAdd = new ControllerSkillAdder();
+            SkillAdder controllerAdd = new SkillAdder();
             loader.setController(controllerAdd);
             controllerAdd.setLogic(this);
 
@@ -236,17 +230,17 @@ public class ControllerLogic implements Initializable {
             stage2.setResizable(false);
             stage2.centerOnScreen();
             stage2.show();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @FXML
-    public void handleEditButton(ActionEvent newActionEvent){
-        try{
+    public void handleEditButton(ActionEvent newActionEvent) {
+        try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("view4.fxml"));
 
-            ControllerSkillOverview controllerEdit = new ControllerSkillOverview();
+            SkillOverview controllerEdit = new SkillOverview();
             loader.setController(controllerEdit);
             Parent root = loader.load();
             controllerEdit.setLogic(this);
@@ -257,7 +251,7 @@ public class ControllerLogic implements Initializable {
             stage3.setResizable(false);
             stage3.centerOnScreen();
             stage3.show();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
