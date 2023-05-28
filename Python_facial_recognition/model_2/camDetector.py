@@ -5,7 +5,7 @@ stop=False
 while stop==False:
     check,frame=webcam.read()
     gray=cv.cvtColor(frame,cv.COLOR_BGR2GRAY)
-    haar_cascade=cv.CascadeClassifier("C:\\Users\\mobasha\\IdeaProjects\\Python_facial_recognition\\model_2\\venv\\haar_face.xml")
+    haar_cascade=cv.CascadeClassifier("C:Python_facial_recognition/model_2/venv/haar_face.xml")
     faces_rect=haar_cascade.detectMultiScale(gray,scaleFactor=1.1,minNeighbors=10)
     face_detected=False
     for(x,y,w,h) in faces_rect:
