@@ -1,7 +1,7 @@
 import numpy as np
 import cv2 as cv
 
-haar_cascade = cv.CascadeClassifier("C:\\Users\\marco\\PycharmProjects\\facerecognition\\venv\\haar_face.xml")
+haar_cascade = cv.CascadeClassifier("C:Python_facial_recognition/model_2/venv/haar_face.xml")
 
 people = ['Marco', 'Perico']
 #features = np.load('features.npy', allow_pickle=True)
