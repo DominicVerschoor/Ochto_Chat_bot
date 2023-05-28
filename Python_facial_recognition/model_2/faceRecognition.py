@@ -1,7 +1,7 @@
 import numpy as np
 import cv2 as cv
 
-haar_cascade = cv.CascadeClassifier("C:Python_facial_recognition/model_2/venv/haar_face.xml")
+haar_cascade = cv.CascadeClassifier("Python_facial_recognition/model_2/venv/haar_face.xml")
 
 people = ['Marco', 'Perico']
 #features = np.load('features.npy', allow_pickle=True)
@@ -10,7 +10,7 @@ people = ['Marco', 'Perico']
 face_recognizer = cv.face.LBPHFaceRecognizer_create()
 face_recognizer.read('face_trained.yml')
 
-img = cv.imread(r'C:\Users\marco\PycharmProjects\facerecognition\venv\faces\Marco\WIN_20210907_23_01_38_Pro.jpg')
+img = cv.imread(r'Python_facial_recognition/model_2/venv/faces/Marco/WIN_20210907_23_01_38_Pro.jpg')
 
 gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 #cv.imshow('Person', gray)

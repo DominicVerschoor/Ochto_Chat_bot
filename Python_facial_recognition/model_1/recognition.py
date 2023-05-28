@@ -30,8 +30,8 @@ class FaceRecognition:
         self.encode_faces()
 
     def encode_faces(self):
-        for image in os.listdir("C:Python_facial_recognition/model_1/faces"):
-            face_image = face_recognition.load_image_file(f"C:Python_facial_recognition/model_1/faces/{image}")
+        for image in os.listdir("Python_facial_recognition/model_1/faces"):
+            face_image = face_recognition.load_image_file(f"Python_facial_recognition/model_1/faces/{image}")
             face_encoding = face_recognition.face_encodings(face_image)[0]
             name = os.path.splitext(image)[0] 
             self.known_face_encodings.append(face_encoding)

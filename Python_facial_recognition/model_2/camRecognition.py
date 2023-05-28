@@ -4,7 +4,7 @@ stop=False
 while stop==False:
     check,frame=webcam.read()
     gray=cv.cvtColor(frame,cv.COLOR_BGR2GRAY)
-    haar_cascade=cv.CascadeClassifier("C:Python_facial_recognition/model_2/venv/haar_face.xml")
+    haar_cascade=cv.CascadeClassifier("Python_facial_recognition/model_2/venv/haar_face.xml")
     people = ['Marco', 'Perico']
     face_recognizer = cv.face.LBPHFaceRecognizer_create()
     face_recognizer.read('face_trained.yml')

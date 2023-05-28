@@ -3,9 +3,9 @@ import cv2 as cv
 import numpy as np
 
 people = ['Marco', 'Perico']
-DIR = r'C:\Users\marco\PycharmProjects\facerecognition\venv\faces'
+DIR = r'Python_facial_recognition/model_2/venv/faces'
 
-haar_cascade = cv.CascadeClassifier("C:Python_facial_recognition/model_2/venv/haar_face.xml")
+haar_cascade = cv.CascadeClassifier("Python_facial_recognition/model_2/venv/haar_face.xml")
 features = []
 labels = []
 
