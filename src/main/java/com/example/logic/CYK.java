@@ -45,7 +45,7 @@ public class CYK {
             for(Map.Entry<String, ArrayList<String>> entry : rules.entrySet()){
                 ArrayList<String> rhs = entry.getValue();
                 for(String s : rhs){
-                    if(spellChecker.checkSingleWord(words[i], s)){
+                    if (words[i].equalsIgnoreCase(s)){
                         P[0][i][j] = true;
                     }
                 }

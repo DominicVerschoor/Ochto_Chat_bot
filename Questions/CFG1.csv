@@ -4,8 +4,8 @@ Rule <weather> How is the weather in <location> | <pro> <verb> in <location> Wha
 Rule <location> <city> <time> | <city>
 Rule <city> NewYork | Berlin
 Rule <time> tomorrow | today
-Rule <pro> I | she | he
+Rule <pro> I | today | he
 Rule <verb> am | is
 Action <weather> * <city> berlin <time> tomorrow It will be sunny.
-Action <weather> * <city> Berlin It is rainy.
+Action <weather> * <city> NewYork It is rainy.
 Action <weather> * <pro> my mother <verb> is  <city> NewYork <time> today It is stormy today.
