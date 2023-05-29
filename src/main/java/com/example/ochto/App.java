@@ -9,7 +9,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -17,8 +16,8 @@ import java.io.InputStreamReader;
 public class App extends Application {
     private String name;
     @Override
-    public void start(Stage stage) throws IOException {
-        Process proc = Runtime.getRuntime().exec("python Python_facial_recognition/model_2/camDetector.py");
+    public void start(Stage stage) throws IOException{
+        Process proc = Runtime.getRuntime().exec("python Python_facial_recognition/model_1/recognition.py");
         BufferedReader out = new BufferedReader(new InputStreamReader(proc.getInputStream()));
         name = out.readLine();
         System.out.println(name);

@@ -1,5 +1,4 @@
-import cv2 as cv;
-import time;
+import cv2 as cv
 webcam=cv.VideoCapture(0)
 stop=False
 while stop==False:
@@ -14,6 +13,6 @@ while stop==False:
     cv.imshow('detected faces',frame)
     if cv.waitKey(1000) & face_detected:
         cv.waitKey(1000)
-        time.sleep(2)
+        # time.sleep(2)
         print(f'Face detected')
         stop=True

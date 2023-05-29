@@ -2,20 +2,7 @@ import face_recognition
 import os, sys
 import cv2
 import numpy as np
-import math
 import time
-
-
-# Helper
-def face_confidence(face_distance, face_match_threshold=0.6):
-    range = (1.0 - face_match_threshold)
-    linear_val = (1.0 - face_distance) / (range * 2.0)
-
-    if face_distance > face_match_threshold:
-        return str(round(linear_val * 100, 2)) + '%'
-    else:
-        value = (linear_val + ((1.0 - linear_val) * math.pow((linear_val - 0.5) * 2, 0.2))) * 100
-        return str(round(value, 2)) + '%'
 
 
 class FaceRecognition:
@@ -25,28 +12,28 @@ class FaceRecognition:
     known_face_encodings = []
     known_face_names = []
     process_current_frame = True
+    name = " "
 
     def __init__(self):
         self.encode_faces()
 
     def encode_faces(self):
-        for image in os.listdir("Python_facial_recognition/model_1/faces"):
-            face_image = face_recognition.load_image_file(f"Python_facial_recognition/model_1/faces/{image}")
+        for image in os.listdir("C:\\Users\\mobasha\\Downloads\\faceRecognitionPythonTooSmart\\face_recognition_python\\faces"):
+            face_image = face_recognition.load_image_file(f"C:\\Users\\mobasha\\Downloads\\faceRecognitionPythonTooSmart\\face_recognition_python\\faces\\{image}")
             face_encoding = face_recognition.face_encodings(face_image)[0]
-            name = os.path.splitext(image)[0] 
+            name = os.path.splitext(image)[0]
             self.known_face_encodings.append(face_encoding)
             self.known_face_names.append(name)
 
-
-
     def run_recognition(self):
         video_capture = cv2.VideoCapture(0)
-
         if not video_capture.isOpened():
             sys.exit('Video source not found...')
 
+        start_time = None
         while True:
             ret, frame = video_capture.read()
+            name = " "
 
             # Only process every other frame of video to save time
             if self.process_current_frame:
@@ -64,24 +51,20 @@ class FaceRecognition:
                 for face_encoding in self.face_encodings:
                     # See if the face is a match for the known face(s)
                     matches = face_recognition.compare_faces(self.known_face_encodings, face_encoding)
-                    name = "Unknown"
-                    confidence = '???'
+                    name = "User detected"
+
 
                     # Calculate the shortest distance to face
                     face_distances = face_recognition.face_distance(self.known_face_encodings, face_encoding)
 
                     best_match_index = np.argmin(face_distances)
                     if matches[best_match_index]:
-                        name = self.known_face_names[best_match_index]
-                        confidence = face_confidence(face_distances[best_match_index])
-                        print(name)
-                        time.sleep(3)
-                        video_capture.release()
-                        cv2.destroyAllWindows()
-                        sys.exit()
+                        name = "User detected"
+                        # confidence = face_confidence(face_distances[best_match_index])
 
-                    self.face_names.append(f'{name} ({confidence})')
-                    
+
+                    self.face_names.append(f'{name})')
+
             self.process_current_frame = not self.process_current_frame
 
             # Display the results
@@ -97,16 +80,25 @@ class FaceRecognition:
                 cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (124,252,50), cv2.FILLED)
                 cv2.putText(frame, name, (left + 6, bottom - 6), cv2.FONT_HERSHEY_DUPLEX, 0.8, (0, 0, 0), 2)
 
+            if self.face_names:
+                # Start the timer if it hasn't started already
+                if start_time is None:
+                    start_time = time.time()
+
             # Display the resulting image
             cv2.imshow('Face Recognition', frame)
 
             # Hit 'q' on the keyboard to quit!
-            if cv2.waitKey(1) == ord('z'):
+            if cv2.waitKey(1) == ord('z') :
+                print(name)
                 break
 
-        # # Release handle to the webcam
-        # video_capture.release()
-        # cv2.destroyAllWindows()
+            # Check if 4 seconds have passed since a face was detected
+            if start_time is not None:
+                elapsed_time = time.time() - start_time
+                if elapsed_time >= 3:
+                    print(name)
+                    break
 
 
 if __name__ == '__main__':
