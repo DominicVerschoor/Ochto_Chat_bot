@@ -34,15 +34,15 @@ public class faceDetector {
 
 
             faceDetector.detectMultiScale(grayFrame, faces);
-
+            //drawing rectangles around the faces
             for (Rect rect : faces.toArray()) {
                 Imgproc.rectangle(frame, new Point(rect.x, rect.y), new Point(rect.x + rect.width, rect.y + rect.height), new Scalar(0, 255, 0));
             }
             imshow("Webcam", frame);
 
-            if (faces.toArray().length > 0) {
-                break;
-            }
+//            if (faces.toArray().length > 0) {
+//                break;
+//            }
             if (waitKey(1) == 'q') {
                 break;
             }
