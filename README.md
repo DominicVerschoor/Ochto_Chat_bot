@@ -14,12 +14,13 @@
 <h2 id="about-the-project"> :pencil: About The Project</h2>
   
 <p align="justify"> 
-  In this phase we were tasked with creating a user-friendly digital assistant that accepts and edits skills. 
-  This was achieved by creating csv and skill handlers that read and store skills into a database.In addition to this, we also implemented algorithms that are able to detect typographical errors which would be the first step to a context free grammar.
+  In this phase we were tasked with creating a user-friendly digital assistant that accepts and edits skills using context-free grammar as well as make the assistant multi-modal by accessing the camera and recognizing whether a person is sitting in front of it. 
+  This was achieved by implementing CYK .In addition to this, we also created algorithm that is able to detect spelling errors by checking the Levanshtein distance. Regarding the face detection part, we built two classifiers using image processing in java and python.
   All this improvements as a whole have brought us closer to answering our research questions: 
   <ol>
-    <li><strong>Research Question 1: </strong>How to create a user friendly chatbot that accepts and edits template based skills?</li>
-    <li><strong>Research Question 2: </strong>How would the increasing size of skills reflect on the performance of the digital assistant?</li>
+    <li><strong>Research Question 1: </strong>How does the degree of the face’s angle affect the time needed to detect the human face?</li>
+    <li><strong>Research Question 2: </strong>How does our approach to the cfg perform on different prompt lengths?</li>
+    <li><strong>Research Question 3: </strong>What thresholds should our spell checker use to minimize false positive and negative corrections</li>
   </ol>
   </p>
   <!-- HOW TO USE THE PROGRAMM -->
@@ -28,8 +29,9 @@
 <p align="justify"> 
    <ol>
     <li> ➤ Open the <strong>App.java</strong> file in the following path <strong>src/main/java/com/example/ochto/App.java</strong></li>
+    <li> ➤ In order to use our program you need a working camera</li>
+    <li> ➤ Sit in front of the camera</li>
     <li> ➤ Run the Java file </li>
-    <li> ➤ Write your name in the login screen and press log in button</li>
     <li> ➤ Write your skill in the text bar in the bottom and click on Enter button</li>
     <li> ➤ You can add skills on the "Add skills" button or "Edit skills"</li>
   </ol>
