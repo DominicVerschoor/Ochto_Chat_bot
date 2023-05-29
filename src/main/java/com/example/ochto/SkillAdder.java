@@ -223,7 +223,7 @@ public class SkillAdder implements Initializable {
     }
 
     public void createCSV(ArrayList<ArrayList<String>> currentAction) {
-        String fileName = "Questions/CFG" + (fileCount());
+        String fileName = "Questions/CFG" + (fileCount()) + ".csv";
         String action = currentAction.get(0).get(0);
         ArrayList<String> rules = currentAction.get(1);
         ArrayList<String> responses = currentAction.get(2);

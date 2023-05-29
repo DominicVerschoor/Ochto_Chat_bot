@@ -20,7 +20,6 @@ public class App extends Application {
         Process proc = Runtime.getRuntime().exec("python Python_facial_recognition/model_1/detector.py");
         BufferedReader out = new BufferedReader(new InputStreamReader(proc.getInputStream()));
         name = out.readLine();
-        System.out.println(name);
         if (!(getName() == null)){
             FXMLLoader loader = new FXMLLoader(getClass().getResource("view1.fxml"));
             Parent root = loader.load();

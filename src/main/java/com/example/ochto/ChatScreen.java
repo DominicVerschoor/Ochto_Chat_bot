@@ -136,7 +136,7 @@ public class ChatScreen implements Initializable {
 
 
             float end = System.currentTimeMillis();
-            System.out.println("Time in ms: " + (end - start));
+//            System.out.println("Time in ms: " + (end - start));
 
         } else {
             message = "Input something!";

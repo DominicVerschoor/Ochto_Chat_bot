@@ -21,12 +21,12 @@ public class SpellChecker {
 
     public boolean checkSingleWord(String userInput, String terminalInput){
         if (userInput.length() < 3 && userInput.matches("[a-zA-Z]+")) {
-            return false;
+            return true;
         }
 
         int distance = getLevenshteinDistance(userInput.toLowerCase(), terminalInput.toLowerCase());
 
-        return distance <= 3;
+        return distance < 4;
     }
 
     public boolean isCorrectlySpelled(String word) {
@@ -90,8 +90,8 @@ public class SpellChecker {
                 } else {
                     cost = 3; // letters are different forms
                 }
-                // Takes the minimum cost of the left, diagonal left and above cells then add the cose
-                comparisonMatrix[i][j] = Math.min(comparisonMatrix[i - 1][j] + 1, Math.min(comparisonMatrix[i][j - 1] + 1, comparisonMatrix[i - 1][j - 1] + cost));
+                // Takes the minimum cost of the left, diagonal left and above cells then add the cost
+                comparisonMatrix[i][j] = Math.min(comparisonMatrix[i - 1][j] + cost, Math.min(comparisonMatrix[i][j - 1] + cost, comparisonMatrix[i - 1][j - 1] + cost));
             }
         }
 
@@ -136,5 +136,36 @@ public class SpellChecker {
         keyboardMap.put('b', Arrays.asList('f', 'g', 'h', 'v', 'n'));
         keyboardMap.put('n', Arrays.asList('g', 'h', 'j', 'b', 'm'));
         keyboardMap.put('m', Arrays.asList('h', 'j', 'k', 'n'));
+    }
+
+    public static void main(String[] args) {
+        String[] correct = "There are many people who enjoy listening to music and playing sports such as football, basketball, and tennis. They like to go outdoors, explore nature, and go on adventures. They also enjoy socializing with friends and family, and having fun in their free time.".split(" ");
+        String[] misspelled = "Ther are any peple who njoy liseng to musik and payng sportes succh as fotball, bascketball, and tenise. They lik to go outors, explor natuer, and go on adventurs. Tey aso enjo socializin with frends and famly, and hain funm in their fre time.".split(" ");
+        String[] variant = "There are lots humans who like singing to songs while enjoying games such as basketball, football, plus golf. They enjoy to go outside, explain things, and go on trips. Those also enjoy talking with family and friends, and receiving enjoyment in our off days.".split(" ");
+
+
+        SpellChecker checker = new SpellChecker();
+
+        int cost1 = 26;
+        int cost2 = 0;
+        for (int i = 0; i < correct.length; i++) {
+
+            if (checker.checkSingleWord(misspelled[i], correct[i])){
+                if (!(misspelled[i].length() < 3) && !misspelled[i].equalsIgnoreCase(correct[i])){
+                    misspelled[i] = correct[i];
+                    cost1--;
+                }
+            }
+
+            if (checker.checkSingleWord(variant[i], correct[i])){
+                if (!(variant[i].length() < 3) && !variant[i].equalsIgnoreCase(correct[i])){
+                    variant[i] = correct[i];
+                    cost2++;
+                }
+            }
+        }
+
+        System.out.println(cost1);
+        System.out.println(cost2);
     }
 }

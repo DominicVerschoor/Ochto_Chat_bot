@@ -117,7 +117,7 @@ public class SkillEditor implements Initializable {
 
                         for (int i = 2; i < updates.length; i++) {
                             if (updates[i].substring(4).equals(ruleInput.getText())){
-                                updates[i] = "Rule" + textField.getText();
+                                updates[i] = "Rule " + textField.getText();
                             }
                         }
 
@@ -156,7 +156,7 @@ public class SkillEditor implements Initializable {
 
                         for (int i = 2; i < updates.length; i++) {
                             if (updates[i].substring(6).equals(responseInput.getText())){
-                                updates[i] = "Action" + textField.getText();
+                                updates[i] = "Action " + textField.getText();
                             }
                         }
 
@@ -172,7 +172,7 @@ public class SkillEditor implements Initializable {
 
     public void createCSV(String[] updates) {
         String fileName = "Questions/" + filename;
-        updates[1] = "Rule" + updates[1];
+        updates[1] = "Rule " + updates[1];
 
         StringBuilder output = new StringBuilder();
 
