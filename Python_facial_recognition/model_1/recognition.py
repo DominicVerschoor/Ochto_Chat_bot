@@ -96,7 +96,7 @@ class FaceDetector:
             # Check if 4 seconds have passed since a face was detected
             if start_time is not None:
                 elapsed_time = time.time() - start_time
-                if elapsed_time >= 3:
+                if elapsed_time >= 4:
                     print(name)
                     break
 
