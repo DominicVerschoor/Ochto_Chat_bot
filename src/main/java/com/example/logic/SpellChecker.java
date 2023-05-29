@@ -24,6 +24,9 @@ public class SpellChecker {
             return true;
         }
 
+        userInput = cleanWord(userInput);
+        terminalInput = cleanWord(terminalInput);
+
         int distance = getLevenshteinDistance(userInput.toLowerCase(), terminalInput.toLowerCase());
 
         return distance < 4;
@@ -136,6 +139,10 @@ public class SpellChecker {
         keyboardMap.put('b', Arrays.asList('f', 'g', 'h', 'v', 'n'));
         keyboardMap.put('n', Arrays.asList('g', 'h', 'j', 'b', 'm'));
         keyboardMap.put('m', Arrays.asList('h', 'j', 'k', 'n'));
+    }
+
+    public static String cleanWord(String input) {
+        return input.replaceAll("[^\\p{L}\\p{N}]+", "");
     }
 
     public static void main(String[] args) {

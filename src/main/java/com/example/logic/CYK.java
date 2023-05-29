@@ -113,7 +113,7 @@ public class CYK {
         String key = getKey(back[words.length-1][0][indexOfNT("<s>")].get(0)[1], back[words.length-1][0][indexOfNT("<s>")].get(0)[2]);
         ArrayList<String[]> slots = extractSlots();
         for(Action action : actions){
-            if(key.equalsIgnoreCase(action.getKey()) && slotsMatch(slots, action.getSlots())){
+            if(cleanWord(key).equalsIgnoreCase(cleanWord(action.getKey())) && slotsMatch(cleanWord(slots), cleanWord(action.getSlots()))){
                 return action.getAction();
             }
         }
@@ -155,6 +155,26 @@ public class CYK {
             index++;
         }
         return -1;
+    }
+
+    public static String cleanWord(String input) {
+        return input.replaceAll("[^\\p{L}\\p{N}]+", "");
+    }
+
+    public static ArrayList<String[]> cleanWord(ArrayList<String[]> input) {
+        ArrayList<String[]> output = new ArrayList<>();
+
+        for (int i = 0; i < input.size(); i++) {
+            String[] tempArray = input.get(i);
+
+            for (int j = 0; j < tempArray.length; j++) {
+                tempArray[j] = cleanWord(tempArray[j]);
+            }
+
+            output.add(tempArray);
+        }
+
+        return output;
     }
 
 }
