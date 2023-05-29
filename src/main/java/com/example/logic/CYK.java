@@ -160,24 +160,4 @@ public class CYK {
         return -1;
     }
 
-    public static String cleanWord(String input) {
-        return input.replaceAll("[^\\p{L}\\p{N}]+", "");
-    }
-
-    public static ArrayList<String[]> cleanWord(ArrayList<String[]> input) {
-        ArrayList<String[]> output = new ArrayList<>();
-
-        for (int i = 0; i < input.size(); i++) {
-            String[] tempArray = input.get(i);
-
-            for (int j = 0; j < tempArray.length; j++) {
-                tempArray[j] = cleanWord(tempArray[j]);
-            }
-
-            output.add(tempArray);
-        }
-
-        return output;
-    }
-
 }

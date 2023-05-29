@@ -26,8 +26,8 @@ public class CYKHandler {
         actions = readActions();
     }
 
-
     public String retrieveAnswer(String prompt) {
+        prompt = cleanWord(prompt);
         for (int i = 0; i < rules.size(); i++) {
             CYK run = new CYK(rules.get(i), actions.get(i), prompt);
             if (run.belongs()) {
@@ -35,6 +35,10 @@ public class CYKHandler {
             }
         }
         return "No answer found";
+    }
+
+    public static String cleanWord(String input) {
+        return input.replaceAll("[^\\p{L}\\p{N}\\s]+", "");
     }
 
     private HashMap<String, ArrayList<String>> convertToCNF(HashMap<String, ArrayList<String>> rules) {
