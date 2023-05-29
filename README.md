@@ -15,7 +15,7 @@
   
 <p align="justify"> 
   In this phase we were tasked with creating a user-friendly digital assistant that accepts and edits skills using context-free grammar as well as make the assistant multi-modal by accessing the camera and recognizing whether a person is sitting in front of it. 
-  This was achieved by implementing CYK .In addition to this, we also created algorithm that is able to detect spelling errors by checking the Levanshtein distance. Regarding the face detection part, we built two classiiers using image processing in java and python.
+  This was achieved by implementing CYK .In addition to this, we also created algorithm that is able to detect spelling errors by checking the Levanshtein distance. Regarding the face detection part, we built two classifiers using image processing in java and python.
   All this improvements as a whole have brought us closer to answering our research questions: 
   <ol>
     <li><strong>Research Question 1: </strong>How does the degree of the face’s angle affect the time needed to detect the human face?</li>
