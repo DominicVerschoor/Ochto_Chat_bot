@@ -5,7 +5,7 @@ import numpy as np
 import time
 
 
-class FaceRecognition:
+class FaceDetector:
     face_locations = []
     face_encodings = []
     face_names = []
@@ -25,7 +25,7 @@ class FaceRecognition:
             self.known_face_encodings.append(face_encoding)
             self.known_face_names.append(name)
 
-    def run_recognition(self):
+    def run_detector(self):
         video_capture = cv2.VideoCapture(0)
         if not video_capture.isOpened():
             sys.exit('Video source not found...')
@@ -96,11 +96,11 @@ class FaceRecognition:
             # Check if 4 seconds have passed since a face was detected
             if start_time is not None:
                 elapsed_time = time.time() - start_time
-                if elapsed_time >= 3:
+                if elapsed_time >= 4:
                     print(name)
                     break
 
 
 if __name__ == '__main__':
-    FaceRecognition().run_recognition()
+    FaceDetector().run_detector()
     
