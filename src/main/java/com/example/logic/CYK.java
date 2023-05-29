@@ -113,7 +113,7 @@ public class CYK {
         String key = getKey(back[words.length-1][0][indexOfNT("<s>")].get(0)[1], back[words.length-1][0][indexOfNT("<s>")].get(0)[2]);
         ArrayList<String[]> slots = extractSlots();
         for(Action action : actions){
-            if(cleanWord(key).equalsIgnoreCase(cleanWord(action.getKey())) && slotsMatch(cleanWord(slots), cleanWord(action.getSlots()))){
+            if(key.equalsIgnoreCase(action.getKey()) && slotsMatch(slots, action.getSlots())){
                 return action.getAction();
             }
         }
@@ -121,6 +121,9 @@ public class CYK {
     }
 
     private boolean slotsMatch(ArrayList<String[]> cykSlots, ArrayList<String[]> skillSlots){
+        if(cykSlots.size() != skillSlots.size()){
+            return false;
+        }
         for(String[] cykPair : cykSlots){
             boolean slotFound = false;
             for(String[] skillPair : skillSlots){
