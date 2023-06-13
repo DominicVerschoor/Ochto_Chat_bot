@@ -1,13 +1,9 @@
 package com.example.ochto;
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,12 +11,14 @@ import java.io.InputStreamReader;
 
 public class App extends Application {
     private String name;
+
     @Override
-    public void start(Stage stage) throws IOException{
-        Process proc = Runtime.getRuntime().exec("python Python_facial_recognition/model_1/detector.py");
+    public void start(Stage stage) throws IOException {
+        ProcessBuilder processBuilder = new ProcessBuilder("python", "Python_facial_recognition/model_1/detector.py");
+        Process proc = processBuilder.start();
         BufferedReader out = new BufferedReader(new InputStreamReader(proc.getInputStream()));
         name = out.readLine();
-        if (!(getName() == null)){
+        if (name != null) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("view1.fxml"));
             Parent root = loader.load();
             ChatScreen controller = loader.getController();
@@ -36,10 +34,9 @@ public class App extends Application {
         }
     }
     public String getName() {
-        String output = name;
-        return output;
+        return name;
     }
-    public static void main(String[] args){
+    public static void main(String[] args) {
         launch();
     }
 }
