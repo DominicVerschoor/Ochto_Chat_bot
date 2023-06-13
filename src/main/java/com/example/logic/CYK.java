@@ -142,11 +142,21 @@ public class CYK {
     private ArrayList<String[]> extractSlots(){
         ArrayList<String[]> result = new ArrayList<String[]>();
         for(String[] pair : labels){
-            if((pair[0].length() >= 6 && !pair[0].substring(pair[0].length()-4, pair[0].length()-1).equals("EXT")) && !pair[0].substring(pair[0].length()-2, pair[0].length()-1).equals("T")){
+            if(!pair[0].substring(pair[0].length()-2, pair[0].length()-1).equals("T") && !isExtension(pair[0])){
                 result.add(pair);
             }
         }
         return result;
+    }
+
+    private boolean isExtension(String slot){
+        if(slot.length() < 6){
+            return false;
+        }
+        if(slot.substring(slot.length()-4, slot.length()-1).equals("EXT")){
+            return true;
+        }
+        return false;
     }
 
     private int indexOfNT(String nonTerminal){

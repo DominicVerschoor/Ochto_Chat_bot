@@ -14,7 +14,7 @@ public class CYKHandler {
 
     public static void main(String[] args) {
         CYKHandler handler = new CYKHandler();
-        System.out.println(handler.retrieveAnswer("Which lectures are there on Monday at 9"));
+        System.out.println(handler.retrieveAnswer("How is the weather in maastricht"));
     }
 
     public CYKHandler() {
