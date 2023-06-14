@@ -206,10 +206,14 @@ public class SkillAdder implements Initializable {
         ruleVbox.getChildren().addAll(ruleText, ruleText1);
         Text ruleText2 = new Text("<ROOM> DeepSpace | SpaceBox");
         ruleVbox.getChildren().addAll(ruleText2);
+        Text ruleText3 = new Text("<SCHEDULE> Which lectures are there <TIME>");
+        ruleVbox.getChildren().addAll(ruleText3);
+        Text ruleText4 = new Text("<TIME> 9 | 12");
+        ruleVbox.getChildren().addAll(ruleText4);
         Text responseText1 = new Text("<LOCATION> * <ROOM> DeepSpace DeepSpace is the first room after the entrance");
         responseVbox.getChildren().addAll(responseText ,responseText1);
-        Text responseText2 = new Text("<LOCATION> * <ROOM> SpaceBox SpaceBox is on the first floor");
-        responseVbox.getChildren().addAll(responseText2);
+        Text responseText3 = new Text("<SCHEDULE> * <TIME> 9 There are no lectures at 9");
+        responseVbox.getChildren().addAll(responseText3);
     }
 
     @FXML

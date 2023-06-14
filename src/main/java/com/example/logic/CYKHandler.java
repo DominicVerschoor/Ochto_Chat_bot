@@ -9,8 +9,6 @@ import java.io.File;
 public class CYKHandler {
     ArrayList<HashMap<String, ArrayList<String>>> rules;
     ArrayList<ArrayList<Action>> actions;
-    private SpellChecker spellChecker;
-    private ArrayList<HashMap<String, ArrayList<String>>> dictionary;
 
     public static void main(String[] args) {
         CYKHandler handler = new CYKHandler();
@@ -18,20 +16,23 @@ public class CYKHandler {
     }
 
     public CYKHandler() {
-        dictionary = generateDictionary();
         rules = readRules();
-        for (int i = 0; i < rules.size(); i++) {
-            rules.set(i, convertToCNF(rules.get(i)));
-        }
+        rules.replaceAll(this::convertToCNF);
         actions = readActions();
     }
 
     public String retrieveAnswer(String prompt) {
         prompt = cleanWord(prompt);
         for (int i = 0; i < rules.size(); i++) {
-            CYK run = new CYK(rules.get(i), actions.get(i), prompt);
-            if (run.belongs()) {
-                return run.getAction();
+            SpellChecker spellChecker = new SpellChecker(prompt);
+            spellChecker.generateDictionary(rules.get(i));
+            ArrayList<String> correctedPrompts = spellChecker.correctedPrompts();
+            for (String curPrompt : correctedPrompts) {
+                System.out.println(curPrompt);
+                CYK run = new CYK(rules.get(i), actions.get(i), curPrompt);
+                if (run.belongs()) {
+                    return run.getAction();
+                }
             }
         }
         return "No answer found";

@@ -11,10 +11,8 @@ public class CYK {
     private boolean belongs;
     private ArrayList<String[]> labels;
     private ArrayList<Action> actions;
-    private SpellChecker spellChecker;
 
     public CYK(HashMap<String, ArrayList<String>> rules, ArrayList<Action> actions, String sentence){
-        spellChecker = new SpellChecker();
         this.rules = rules;
         this.actions = actions;
         this.words = sentence.split(" ");
@@ -77,7 +75,7 @@ public class CYK {
     public ArrayList<String[]> labels (){
         return labels;
     }
-    
+
     private ArrayList<String[]> getLabels (int row, int col, int rule){
         ArrayList<String[]> result = new ArrayList<String[]>();
         if(row == 0){
@@ -90,7 +88,7 @@ public class CYK {
         result.addAll(getLabels(node[0], col, node[1]));
         result.addAll(getLabels(row-(node[0]+1), col+node[0]+1, node[2]));
         return result;
-    }   
+    }
 
     private String getKey(int ruleIndexOne, int ruleIndexTwo){
         Set<String> keySet = rules.keySet();

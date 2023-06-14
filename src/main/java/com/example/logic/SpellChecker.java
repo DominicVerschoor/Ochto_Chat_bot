@@ -6,41 +6,38 @@ public class SpellChecker {
     private Set<String> dictionary;
     private Map<Character, List<Character>> keyboardMap;
     private String userInput;
-    private String terminalInput;
+    private final int distanceThreshold = 4;
+    private final int minWordLength = 4;
 
-    public SpellChecker(Set<String> dictionary) {
-        this.dictionary = dictionary;
+    public SpellChecker(String userInput) {
+        this.userInput = userInput;
+        this.dictionary = new HashSet<>();
         this.keyboardMap = new HashMap<>();
         createKeyboardMap();
     }
 
-    public SpellChecker(){
-        this.keyboardMap = new HashMap<>();
-        createKeyboardMap();
-    }
-
-    public boolean checkSingleWord(String userInput, String terminalInput){
-        if (userInput.length() < 3 && userInput.matches("[a-zA-Z]+")) {
-            return true;
-        }
-
+    public boolean checkSingleWord(String userInput, String terminalInput) {
         userInput = cleanWord(userInput);
         terminalInput = cleanWord(terminalInput);
 
+        if (userInput.length() < 4) {
+            return userInput.equalsIgnoreCase(terminalInput);
+        }
+
         int distance = getLevenshteinDistance(userInput.toLowerCase(), terminalInput.toLowerCase());
 
-        return distance < 4;
+        return distance < distanceThreshold;
     }
 
-    public boolean isCorrectlySpelled(String word) {
-        return dictionary.contains(word.toLowerCase());
+    public boolean isNotCorrectlySpelled(String word) {
+        return !dictionary.contains(word.toLowerCase());
     }
 
     public List<String> getSuggestions(String word) {
         List<String> suggestions = new ArrayList<>();
 
-        // If its a single letter word dont check
-        if (!(word.length() < 3 && word.matches("[a-zA-Z]+"))) {
+        // If its a 3 or less letter word or contains numbers dont check
+        if (!(word.length() < minWordLength && word.matches("[a-zA-Z]+"))) {
 
             // Check Levenshtein distance
             int minDistance = Integer.MAX_VALUE;
@@ -54,11 +51,66 @@ public class SpellChecker {
                     suggestions.add(dictWord);
                 }
             }
-            if (minDistance > 3){suggestions.clear();}
+            if (minDistance > distanceThreshold) {
+                suggestions.clear();
+            }
 //            System.out.println(minDistance);
         }
 
         return suggestions;
+    }
+
+    public ArrayList<String> correctedPrompts() {
+        ArrayList<String> output = new ArrayList<>();
+        String[] splitInput = userInput.split(" ");
+
+        processPrompts(splitInput, output);
+        output = removeIncorrectPrompt(output);
+
+        if (output.size() == 0){
+            output.add(userInput);
+        }
+
+        return output;
+    }
+
+    private void processPrompts(String[] prompt, ArrayList<String> output) {
+        for (int currentWord = 0; currentWord < prompt.length; currentWord++) {
+            String word = prompt[currentWord];
+            if (isNotCorrectlySpelled(word)) {
+                List<String> suggestions = getSuggestions(word);
+                for (String sug : suggestions) {
+                    String[] tempOutput = Arrays.copyOf(prompt, prompt.length);
+                    tempOutput[currentWord] = sug;
+                    output.add(String.join(" ", tempOutput));
+                    processPrompts(tempOutput, output); // Recursively process the updated prompt
+                }
+            }
+        }
+    }
+
+    private ArrayList<String> removeIncorrectPrompt(ArrayList<String> prompt){
+        for (int i = 0; i < prompt.size(); i++) {
+            String[] splitPrompt = prompt.get(i).split(" ");
+            for (String word:splitPrompt) {
+                if (isNotCorrectlySpelled(word) && word.length() >= minWordLength){
+                    prompt.remove(i);
+                    i--;
+                    break;
+                }
+            }
+        }
+
+        ArrayList<String> duplicatesRemoved = new ArrayList<>();
+        HashSet<String> set = new HashSet<>();
+
+        for (String element : prompt) {
+            if (set.add(element)) {
+                duplicatesRemoved.add(element);
+            }
+        }
+
+        return duplicatesRemoved;
     }
 
     private int getLevenshteinDistance(String word, String dictWord) {
@@ -103,16 +155,6 @@ public class SpellChecker {
     }
 
     private void createKeyboardMap() {
-        keyboardMap.put('1', List.of('2'));
-        keyboardMap.put('2', Arrays.asList('1', '3'));
-        keyboardMap.put('3', Arrays.asList('2', '4'));
-        keyboardMap.put('4', Arrays.asList('3', '5'));
-        keyboardMap.put('5', Arrays.asList('4', '6'));
-        keyboardMap.put('6', Arrays.asList('5', '7'));
-        keyboardMap.put('7', Arrays.asList('6', '8'));
-        keyboardMap.put('8', Arrays.asList('7', '9'));
-        keyboardMap.put('9', Arrays.asList('8', '0'));
-        keyboardMap.put('0', List.of('9'));
         keyboardMap.put('q', Arrays.asList('w', 'a', 's'));
         keyboardMap.put('w', Arrays.asList('q', 'e', 'a', 's', 'd'));
         keyboardMap.put('e', Arrays.asList('w', 'r', 's', 'd', 'f'));
@@ -141,38 +183,79 @@ public class SpellChecker {
         keyboardMap.put('m', Arrays.asList('h', 'j', 'k', 'n'));
     }
 
-    public static String cleanWord(String input) {
+    public String cleanWord(String input) {
         return input.replaceAll("[^\\p{L}\\p{N}]+", "");
     }
 
-    public static void main(String[] args) {
-        String[] correct = "There are many people who enjoy listening to music and playing sports such as football, basketball, and tennis. They like to go outdoors, explore nature, and go on adventures. They also enjoy socializing with friends and family, and having fun in their free time.".split(" ");
-        String[] misspelled = "Ther are any peple who njoy liseng to musik and payng sportes succh as fotball, bascketball, and tenise. They lik to go outors, explor natuer, and go on adventurs. Tey aso enjo socializin with frends and famly, and hain funm in their fre time.".split(" ");
-        String[] variant = "There are lots humans who like singing to songs while enjoying games such as basketball, football, plus golf. They enjoy to go outside, explain things, and go on trips. Those also enjoy talking with family and friends, and receiving enjoyment in our off days.".split(" ");
-
-
-        SpellChecker checker = new SpellChecker();
-
-        int cost1 = 26;
-        int cost2 = 0;
-        for (int i = 0; i < correct.length; i++) {
-
-            if (checker.checkSingleWord(misspelled[i], correct[i])){
-                if (!(misspelled[i].length() < 3) && !misspelled[i].equalsIgnoreCase(correct[i])){
-                    misspelled[i] = correct[i];
-                    cost1--;
-                }
-            }
-
-            if (checker.checkSingleWord(variant[i], correct[i])){
-                if (!(variant[i].length() < 3) && !variant[i].equalsIgnoreCase(correct[i])){
-                    variant[i] = correct[i];
-                    cost2++;
+    public void generateDictionary(HashMap<String, ArrayList<String>> rules) {
+        for (Map.Entry<String, ArrayList<String>> entry : rules.entrySet()) {
+            ArrayList<String> rhs = entry.getValue();
+            for (String s : rhs) {
+                if (!s.contains("<") && !s.contains(">") && s.matches("[a-zA-Z]+") && s.length() >= minWordLength) {
+                    dictionary.add(s.toLowerCase());
                 }
             }
         }
+    }
 
-        System.out.println(cost1);
-        System.out.println(cost2);
+    private void setDictionary(Set<String> dictionary) {
+        this.dictionary = dictionary;
+    }
+
+    public static void main(String[] args) {
+        Set<String> rules = new HashSet<>();
+        rules.add("which");
+        rules.add("lectures");
+        rules.add("have");
+        rules.add("monday");
+        rules.add("sonday");
+
+        SpellChecker test = new SpellChecker("Whic leures do I have on Moday at 9");
+        test.setDictionary(rules);
+
+        ArrayList<String> outputs = test.correctedPrompts();
+
+        for (String s : outputs) {
+            System.out.println(s);
+        }
+
+
+//        String[] correct = "There are many people who enjoy listening to music and playing sports such as football, basketball, and tennis. They like to go outdoors, explore nature, and go on adventures. They also enjoy socializing with friends and family, and having fun in their free time.".split(" ");
+//        String[] misspelled = "Ther are any peple who njoy liseng to musik and payng sportes succh as fotball, bascketball, and tenise. They lik to go outors, explor natuer, and go on adventurs. Tey aso enjo socializin with frends and famly, and hain funm in their fre time.".split(" ");
+//        String[] variant = "There are lots humans who like singing to songs while enjoying games such as basketball, football, plus golf. They enjoy to go outside, explain things, and go on trips. Those also enjoy talking with family and friends, and receiving enjoyment in our off days.".split(" ");
+//
+//
+//        SpellChecker checker = new SpellChecker();
+//
+//        System.out.println(checker.getLevenshteinDistance("there", "which"));
+//        System.out.println(checker.getLevenshteinDistance("there", "lectures"));
+//        System.out.println(checker.getLevenshteinDistance("there", "are"));
+//        System.out.println(checker.getLevenshteinDistance("there", "there"));
+//        System.out.println(checker.getLevenshteinDistance("there", "on"));
+//        System.out.println(checker.getLevenshteinDistance("there", "mnday"));
+//        System.out.println(checker.getLevenshteinDistance("there", "at"));
+//        System.out.println(checker.getLevenshteinDistance("there", "9"));
+//
+//        int cost1 = 26;
+//        int cost2 = 0;
+//        for (int i = 0; i < correct.length; i++) {
+//
+//            if (checker.checkSingleWord(misspelled[i], correct[i])){
+//                if (!(misspelled[i].length() < 3) && !misspelled[i].equalsIgnoreCase(correct[i])){
+//                    misspelled[i] = correct[i];
+//                    cost1--;
+//                }
+//            }
+//
+//            if (checker.checkSingleWord(variant[i], correct[i])){
+//                if (!(variant[i].length() < 3) && !variant[i].equalsIgnoreCase(correct[i])){
+//                    variant[i] = correct[i];
+//                    cost2++;
+//                }
+//            }
+//        }
+//
+//        System.out.println(cost1);
+//        System.out.println(cost2);
     }
 }
