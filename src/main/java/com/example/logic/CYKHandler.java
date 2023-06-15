@@ -38,6 +38,69 @@ public class CYKHandler {
         return "No answer found";
     }
 
+    public String read(ArrayList<String> prompts){
+        ArrayList<File> files = getAllQuestions();
+
+        for (File file:files) {
+            CSVReader reader = new CSVReader(file);
+            ArrayList<String> ruleContent = reader.getRuleContent();
+            String finalPrompt = "";
+            String finalContent = "";
+
+            int min = Integer.MAX_VALUE;
+            for (String prompt:prompts) {
+                for (String content:ruleContent) {
+                    if (comparePrompts(prompt, content) < min){
+                        finalContent = content;
+                        finalPrompt = prompt;
+                    }
+                }
+            }
+
+
+
+
+        }
+
+        return "";
+    }
+
+    public int comparePrompts(String prompt, String content){
+        String[] splitPrompt = prompt.split(" ");
+        String[] splitContent = content.split(" ");
+
+        int length = Integer.min(splitContent.length, splitPrompt.length);
+        int counter = Math.abs(splitContent.length - splitPrompt.length);
+        for (int i = 0; i < length; i++) {
+            if (!splitContent[i].equalsIgnoreCase(splitPrompt[i])){
+                counter++;
+            }
+        }
+
+        return counter;
+    }
+
+    public ArrayList<File> getAllQuestions() {
+        String folderPath = "Questions";
+        ArrayList allFiles = new ArrayList();
+
+        // Get a list of all the files in the folder
+        File folder = new File(folderPath);
+        File[] fileList = folder.listFiles();
+
+        // Loop over each file in the folder and read the first line
+        for (File file : fileList) {
+            try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+                br.readLine();
+                allFiles.add(file);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return allFiles;
+    }
+
     public static String cleanWord(String input) {
         return input.replaceAll("[^\\p{L}\\p{N}\\s]+", "");
     }

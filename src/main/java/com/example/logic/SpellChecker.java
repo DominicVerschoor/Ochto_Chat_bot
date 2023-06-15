@@ -114,6 +114,8 @@ public class SpellChecker {
     }
 
     private int getLevenshteinDistance(String word, String dictWord) {
+        word = word.toLowerCase();
+        dictWord = dictWord.toLowerCase();
         int wordLength = word.length();
         int dictLength = dictWord.length();
         int[][] comparisonMatrix = new int[wordLength + 1][dictLength + 1];
@@ -203,21 +205,28 @@ public class SpellChecker {
     }
 
     public static void main(String[] args) {
-        Set<String> rules = new HashSet<>();
-        rules.add("which");
-        rules.add("lectures");
-        rules.add("have");
-        rules.add("monday");
-        rules.add("sonday");
+        SpellChecker checker = new SpellChecker("Which lectures are there on monday");
+        System.out.println(checker.getLevenshteinDistance("Which lectures are there on monday", "Which lectures are there on <day> at <time>"));
+        System.out.println(checker.getLevenshteinDistance("Which lectures are there on monday", "Which lectures are there at <time> on <day>"));
+        System.out.println(checker.getLevenshteinDistance("Which lectures are there on monday", "at <day> on <time> which lectures do i have"));
+        System.out.println(checker.getLevenshteinDistance("Which lectures are there on monday", "on <day> at <DAY> which lectures do i have"));
 
-        SpellChecker test = new SpellChecker("Whic leures do I have on Moday at 9");
-        test.setDictionary(rules);
 
-        ArrayList<String> outputs = test.correctedPrompts();
-
-        for (String s : outputs) {
-            System.out.println(s);
-        }
+//        Set<String> rules = new HashSet<>();
+//        rules.add("which");
+//        rules.add("lectures");
+//        rules.add("have");
+//        rules.add("monday");
+//        rules.add("sonday");
+//
+//        SpellChecker test = new SpellChecker("Whic leures do I have on Moday at 9");
+//        test.setDictionary(rules);
+//
+//        ArrayList<String> outputs = test.correctedPrompts();
+//
+//        for (String s : outputs) {
+//            System.out.println(s);
+//        }
 
 
 //        String[] correct = "There are many people who enjoy listening to music and playing sports such as football, basketball, and tennis. They like to go outdoors, explore nature, and go on adventures. They also enjoy socializing with friends and family, and having fun in their free time.".split(" ");
