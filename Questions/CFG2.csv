@@ -1,0 +1,18 @@
+Rule <S> <ACTION>
+Rule <ACTION> <GREET> | <ASK> | <WEATHER>
+Rule <GREET> Good <TIMEOFDAY> | How is your <DAY>
+Rule <ASK> What is the <SUBJECT> today | Do you have any information about <SUBJECT>
+Rule <WEATHER> What's the weather like in <PLACE>
+Rule <TIMEOFDAY> morning | afternoon | evening
+Rule <SUBJECT> lecture | assignment | test
+Rule <DAY> day | evening
+Rule <PLACE> San Francisco | London | Sydney | New York | Tokyo
+
+Action <GREET> * <TIMEOFDAY> morning Good morning to you too!
+Action <GREET> * <DAY> day How is your day going?
+Action <ASK> * <SUBJECT> lecture The lecture today is about Machine Learning
+Action <ASK> * <SUBJECT> assignment Your assignment today is to write a summary on AI advancements
+Action <ASK> * <SUBJECT> test The test today will cover the topic of Neural Networks
+Action <WEATHER> * <PLACE> San Francisco The weather in San Francisco is sunny
+Action <WEATHER> * <PLACE> London The weather in London is cloudy
+Action I'm sorry, I don't understand the question.
