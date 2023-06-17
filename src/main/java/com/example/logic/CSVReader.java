@@ -12,6 +12,7 @@ public class CSVReader {
     private String action;
     private ArrayList<String> rules;
     private ArrayList<String> ruleContent;
+    private HashMap<String, ArrayList<String>> terminalMap;
     private ArrayList<String> responses;
     private File file;
     private List<String> everything;
@@ -21,6 +22,7 @@ public class CSVReader {
         rules = new ArrayList<>();
         responses = new ArrayList<>();
         ruleContent = new ArrayList<>();
+        terminalMap = new HashMap<>();
         read();
     }
 
@@ -80,17 +82,16 @@ public class CSVReader {
     private void removeTerminals(HashMap<String, ArrayList<String>> contentMap) {
         ArrayList<String> terminalKeys = new ArrayList<>();
 
-        for (HashMap.Entry<String, ArrayList<String>> entry : contentMap.entrySet()) {
-            String key = entry.getKey();
-            ArrayList<String> values = entry.getValue();
+        contentMap.forEach((key, values) -> {
             if (!(values.get(0).contains("<") && values.get(0).contains(">"))) {
                 terminalKeys.add(key);
             }
-        }
+        });
 
-        for (String key : terminalKeys) {
+        terminalKeys.forEach(key -> {
+            terminalMap.put(key, contentMap.get(key));
             contentMap.remove(key);
-        }
+        });
     }
 
     private void readRuleContent(HashMap<String, ArrayList<String>> contentMap, String currentLine) {
@@ -109,6 +110,10 @@ public class CSVReader {
         }
 
         contentMap.put(splitCurrentLine[1], content);
+    }
+
+    public HashMap<String, ArrayList<String>> getTerminalMap() {
+        return terminalMap;
     }
 
     public ArrayList<String> getRuleContent() {

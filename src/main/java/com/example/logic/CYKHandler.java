@@ -33,6 +33,7 @@ public class CYKHandler {
                 if (run.belongs()) {
                     return run.getAction();
                 }
+                read(correctedPrompts);
             }
         }
         return "No answer found";
@@ -40,27 +41,31 @@ public class CYKHandler {
 
     public String read(ArrayList<String> prompts){
         ArrayList<File> files = getAllQuestions();
+        HashMap<String, ArrayList<String>> terminalMap = new HashMap<>();
+        int min = Integer.MAX_VALUE;
+        String finalPrompt = "";
+        String finalContent = "";
 
         for (File file:files) {
             CSVReader reader = new CSVReader(file);
             ArrayList<String> ruleContent = reader.getRuleContent();
-            String finalPrompt = "";
-            String finalContent = "";
 
-            int min = Integer.MAX_VALUE;
             for (String prompt:prompts) {
                 for (String content:ruleContent) {
                     if (comparePrompts(prompt, content) < min){
                         finalContent = content;
                         finalPrompt = prompt;
+                        min = comparePrompts(prompt, content);
+                        terminalMap = reader.getTerminalMap();
                     }
                 }
             }
-
-
-
-
         }
+
+        // TODO: Extract slots from final prompt
+        // TODO: Detect which slots are missing
+        System.out.println(finalContent);
+        System.out.println(finalPrompt);
 
         return "";
     }

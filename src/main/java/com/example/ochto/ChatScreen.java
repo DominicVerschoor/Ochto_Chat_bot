@@ -130,7 +130,7 @@ public class ChatScreen implements Initializable {
 
         if (!message.isEmpty()) {
             float start = System.currentTimeMillis();
-
+            // TODO: Remember previous user inputs
             handler = new CYKHandler();
             message = handler.retrieveAnswer(message);
 
