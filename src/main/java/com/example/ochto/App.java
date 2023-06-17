@@ -14,7 +14,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        ProcessBuilder processBuilder = new ProcessBuilder("python", "Python_facial_recognition/model_1/detector.py");
+        ProcessBuilder processBuilder = new ProcessBuilder("python", "Python_facial_recognition/model_1/Recognizer.py");
         Process proc = processBuilder.start();
         BufferedReader out = new BufferedReader(new InputStreamReader(proc.getInputStream()));
         name = out.readLine();
