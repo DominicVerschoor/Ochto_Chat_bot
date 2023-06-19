@@ -48,7 +48,7 @@ public class CYKHandler {
         int min = Integer.MAX_VALUE;
         String finalPrompt = "";
         String finalContent = "";
-
+        int counter = 0;
         for (File file:files) {
             CSVReader reader = new CSVReader(file);
             ArrayList<String> ruleContent = reader.getRuleContent();
@@ -60,17 +60,25 @@ public class CYKHandler {
                         finalPrompt = prompt;
                         min = comparePrompts(prompt, content);
                         terminalMap = reader.getTerminalMap();
+                        counter = comparePrompts(prompt,content);
                     }
                 }
             }
         }
+        System.out.println(counter);
+        if(extractSlots(finalPrompt,finalContent, terminalMap)!= null) {
+            ArrayList<String> missingSlots = extractSlots(finalPrompt, finalContent, terminalMap);for (String slot:missingSlots) {
+                output.append(", ").append(slot);
+            }
 
-        ArrayList<String> missingSlots = extractSlots(finalPrompt, finalContent, terminalMap);
-
-        for (String slot:missingSlots) {
-            output.append(", ").append(slot);
+        }
+        else{
+            return "Can you give me more information";
         }
 
+        if(counter >= 3){
+            return "Sorry I don't know";
+        }
         return output.toString();
     }
 
@@ -90,7 +98,10 @@ public class CYKHandler {
                 if (prompt.toLowerCase().contains(ter.replaceAll("[^\\p{L}\\p{N}]+", "").toLowerCase())){
                     slots.remove(slot);
                 }
+            } if (slots.size() == 0){
+                return null;
             }
+
         }
 
         return slots;
