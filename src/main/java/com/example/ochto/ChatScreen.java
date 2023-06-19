@@ -22,10 +22,7 @@ import javafx.scene.text.Font;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Random;
-import java.util.ResourceBundle;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -74,10 +71,13 @@ public class ChatScreen implements Initializable {
     @FXML
     private Button skillButton;
     private CYKHandler handler;
-    private SpellChecker spellChecker;
+    private ArrayList<String> userChatLog;
+    private ArrayList<String> octoChatLog;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        userChatLog = new ArrayList<>();
+        octoChatLog = new ArrayList<>();
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         vbox_message.heightProperty().addListener(new ChangeListener<Number>() {
@@ -130,10 +130,12 @@ public class ChatScreen implements Initializable {
 
         if (!message.isEmpty()) {
             float start = System.currentTimeMillis();
+
+            userChatLog.add(message);
             // TODO: Remember previous user inputs
             handler = new CYKHandler();
             message = handler.retrieveAnswer(message);
-
+            octoChatLog.add(message);
 
             float end = System.currentTimeMillis();
 //            System.out.println("Time in ms: " + (end - start));
@@ -153,6 +155,12 @@ public class ChatScreen implements Initializable {
         };
         int delay = 1;
         timer.schedule(tt, delay * 500);
+
+        for (int i = 0; i < userChatLog.size(); i++) {
+            System.out.println("User: " + userChatLog.get(i));
+            System.out.println("Octo: " + octoChatLog.get(i));
+        }
+        System.out.println();
     }
 
     public void addUMessage(String message, VBox vbox) {

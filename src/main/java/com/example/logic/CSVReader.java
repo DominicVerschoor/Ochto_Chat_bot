@@ -89,7 +89,7 @@ public class CSVReader {
         });
 
         terminalKeys.forEach(key -> {
-            terminalMap.put(key, contentMap.get(key));
+            terminalMap.put(key.toLowerCase(), contentMap.get(key));
             contentMap.remove(key);
         });
     }

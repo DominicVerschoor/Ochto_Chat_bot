@@ -3,6 +3,7 @@ package com.example.logic;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.*;
 import java.io.File;
 
@@ -22,24 +23,26 @@ public class CYKHandler {
     }
 
     public String retrieveAnswer(String prompt) {
+        String output = "No answer found";
         prompt = cleanWord(prompt);
         for (int i = 0; i < rules.size(); i++) {
             SpellChecker spellChecker = new SpellChecker(prompt);
             spellChecker.generateDictionary(rules.get(i));
             ArrayList<String> correctedPrompts = spellChecker.correctedPrompts();
             for (String curPrompt : correctedPrompts) {
-                System.out.println(curPrompt);
                 CYK run = new CYK(rules.get(i), actions.get(i), curPrompt);
                 if (run.belongs()) {
                     return run.getAction();
                 }
-                read(correctedPrompts);
+                output = read(correctedPrompts);
             }
         }
-        return "No answer found";
+        return output;
     }
 
-    public String read(ArrayList<String> prompts){
+    private String read(ArrayList<String> prompts){
+        StringBuilder output = new StringBuilder();
+        output.append("Can you also give me the");
         ArrayList<File> files = getAllQuestions();
         HashMap<String, ArrayList<String>> terminalMap = new HashMap<>();
         int min = Integer.MAX_VALUE;
@@ -62,15 +65,38 @@ public class CYKHandler {
             }
         }
 
-        // TODO: Extract slots from final prompt
-        // TODO: Detect which slots are missing
-        System.out.println(finalContent);
-        System.out.println(finalPrompt);
+        ArrayList<String> missingSlots = extractSlots(finalPrompt, finalContent, terminalMap);
 
-        return "";
+        for (String slot:missingSlots) {
+            output.append(", ").append(slot);
+        }
+
+        return output.toString();
     }
 
-    public int comparePrompts(String prompt, String content){
+    private ArrayList<String> extractSlots(String prompt, String content, HashMap<String, ArrayList<String>> terminalMap){
+        ArrayList<String> slots = new ArrayList<>();
+        String[] splitContent = content.toLowerCase().split(" ");
+
+        for (String con:splitContent) {
+            if (con.contains("<") && con.contains(">")){
+                slots.add(con);
+            }
+        }
+
+        for (String slot: slots) {
+            ArrayList<String> currentTerminal = terminalMap.get(slot);
+            for (String ter:currentTerminal) {
+                if (prompt.toLowerCase().contains(ter.replaceAll("[^\\p{L}\\p{N}]+", "").toLowerCase())){
+                    slots.remove(slot);
+                }
+            }
+        }
+
+        return slots;
+    }
+
+    private int comparePrompts(String prompt, String content){
         String[] splitPrompt = prompt.split(" ");
         String[] splitContent = content.split(" ");
 
@@ -85,7 +111,7 @@ public class CYKHandler {
         return counter;
     }
 
-    public ArrayList<File> getAllQuestions() {
+    private ArrayList<File> getAllQuestions() {
         String folderPath = "Questions";
         ArrayList allFiles = new ArrayList();
 
@@ -106,7 +132,7 @@ public class CYKHandler {
         return allFiles;
     }
 
-    public static String cleanWord(String input) {
+    private static String cleanWord(String input) {
         return input.replaceAll("[^\\p{L}\\p{N}\\s]+", "");
     }
 
@@ -214,77 +240,6 @@ public class CYKHandler {
         assert files != null;
         for (File file : files) {
             result.add(CSVHandler.getActions(file));
-        }
-        return result;
-    }
-
-    private ArrayList<HashMap<String, ArrayList<String>>> generateDictionary() {
-        ArrayList<HashMap<String, ArrayList<String>>> output = new ArrayList<>();
-        File folder = new File("Questions/");
-        File[] files = folder.listFiles();
-        assert files != null;
-        for (File file : files) {
-            output.add(getTerminals(file));
-        }
-        return output;
-    }
-
-    public static HashMap<String, ArrayList<String>> getTerminals(File fileName) {
-        HashMap<String, ArrayList<String>> result = new HashMap<String, ArrayList<String>>();
-        List<String> lines = new ArrayList<>();
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(fileName));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                lines.add(line);
-            }
-            reader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        for (String line : lines) {
-            String[] words = line.split(" ");
-            String cleanLine = line.substring(6 + words[1].length(), line.length());
-            if (words[0].equalsIgnoreCase("Rule")) {
-                boolean terminal = false;
-                String[] entries = cleanLine.split("[|]");
-                ArrayList<String> newEntries = new ArrayList<String>(Arrays.asList(entries));
-                for (int i = 0; i < newEntries.size(); i++) {
-                    if (newEntries.get(i).charAt(0) == ' ') {
-                        newEntries.set(i, newEntries.get(i).substring(1, newEntries.get(i).length()));
-                    }
-                    if (newEntries.get(i).charAt(newEntries.get(i).length() - 1) == ' ') {
-                        newEntries.set(i, newEntries.get(i).substring(0, newEntries.get(i).length() - 1));
-                    }
-                }
-                for (int i = 0; i < newEntries.size(); i++) {
-                    String[] entryWords = newEntries.get(i).split(" ");
-                    if (entryWords.length > 1 || entryWords[0].charAt(0) == '<') {
-                        for (int j = 0; j < entryWords.length; j++) {
-                            String word = entryWords[j].replaceAll("\\s", "");
-                            if (word.charAt(0) == '<') {
-                                word = word.substring(1, word.length() - 1);
-                            } else {
-                                word = "W";
-                                terminal = false;
-                            }
-                            entryWords[j] = word;
-                        }
-                    }
-                    ArrayList<String> temp = new ArrayList<String>(Arrays.asList(entryWords));
-                    for (int j = 0; j < temp.size() - 1; j++) {
-                        if (temp.get(j).equalsIgnoreCase("W") && temp.get(j + 1).equalsIgnoreCase("W")) {
-                            temp.remove(j);
-                        }
-                    }
-                    entryWords = temp.toArray(new String[temp.size()]);
-                    newEntries.set(i, String.join("", entryWords));
-                }
-                if (terminal) {
-                    result.put(words[1].substring(1, words[1].length() - 1), newEntries);
-                }
-            }
         }
         return result;
     }
