@@ -22,7 +22,7 @@ public class CYKHandler {
     }
 
     public String retrieveAnswer(String prompt) {
-        String output = "No answer found";
+        String output = null;
         prompt = cleanWord(prompt);
         SpellChecker spellChecker = new SpellChecker(prompt);
         spellChecker.generateDictionary(rules);
@@ -30,15 +30,22 @@ public class CYKHandler {
         for (int i = 0; i < rules.size(); i++) {
             for (String curPrompt : correctedPrompts) {
                 CYK run = new CYK(rules.get(i), actions.get(i), curPrompt);
-                output = read(curPrompt);
                 if (run.belongs()) {
-                    return run.getAction(output);
-                }
-                if (output.contains("<") && output.contains(">")) {
-                    return output;
+                    output = run.getAction();
                 }
             }
         }
+
+        if (output == null) {
+            for (String curPrompt : correctedPrompts) {
+                String tempRead = read(curPrompt);
+                if (tempRead.contains("<") && tempRead.contains(">")) {
+                    output = tempRead;
+                }
+            }
+        }
+
+
         return output;
     }
 
@@ -67,9 +74,7 @@ public class CYKHandler {
             }
         }
 
-        if (counter == 1) {
-            return "";
-        } else if (extractSlots(finalPrompt, finalContent, terminalMap) != null) {
+        if (extractSlots(finalPrompt, finalContent, terminalMap) != null) {
             ArrayList<String> missingSlots = extractSlots(finalPrompt, finalContent, terminalMap);
             assert missingSlots != null;
             for (String slot : missingSlots) {
@@ -117,11 +122,18 @@ public class CYKHandler {
     private int comparePrompts(String prompt, String content) {
         String[] splitPrompt = prompt.split(" ");
         String[] splitContent = content.split(" ");
+        ArrayList<String> prunedContent = new ArrayList<>();
 
-        int length = Integer.min(splitContent.length, splitPrompt.length);
-        int counter = Math.max(Math.abs(splitContent.length - splitPrompt.length), 2);
+        for (String word : splitContent) {
+            if (!word.contains("<") && !word.contains(">")) {
+                prunedContent.add(word);
+            }
+        }
+
+        int length = Integer.min(prunedContent.size(), splitPrompt.length);
+        int counter = Math.abs(prunedContent.size() - splitPrompt.length);
         for (int i = 0; i < length; i++) {
-            if (!splitContent[i].equalsIgnoreCase(splitPrompt[i])) {
+            if (!prunedContent.get(i).equalsIgnoreCase(splitPrompt[i])) {
                 counter++;
             }
         }

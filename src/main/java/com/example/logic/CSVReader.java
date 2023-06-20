@@ -103,7 +103,11 @@ public class CSVReader {
                 substring.append(splitCurrentLine[i]).append(" ");
             }
 
-            if (splitCurrentLine[i].equals("|") || i == splitCurrentLine.length - 1) {
+            if (splitCurrentLine[i].equals("|")) {
+                substring.deleteCharAt(substring.length() - 1);
+                content.add(substring.toString());
+                substring = new StringBuilder();
+            } else if (i == splitCurrentLine.length - 1) {
                 content.add(substring.toString());
                 substring = new StringBuilder();
             }

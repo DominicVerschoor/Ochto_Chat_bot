@@ -103,7 +103,7 @@ public class CYK {
     }
 
 
-    public String getAction(String alternate){
+    public String getAction(){
         String key = getKey(back[words.length-1][0][indexOfNT("<s>")].get(0)[1], back[words.length-1][0][indexOfNT("<s>")].get(0)[2]);
         ArrayList<String[]> slots = extractSlots();
         for(Action action : actions){
@@ -111,7 +111,7 @@ public class CYK {
                 return action.getAction();
             }
         }
-        return alternate;
+        return null;
     }
 
     private boolean slotsMatch(ArrayList<String[]> cykSlots, ArrayList<String[]> skillSlots){
