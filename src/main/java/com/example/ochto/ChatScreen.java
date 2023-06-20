@@ -134,10 +134,10 @@ public class ChatScreen implements Initializable {
             userChatLog.add(message);
             // TODO: Remember previous user inputs
             handler = new CYKHandler();
-            message = "";
-            for(int i = 0; i < userChatLog.size(); i++){
-                message = message+  userChatLog.get(i) + " ";
-            }
+//            message = "";
+//            for(int i = 0; i < userChatLog.size(); i++){
+//                message = message + userChatLog.get(i) + " ";
+//            }
             message = handler.retrieveAnswer(message);
             octoChatLog.add(message);
 

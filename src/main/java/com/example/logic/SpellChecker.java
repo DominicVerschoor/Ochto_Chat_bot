@@ -189,12 +189,14 @@ public class SpellChecker {
         return input.replaceAll("[^\\p{L}\\p{N}]+", "");
     }
 
-    public void generateDictionary(HashMap<String, ArrayList<String>> rules) {
-        for (Map.Entry<String, ArrayList<String>> entry : rules.entrySet()) {
-            ArrayList<String> rhs = entry.getValue();
-            for (String s : rhs) {
-                if (!s.contains("<") && !s.contains(">") && s.matches("[a-zA-Z]+") && s.length() >= minWordLength) {
-                    dictionary.add(s.toLowerCase());
+    public void generateDictionary(ArrayList<HashMap<String, ArrayList<String>>> rules) {
+        for (HashMap<String, ArrayList<String>> rule : rules) {
+            for (Map.Entry<String, ArrayList<String>> entry : rule.entrySet()) {
+                ArrayList<String> rhs = entry.getValue();
+                for (String s : rhs) {
+                    if (!s.contains("<") && !s.contains(">") && s.matches("[a-zA-Z]+") && s.length() >= minWordLength) {
+                        dictionary.add(s.toLowerCase());
+                    }
                 }
             }
         }

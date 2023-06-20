@@ -3,7 +3,6 @@ package com.example.logic;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.*;
 import java.io.File;
 
@@ -25,22 +24,25 @@ public class CYKHandler {
     public String retrieveAnswer(String prompt) {
         String output = "No answer found";
         prompt = cleanWord(prompt);
+        SpellChecker spellChecker = new SpellChecker(prompt);
+        spellChecker.generateDictionary(rules);
+        ArrayList<String> correctedPrompts = spellChecker.correctedPrompts();
         for (int i = 0; i < rules.size(); i++) {
-            SpellChecker spellChecker = new SpellChecker(prompt);
-            spellChecker.generateDictionary(rules.get(i));
-            ArrayList<String> correctedPrompts = spellChecker.correctedPrompts();
             for (String curPrompt : correctedPrompts) {
                 CYK run = new CYK(rules.get(i), actions.get(i), curPrompt);
+                output = read(curPrompt);
                 if (run.belongs()) {
-                    return run.getAction();
+                    return run.getAction(output);
                 }
-                output = read(correctedPrompts);
+                if (output.contains("<") && output.contains(">")) {
+                    return output;
+                }
             }
         }
         return output;
     }
 
-    private String read(ArrayList<String> prompts){
+    private String read(String prompt) {
         StringBuilder output = new StringBuilder();
         output.append("Can you also give me the");
         ArrayList<File> files = getAllQuestions();
@@ -49,72 +51,77 @@ public class CYKHandler {
         String finalPrompt = "";
         String finalContent = "";
         int counter = 0;
-        for (File file:files) {
+        for (File file : files) {
             CSVReader reader = new CSVReader(file);
             ArrayList<String> ruleContent = reader.getRuleContent();
 
-            for (String prompt:prompts) {
-                for (String content:ruleContent) {
-                    if (comparePrompts(prompt, content) < min){
-                        finalContent = content;
-                        finalPrompt = prompt;
-                        min = comparePrompts(prompt, content);
-                        terminalMap = reader.getTerminalMap();
-                        counter = comparePrompts(prompt,content);
-                    }
+            for (String content : ruleContent) {
+                int compare = comparePrompts(prompt, content);
+                if (compare < min) {
+                    finalContent = content;
+                    finalPrompt = prompt;
+                    min = compare;
+                    terminalMap = reader.getTerminalMap();
+                    counter = compare;
                 }
             }
         }
-        System.out.println(counter);
-        if(extractSlots(finalPrompt,finalContent, terminalMap)!= null) {
-            ArrayList<String> missingSlots = extractSlots(finalPrompt, finalContent, terminalMap);for (String slot:missingSlots) {
+
+        if (counter == 1) {
+            return "";
+        } else if (extractSlots(finalPrompt, finalContent, terminalMap) != null) {
+            ArrayList<String> missingSlots = extractSlots(finalPrompt, finalContent, terminalMap);
+            assert missingSlots != null;
+            for (String slot : missingSlots) {
                 output.append(", ").append(slot);
             }
 
-        }
-        else{
+        } else {
             return "Can you give me more information";
         }
 
-        if(counter >= 3){
+        if (counter > 5) {
             return "Sorry I don't know";
         }
         return output.toString();
     }
 
-    private ArrayList<String> extractSlots(String prompt, String content, HashMap<String, ArrayList<String>> terminalMap){
+    private ArrayList<String> extractSlots(String prompt, String content, HashMap<String, ArrayList<String>> terminalMap) {
         ArrayList<String> slots = new ArrayList<>();
         String[] splitContent = content.toLowerCase().split(" ");
 
-        for (String con:splitContent) {
-            if (con.contains("<") && con.contains(">")){
+        for (String con : splitContent) {
+            if (con.contains("<") && con.contains(">")) {
                 slots.add(con);
             }
         }
 
-        for (String slot: slots) {
+        Iterator<String> iterator = slots.iterator();
+        while (iterator.hasNext()) {
+            String slot = iterator.next();
             ArrayList<String> currentTerminal = terminalMap.get(slot);
-            for (String ter:currentTerminal) {
-                if (prompt.toLowerCase().contains(ter.replaceAll("[^\\p{L}\\p{N}]+", "").toLowerCase())){
-                    slots.remove(slot);
+            for (String ter : currentTerminal) {
+                if (prompt.toLowerCase().contains(ter.replaceAll("[^\\p{L}\\p{N}]+", "").toLowerCase())) {
+                    iterator.remove();
+                    break; // Exit the inner loop once a match is found
                 }
-            } if (slots.size() == 0){
+            }
+            if (slots.isEmpty()) {
                 return null;
             }
-
         }
 
         return slots;
     }
 
-    private int comparePrompts(String prompt, String content){
+    private int comparePrompts(String prompt, String content) {
         String[] splitPrompt = prompt.split(" ");
         String[] splitContent = content.split(" ");
 
         int length = Integer.min(splitContent.length, splitPrompt.length);
-        int counter = Math.abs(splitContent.length - splitPrompt.length);
+        int counter = Math.max(Math.abs(splitContent.length - splitPrompt.length), 2);
         for (int i = 0; i < length; i++) {
-            if (!splitContent[i].equalsIgnoreCase(splitPrompt[i])){
+            if (!splitContent[i].equalsIgnoreCase(splitPrompt[i])) {
                 counter++;
             }
         }
@@ -124,13 +131,14 @@ public class CYKHandler {
 
     private ArrayList<File> getAllQuestions() {
         String folderPath = "Questions";
-        ArrayList allFiles = new ArrayList();
+        ArrayList<File> allFiles = new ArrayList<>();
 
         // Get a list of all the files in the folder
         File folder = new File(folderPath);
         File[] fileList = folder.listFiles();
 
         // Loop over each file in the folder and read the first line
+        assert fileList != null;
         for (File file : fileList) {
             try (BufferedReader br = new BufferedReader(new FileReader(file))) {
                 br.readLine();

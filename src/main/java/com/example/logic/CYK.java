@@ -72,10 +72,6 @@ public class CYK {
         }
     }
 
-    public ArrayList<String[]> labels (){
-        return labels;
-    }
-
     private ArrayList<String[]> getLabels (int row, int col, int rule){
         ArrayList<String[]> result = new ArrayList<String[]>();
         if(row == 0){
@@ -107,7 +103,7 @@ public class CYK {
     }
 
 
-    public String getAction(){
+    public String getAction(String alternate){
         String key = getKey(back[words.length-1][0][indexOfNT("<s>")].get(0)[1], back[words.length-1][0][indexOfNT("<s>")].get(0)[2]);
         ArrayList<String[]> slots = extractSlots();
         for(Action action : actions){
@@ -115,7 +111,7 @@ public class CYK {
                 return action.getAction();
             }
         }
-        return "I dunno :P";
+        return alternate;
     }
 
     private boolean slotsMatch(ArrayList<String[]> cykSlots, ArrayList<String[]> skillSlots){
