@@ -78,6 +78,7 @@ public class ChatScreen implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         userChatLog = new ArrayList<>();
         octoChatLog = new ArrayList<>();
+        octoChatLog.add("Hi user");
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         vbox_message.heightProperty().addListener(new ChangeListener<Number>() {
@@ -132,17 +133,18 @@ public class ChatScreen implements Initializable {
             float start = System.currentTimeMillis();
 
             userChatLog.add(message);
-            // TODO: Remember previous user inputs
             handler = new CYKHandler();
-//            message = "";
-//            for(int i = 0; i < userChatLog.size(); i++){
-//                message = message + userChatLog.get(i) + " ";
-//            }
-            message = handler.retrieveAnswer(message);
+
+            if (octoChatLog.get(octoChatLog.size()-1).contains("<") && octoChatLog.get(octoChatLog.size()-1).contains(">")){
+                String ans = userChatLog.get(userChatLog.size()-2);
+                String slt = userChatLog.get(userChatLog.size()-1);
+                message = handler.retrieveMergedAnswer(ans, slt);
+            } else {
+                message = handler.retrieveAnswer(message);
+            }
             octoChatLog.add(message);
 
             float end = System.currentTimeMillis();
-//            System.out.println("Time in ms: " + (end - start));
 
         } else {
             message = "Input something!";

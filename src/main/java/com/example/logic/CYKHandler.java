@@ -10,11 +10,6 @@ public class CYKHandler {
     ArrayList<HashMap<String, ArrayList<String>>> rules;
     ArrayList<ArrayList<Action>> actions;
 
-    public static void main(String[] args) {
-        CYKHandler handler = new CYKHandler();
-        System.out.println(handler.retrieveAnswer("How is the weather in maastricht"));
-    }
-
     public CYKHandler() {
         rules = readRules();
         rules.replaceAll(this::convertToCNF);
@@ -26,6 +21,7 @@ public class CYKHandler {
         prompt = cleanWord(prompt);
         SpellChecker spellChecker = new SpellChecker(prompt);
         spellChecker.generateDictionary(rules);
+
         ArrayList<String> correctedPrompts = spellChecker.correctedPrompts();
         for (int i = 0; i < rules.size(); i++) {
             for (String curPrompt : correctedPrompts) {
@@ -39,12 +35,81 @@ public class CYKHandler {
         if (output == null) {
             for (String curPrompt : correctedPrompts) {
                 String tempRead = read(curPrompt);
-                if (tempRead.contains("<") && tempRead.contains(">")) {
+                if (isTerminal(tempRead)) {
                     output = tempRead;
                 }
             }
         }
 
+
+        return output;
+    }
+
+    public String retrieveMergedAnswer(String message, String slots) {
+        String[] splitSlots = cleanWord(slots).split(" ");
+        ArrayList<File> files = getAllQuestions();
+        HashMap<String, ArrayList<String>> terminalMap = new HashMap<>();
+        int min = Integer.MAX_VALUE;
+        String finalContent = "";
+
+        for (File file : files) {
+            CSVReader reader = new CSVReader(file);
+            ArrayList<String> ruleContent = reader.getRuleContent();
+
+            for (String content : ruleContent) {
+                int compare = comparePrompts(message, content);
+                if (compare < min) {
+                    finalContent = content;
+                    min = compare;
+                    terminalMap = reader.getTerminalMap();
+                }
+            }
+        }
+
+        String mergedPrompt = mergeContent(finalContent, message, splitSlots, terminalMap);
+
+        return retrieveAnswer(mergedPrompt);
+    }
+
+    private String mergeContent(String finalContent, String message, String[] slots, HashMap<String, ArrayList<String>> terminalMap) {
+        String[] splitFinalContent = finalContent.split(" ");
+        HashMap<String, String> existingSlots = getExistingSlotsFromMessage(message, terminalMap);
+
+        for (int i = 0; i < splitFinalContent.length; i++) {
+            String word = splitFinalContent[i];
+            if (isTerminal(word)) {
+                String oldSlot = existingSlots.get(word.toLowerCase());
+                if (oldSlot != null) {
+                    splitFinalContent[i] = oldSlot.replaceAll("\\s", "");
+                } else {
+                    for (String slot : slots) {
+                        HashMap<String, String> newSlots = getExistingSlotsFromMessage(slot, terminalMap);
+                        String newSlot = newSlots.get(word.toLowerCase());
+
+                        if (newSlot != null) {
+                            splitFinalContent[i] = newSlot.replaceAll("\\s", "");
+                        }
+                    }
+                }
+            }
+        }
+
+        return String.join(" ", splitFinalContent);
+    }
+
+    private HashMap<String, String> getExistingSlotsFromMessage(String message, HashMap<String, ArrayList<String>> terminalMap) {
+        HashMap<String, String> output = new HashMap<>();
+
+        for (Map.Entry<String, ArrayList<String>> entry : terminalMap.entrySet()) {
+            String key = entry.getKey();
+            ArrayList<String> terminals = entry.getValue();
+
+            for (String word : terminals) {
+                if (isTerminalInString(message, word)) {
+                    output.put(key, word);
+                }
+            }
+        }
 
         return output;
     }
@@ -58,6 +123,7 @@ public class CYKHandler {
         String finalPrompt = "";
         String finalContent = "";
         int counter = 0;
+
         for (File file : files) {
             CSVReader reader = new CSVReader(file);
             ArrayList<String> ruleContent = reader.getRuleContent();
@@ -74,9 +140,8 @@ public class CYKHandler {
             }
         }
 
-        if (extractSlots(finalPrompt, finalContent, terminalMap) != null) {
-            ArrayList<String> missingSlots = extractSlots(finalPrompt, finalContent, terminalMap);
-            assert missingSlots != null;
+        ArrayList<String> missingSlots = extractSlots(finalPrompt, finalContent, terminalMap);
+        if (missingSlots != null) {
             for (String slot : missingSlots) {
                 output.append(", ").append(slot);
             }
@@ -96,7 +161,7 @@ public class CYKHandler {
         String[] splitContent = content.toLowerCase().split(" ");
 
         for (String con : splitContent) {
-            if (con.contains("<") && con.contains(">")) {
+            if (isTerminal(con)) {
                 slots.add(con);
             }
         }
@@ -106,7 +171,7 @@ public class CYKHandler {
             String slot = iterator.next();
             ArrayList<String> currentTerminal = terminalMap.get(slot);
             for (String ter : currentTerminal) {
-                if (prompt.toLowerCase().contains(ter.replaceAll("[^\\p{L}\\p{N}]+", "").toLowerCase())) {
+                if (isTerminalInString(prompt, ter)) {
                     iterator.remove();
                     break; // Exit the inner loop once a match is found
                 }
@@ -125,7 +190,7 @@ public class CYKHandler {
         ArrayList<String> prunedContent = new ArrayList<>();
 
         for (String word : splitContent) {
-            if (!word.contains("<") && !word.contains(">")) {
+            if (!isTerminal(word)) {
                 prunedContent.add(word);
             }
         }
@@ -163,7 +228,19 @@ public class CYKHandler {
         return allFiles;
     }
 
-    private static String cleanWord(String input) {
+    private boolean isTerminalInString(String prompt, String terminal) {
+        String cleanTerminal = terminal.replaceAll("[^\\p{L}\\p{N}]+", "").toLowerCase();
+        String[] splitPrompt = prompt.toLowerCase().split(" ");
+
+        for (String word : splitPrompt) {
+            if (word.equalsIgnoreCase(cleanTerminal)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private String cleanWord(String input) {
         return input.replaceAll("[^\\p{L}\\p{N}\\s]+", "");
     }
 
@@ -273,5 +350,9 @@ public class CYKHandler {
             result.add(CSVHandler.getActions(file));
         }
         return result;
+    }
+
+    private boolean isTerminal(String word) {
+        return word.contains("<") && word.contains(">");
     }
 }
