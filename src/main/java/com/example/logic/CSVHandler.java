@@ -15,7 +15,7 @@ import java.util.Map;
 public class CSVHandler {
 
     public static void main(String[] args) {
-        HashMap<String, ArrayList<String>> map = CSVHandler.getRules(new File("Questions/CFG.csv"));
+        HashMap<String, ArrayList<String>> map = CSVHandler.getRules(new File("Questions/CFG0.csv"));
         System.out.println("Done");
     }
 

@@ -7,7 +7,6 @@ Rule <TIMEOFDAY> morning | afternoon | evening
 Rule <SUBJECT> lecture | assignment | test
 Rule <DAY> day | evening
 Rule <PLACE> San Francisco | London | Sydney | New York | Tokyo
-
 Action <GREET> * <TIMEOFDAY> morning Good morning to you too!
 Action <GREET> * <DAY> day How is your day going?
 Action <ASK> * <SUBJECT> lecture The lecture today is about Machine Learning
