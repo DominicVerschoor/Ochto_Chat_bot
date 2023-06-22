@@ -31,11 +31,9 @@ public class Dataset {
 
         for (String currentOption : currentOptions) {
             returnList.add(currentOption);
-            boolean hasSlot = false;
             String[] splitString = currentOption.split(" ");
             for (String splitWord : splitString) {
                 if (splitWord.charAt(0) == '<') {
-                    hasSlot = true;
                     ArrayList<String> options = getDataset(ruleMap.get(splitWord));
 
                     // for every item in returnlist
@@ -48,22 +46,23 @@ public class Dataset {
                         for (int j = 0; j < splitList.length; j++) {
 
                             // if word is the terminal for which we found options
-                            if (cleanWord(splitList[j]).equalsIgnoreCase(cleanWord(splitWord))) {
+                            if (splitList[j].trim().equalsIgnoreCase(splitWord.trim())) {
 
                                 returnList.set(i,"");
 
                                 // go through all options for the terminal
                                 for (String option : options) {
-                                    splitList[j] = option;
-                                    StringBuilder updatedItem = new StringBuilder();
-                                    for (String item : splitList){
-                                        updatedItem.append(item).append(" ");
+                                    if (!(option.trim().equals(""))) {
+                                        splitList[j] = option.trim();
+                                        StringBuilder updatedItem = new StringBuilder();
+                                        for (String item : splitList) {
+                                            updatedItem.append(item).append(" ");
+                                        }
+                                        returnList.add(updatedItem.toString());
                                     }
-                                    returnList.add(updatedItem.toString());
                                 }
                             }
                         }
-
                     }
                 }
             }
