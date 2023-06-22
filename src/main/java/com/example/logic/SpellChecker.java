@@ -113,7 +113,7 @@ public class SpellChecker {
         return duplicatesRemoved;
     }
 
-    private int getLevenshteinDistance(String word, String dictWord) {
+    public int getLevenshteinDistance(String word, String dictWord) {
         word = word.toLowerCase();
         dictWord = dictWord.toLowerCase();
         int wordLength = word.length();
@@ -208,10 +208,15 @@ public class SpellChecker {
 
     public static void main(String[] args) {
         SpellChecker checker = new SpellChecker("Which lectures are there on monday");
-        System.out.println(checker.getLevenshteinDistance("Which lectures are there on monday", "Which lectures are there on <day> at <time>"));
-        System.out.println(checker.getLevenshteinDistance("Which lectures are there on monday", "Which lectures are there at <time> on <day>"));
-        System.out.println(checker.getLevenshteinDistance("Which lectures are there on monday", "at <day> on <time> which lectures do i have"));
-        System.out.println(checker.getLevenshteinDistance("Which lectures are there on monday", "on <day> at <DAY> which lectures do i have"));
+        System.out.println(checker.getLevenshteinDistance("Which lectures are there on", "Which lectures are there on at"));
+        System.out.println(checker.getLevenshteinDistance("Which lectures are there on", "Which lectures are there at on"));
+        System.out.println(checker.getLevenshteinDistance("Which lectures are there on", "at on which lectures do i have"));
+        System.out.println(checker.getLevenshteinDistance("Which lectures are there on", "on at which lectures do i have"));
+        System.out.println();
+        System.out.println(checker.getLevenshteinDistance("on which lectures do have", "Which lectures are there on at"));
+        System.out.println(checker.getLevenshteinDistance("on which lectures do have", "Which lectures are there at on"));
+        System.out.println(checker.getLevenshteinDistance("on which lectures do have", "at on which lectures do i have"));
+        System.out.println(checker.getLevenshteinDistance("on which lectures do have", "on at which lectures do i have"));
 
 
 //        Set<String> rules = new HashSet<>();

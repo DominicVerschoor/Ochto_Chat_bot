@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.HashSet;
 
 public class CSVReader {
     private String action;
@@ -55,27 +58,52 @@ public class CSVReader {
     }
 
     public void mergeRuleContent(HashMap<String, ArrayList<String>> contentMap) {
+        Set<String> replacedSlots = new HashSet<>();
         removeTerminals(contentMap);
+
         for (HashMap.Entry<String, ArrayList<String>> entry : contentMap.entrySet()) {
+
             ArrayList<String> values = entry.getValue();
 
             for (String value : values) {
+
                 String[] splitValue = value.split(" ");
+
                 for (int j = 0; j < splitValue.length; j++) {
+
                     String word = splitValue[j];
                     if (contentMap.containsKey(word)) {
+
                         ArrayList<String> contentValues = contentMap.get(word);
+
                         for (String contentValue : contentValues) {
                             splitValue[j] = contentValue;
                             ruleContent.add(String.join(" ", splitValue));
                         }
+
+                        replacedSlots.add(word);
                     } else if (word.contains("<") && word.contains(">")) {
                         ruleContent.add(String.join(" ", splitValue));
                     }
-                    //TODO: remove after adding
-//                    contentMap.replace(word, new ArrayList<>());
                 }
             }
+        }
+
+
+        removeNonTerminalSlots(ruleContent, contentMap);
+        removeReplacedSlots(ruleContent, contentMap, replacedSlots);
+    }
+
+    private void removeNonTerminalSlots(ArrayList<String> list, HashMap<String, ArrayList<String>> contentMap) {
+        for (Map.Entry<String, ArrayList<String>> entry : contentMap.entrySet()) {
+            list.removeIf(sentence -> sentence.contains(entry.getKey()));
+        }
+    }
+
+    private void removeReplacedSlots(ArrayList<String> list, HashMap<String, ArrayList<String>> contentMap, Set<String> replacedSlots) {
+        for (String replaced : replacedSlots) {
+            ArrayList<String> content = contentMap.get(replaced);
+            list.removeAll(content);
         }
     }
 
@@ -108,6 +136,7 @@ public class CSVReader {
                 content.add(substring.toString());
                 substring = new StringBuilder();
             } else if (i == splitCurrentLine.length - 1) {
+                substring.deleteCharAt(substring.length() - 1);
                 content.add(substring.toString());
                 substring = new StringBuilder();
             }

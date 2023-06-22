@@ -73,11 +73,13 @@ public class ChatScreen implements Initializable {
     private CYKHandler handler;
     private ArrayList<String> userChatLog;
     private ArrayList<String> octoChatLog;
+    private ArrayList<String> userSlotLog;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         userChatLog = new ArrayList<>();
         octoChatLog = new ArrayList<>();
+        userSlotLog = new ArrayList<>();
         octoChatLog.add("Hi user");
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -132,14 +134,15 @@ public class ChatScreen implements Initializable {
         if (!message.isEmpty()) {
             float start = System.currentTimeMillis();
 
-            userChatLog.add(message);
             handler = new CYKHandler();
 
             if (octoChatLog.get(octoChatLog.size()-1).contains("<") && octoChatLog.get(octoChatLog.size()-1).contains(">")){
-                String ans = userChatLog.get(userChatLog.size()-2);
-                String slt = userChatLog.get(userChatLog.size()-1);
+                userSlotLog.add(message);
+                String ans = userChatLog.get(userChatLog.size()-1);
+                String slt = userSlotLog.get(userSlotLog.size()-1);
                 message = handler.retrieveMergedAnswer(ans, slt);
             } else {
+                userChatLog.add(message);
                 message = handler.retrieveAnswer(message);
             }
             octoChatLog.add(message);

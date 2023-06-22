@@ -56,8 +56,11 @@ public class CYKHandler {
             CSVReader reader = new CSVReader(file);
             ArrayList<String> ruleContent = reader.getRuleContent();
 
+            if (terminalMap.isEmpty()){ terminalMap = reader.getTerminalMap();}
+
             for (String content : ruleContent) {
-                int compare = comparePrompts(message, content);
+                int compare = comparePrompts(message, content, terminalMap);
+//                int compare = checker.getLevenshteinDistance(message, content);
                 if (compare < min) {
                     finalContent = content;
                     min = compare;
@@ -118,7 +121,7 @@ public class CYKHandler {
         StringBuilder output = new StringBuilder();
         output.append("Can you also give me the");
         ArrayList<File> files = getAllQuestions();
-        HashMap<String, ArrayList<String>> terminalMap = new HashMap<>();
+        HashMap<String, ArrayList<String>> finalTerminalMap = new HashMap<>();
         int min = Integer.MAX_VALUE;
         String finalPrompt = "";
         String finalContent = "";
@@ -127,20 +130,23 @@ public class CYKHandler {
         for (File file : files) {
             CSVReader reader = new CSVReader(file);
             ArrayList<String> ruleContent = reader.getRuleContent();
+            HashMap<String, ArrayList<String>> terminalMap = reader.getTerminalMap();
 
             for (String content : ruleContent) {
-                int compare = comparePrompts(prompt, content);
+
+                int compare = comparePrompts(prompt, content, terminalMap);
+//                int compare = checker.getLevenshteinDistance(prompt, content);
                 if (compare < min) {
                     finalContent = content;
                     finalPrompt = prompt;
                     min = compare;
-                    terminalMap = reader.getTerminalMap();
+                    finalTerminalMap = reader.getTerminalMap();
                     counter = compare;
                 }
             }
         }
 
-        ArrayList<String> missingSlots = extractSlots(finalPrompt, finalContent, terminalMap);
+        ArrayList<String> missingSlots = extractSlots(finalPrompt, finalContent, finalTerminalMap);
         if (missingSlots != null) {
             for (String slot : missingSlots) {
                 output.append(", ").append(slot);
@@ -149,10 +155,10 @@ public class CYKHandler {
         } else {
             return "Can you give me more information";
         }
-
-        if (counter > 5) {
-            return "Sorry I don't know";
-        }
+//
+//        if (counter > 5) {
+//            return "Sorry I don't know";
+//        }
         return output.toString();
     }
 
@@ -170,10 +176,12 @@ public class CYKHandler {
         while (iterator.hasNext()) {
             String slot = iterator.next();
             ArrayList<String> currentTerminal = terminalMap.get(slot);
-            for (String ter : currentTerminal) {
-                if (isTerminalInString(prompt, ter)) {
-                    iterator.remove();
-                    break; // Exit the inner loop once a match is found
+            if (currentTerminal != null) {
+                for (String ter : currentTerminal) {
+                    if (isTerminalInString(prompt, ter)) {
+                        iterator.remove();
+                        break; // Exit the inner loop once a match is found
+                    }
                 }
             }
             if (slots.isEmpty()) {
@@ -184,10 +192,12 @@ public class CYKHandler {
         return slots;
     }
 
-    private int comparePrompts(String prompt, String content) {
-        String[] splitPrompt = prompt.split(" ");
-        String[] splitContent = content.split(" ");
+    private int comparePrompts(String prompt, String content, HashMap<String, ArrayList<String>> terminalMap) {
+        SpellChecker checker = new SpellChecker("");
+        String[] splitPrompt = prompt.toLowerCase().split(" ");
+        String[] splitContent = content.toLowerCase().split(" ");
         ArrayList<String> prunedContent = new ArrayList<>();
+        ArrayList<String> prunedPrompt = new ArrayList<>(Arrays.asList(splitPrompt));
 
         for (String word : splitContent) {
             if (!isTerminal(word)) {
@@ -195,15 +205,19 @@ public class CYKHandler {
             }
         }
 
-        int length = Integer.min(prunedContent.size(), splitPrompt.length);
-        int counter = Math.abs(prunedContent.size() - splitPrompt.length);
-        for (int i = 0; i < length; i++) {
-            if (!prunedContent.get(i).equalsIgnoreCase(splitPrompt[i])) {
-                counter++;
+        for (Map.Entry<String, ArrayList<String>> entry : terminalMap.entrySet()) {
+            ArrayList<String> terminals = entry.getValue();
+            for (String word : terminals) {
+                if (isTerminalInString(prompt, word)) {
+                    prunedPrompt.remove(word.toLowerCase());
+                }
             }
         }
 
-        return counter;
+        String finalContent = String.join(" ", prunedContent);
+        String finalPrompt = String.join(" ", prunedPrompt);
+
+        return checker.getLevenshteinDistance(finalPrompt, finalContent);
     }
 
     private ArrayList<File> getAllQuestions() {
