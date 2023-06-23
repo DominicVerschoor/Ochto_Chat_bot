@@ -29,14 +29,12 @@ public class App extends Application {
                 String imageName = scanner.nextLine();
                 captureScreenshot(imageName);
             } else {
-                name = "Unknown";
-                runChat(stage);
+                return;
             }
         }
         stage.centerOnScreen();
         stage.show();
     }
-
 
 
     public void runFR() throws IOException {
