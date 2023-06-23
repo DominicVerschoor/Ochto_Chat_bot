@@ -74,6 +74,7 @@ public class ChatScreen implements Initializable {
     private ArrayList<String> userChatLog;
     private ArrayList<String> octoChatLog;
     private ArrayList<String> userSlotLog;
+    private App app = new App();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -228,8 +229,8 @@ public class ChatScreen implements Initializable {
         vbox.getChildren().add(hBox);
     }
 
-    public void setName(String s) {
-        addBMessage("Hi " + s.toUpperCase() + "! How can i assist you?", vbox_message);
+    public void setName(String name) {
+        addBMessage("Hi " + name + "! How can i assist you?", vbox_message);
     }
 
     @FXML
