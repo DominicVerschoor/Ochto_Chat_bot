@@ -15,7 +15,7 @@ public class Dataset {
     static ArrayList<String> finalRules = new ArrayList<>();
     static ArrayList<String> finalActions = new ArrayList<>();
 
-    public static void main(String[] args) {
+    public Dataset() {
         finalRules = new ArrayList<>();
         finalActions = new ArrayList<>();
 
@@ -32,7 +32,6 @@ public class Dataset {
             finalRules.addAll(getRuleDataset());
             finalActions.addAll(getActionDataset());
         }
-        System.out.println("done");
     }
 
     public static ArrayList<String> getAllRules(){
@@ -43,11 +42,11 @@ public class Dataset {
         return finalActions;
     }
 
-    public static ArrayList<String> getRuleDataset(){
+    public ArrayList<String> getRuleDataset(){
         return cleanDataset(ruleDataset);
     }
 
-    public static ArrayList<String> getActionDataset(){
+    public ArrayList<String> getActionDataset(){
         return cleanDataset(actionDataset);
     }
 
@@ -143,14 +142,6 @@ public class Dataset {
             tokenizedData.add(indexedTokens);
         }
 
-        System.out.println("Tokenized Data:");
-        for (ArrayList<Integer> sentenceTokens : tokenizedData) {
-            System.out.println(sentenceTokens);
-        }
-        System.out.println("\nVocabulary Index:");
-        for (String token : vocabularyIndex.keySet()) {
-            System.out.println(token + ": " + vocabularyIndex.get(token));
-        }
     }
 
     public static ArrayList<Action> getActions(File fileName){

@@ -28,7 +28,6 @@ public class CYKHandler {
             spellChecker.generateDictionary(rules.get(i));
             ArrayList<String> correctedPrompts = spellChecker.correctedPrompts();
             for (String curPrompt : correctedPrompts) {
-                System.out.println(curPrompt);
                 CYK run = new CYK(rules.get(i), actions.get(i), curPrompt);
                 if (run.belongs()) {
                     return run.getAction();
