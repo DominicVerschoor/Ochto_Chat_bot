@@ -1,10 +1,8 @@
 package com.example.logic;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
@@ -12,21 +10,62 @@ public class Dataset {
 
     static HashMap<String, ArrayList<String>> ruleMap = new HashMap<>();
     static ArrayList<Action> actionMap = new ArrayList<>();
-    static ArrayList<String> dataset = new ArrayList<>();
+    static ArrayList<String> ruleDataset = new ArrayList<>();
+    static ArrayList<String> actionDataset = new ArrayList<>();
+    static ArrayList<String> finalRules = new ArrayList<>();
+    static ArrayList<String> finalActions = new ArrayList<>();
 
     public static void main(String[] args) {
-        ruleMap = getRules(new File("Questions/CFG0.csv"));
-        actionMap = getActions(new File("Questions/CFG0.csv"));
+        finalRules = new ArrayList<>();
+        finalActions = new ArrayList<>();
 
-        dataset = cleanDataset(getDataset(ruleMap.get("<action>")));
+        File folder = new File("Questions/");
+        File[] files = folder.listFiles();
+        assert files != null;
+        for (File file : files) {
+            ruleMap = getRules(file);
+            actionMap = getActions(file);
 
-        for (String line : dataset){
-            System.out.println(line);
+            ruleDataset = makeRuleDataset(ruleMap.get("<action>"));
+            actionDataset = makeActionDataset(cleanDataset(ruleDataset));
+
+            finalRules.addAll(getRuleDataset());
+            finalActions.addAll(getActionDataset());
         }
-        //tokenize(dataset);
+        System.out.println("done");
     }
 
-    public static ArrayList<String> getDataset(ArrayList<String> currentOptions){
+    public static ArrayList<String> getAllRules(){
+        return finalRules;
+    }
+
+    public static ArrayList<String> getAllActions(){
+        return finalActions;
+    }
+
+    public static ArrayList<String> getRuleDataset(){
+        return cleanDataset(ruleDataset);
+    }
+
+    public static ArrayList<String> getActionDataset(){
+        return cleanDataset(actionDataset);
+    }
+
+    public static ArrayList<String> makeActionDataset(ArrayList<String> ruleSet){
+        ArrayList<String> actionSet = new ArrayList<>();
+        CYKHandler handler = new CYKHandler();
+        for (int i = 0; i < ruleSet.size(); i++){
+            String action = handler.retrieveAnswer(ruleSet.get(i));
+            if (action.equalsIgnoreCase("I dunno :P")){
+                ruleDataset.set(i,"");
+            } else{
+                actionSet.add(handler.retrieveAnswer(ruleSet.get(i)));
+            }
+        }
+        return actionSet;
+    }
+
+    public static ArrayList<String> makeRuleDataset(ArrayList<String> currentOptions){
         ArrayList<String> returnList = new ArrayList<>();
 
         for (String currentOption : currentOptions) {
@@ -34,7 +73,7 @@ public class Dataset {
             String[] splitString = currentOption.split(" ");
             for (String splitWord : splitString) {
                 if (splitWord.charAt(0) == '<') {
-                    ArrayList<String> options = getDataset(ruleMap.get(splitWord));
+                    ArrayList<String> options = makeRuleDataset(ruleMap.get(splitWord));
 
                     // for every item in returnlist
                     for (int i = 0; i < returnList.size(); i++) {
@@ -77,9 +116,8 @@ public class Dataset {
                 inputSet.set(j,inputSet.get(j).substring(1));
             }
         }
-
         for (int i = 0; i < inputSet.size(); i++){
-            if (inputSet.get(i).trim() == ""){
+            if (inputSet.get(i).trim().equals("")){
                 inputSet.remove(i);
                 i--;
             }
