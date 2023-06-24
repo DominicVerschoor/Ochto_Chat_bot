@@ -78,5 +78,7 @@
             <Insets top="1.0" />
          </opaqueInsets>
       </Label>
+      <Button fx:id="ruleButton" layoutX="192.0" layoutY="447.0" mnemonicParsing="false" onAction="#onRuleButton" prefHeight="26.0" prefWidth="94.0" text="Add Rule" />
+      <Button fx:id="responseButton" layoutX="653.0" layoutY="447.0" mnemonicParsing="false" onAction="#onResponseButton" prefHeight="26.0" prefWidth="94.0" text="Add Response" />
    </children>
 </AnchorPane>

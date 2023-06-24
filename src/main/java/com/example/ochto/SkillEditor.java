@@ -47,6 +47,10 @@ public class SkillEditor implements Initializable {
     public CSVReader reader;
     @FXML
     private Button saveButton;
+    @FXML
+    private Button ruleButton;
+    @FXML
+    private Button responseButton;
     private final Stage stage7 = new Stage();
     private ChatScreen logic = new ChatScreen();
     private String filename;
@@ -56,6 +60,8 @@ public class SkillEditor implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         saveButton = new Button();
+        ruleButton = new Button();
+        responseButton = new Button();
 
         actionTable();
         ruleTable();
@@ -196,6 +202,11 @@ public class SkillEditor implements Initializable {
 
     @FXML
     void onSaveButton(ActionEvent event) {
+
+        for (String entry : updates){
+            System.out.println(entry);
+        }
+
         createCSV(updates);
 
         try {
@@ -218,6 +229,95 @@ public class SkillEditor implements Initializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @FXML
+    void onRuleButton(ActionEvent event){
+        Text ruleInput = new Text("");
+        ruleInput.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 15));
+
+        // create a new TextField and set its initial value to the Text object's text
+        TextField textField = new TextField("Enter New Rule");
+
+        // replace the Text object with the TextField in the VBox
+        VBox parent = ruleVBox;
+        parent.getChildren().add(textField);
+
+        // request focus and select all text in the TextField
+        textField.requestFocus();
+        textField.selectAll();
+
+        // set an action listener on the TextField to handle the text input
+        textField.setOnAction(actionEvent -> {
+            String[] newUpdates = new String[updates.length+1];
+
+            System.arraycopy(updates, 0, newUpdates, 0, updates.length);
+
+            int location = 0;
+
+            for (int i = 0; i < newUpdates.length; i++){
+                if (newUpdates[i].startsWith("Action")){
+                    for (int j = newUpdates.length-1; j > i; j--){
+                        newUpdates[j] = newUpdates[j-1];
+                        if (j == i + 1){
+                            location = i;
+                        }
+                    }
+                    break;
+                }
+            }
+
+            newUpdates[location] = "Rule " + textField.getText();
+
+            ruleInput.setText(" " + textField.getText() + "\n");
+
+            parent.getChildren().add(ruleInput);
+            parent.getChildren().remove(textField);
+
+            for (String entry: newUpdates){
+                System.out.println(entry);
+            }
+
+            updates = newUpdates;
+        });
+    }
+
+    @FXML
+    void onResponseButton(ActionEvent event){
+        Text responseInput = new Text("");
+        responseInput.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 15));
+
+        // create a new TextField and set its initial value to the Text object's text
+        TextField textField = new TextField("Enter New Response");
+
+        // replace the Text object with the TextField in the VBox
+        VBox parent = responseVBox;
+        parent.getChildren().add(textField);
+
+        // request focus and select all text in the TextField
+        textField.requestFocus();
+        textField.selectAll();
+
+        // set an action listener on the TextField to handle the text input
+        textField.setOnAction(actionEvent -> {
+            String[] newUpdates = new String[updates.length+1];
+
+            System.arraycopy(updates, 0, newUpdates, 0, updates.length);
+
+            newUpdates[newUpdates.length-1] = newUpdates[newUpdates.length-2];
+            newUpdates[newUpdates.length-2] = "Action " + textField.getText();
+
+            responseInput.setText(" " + textField.getText() + "\n");
+
+            parent.getChildren().add(responseInput);
+            parent.getChildren().remove(textField);
+
+            for (String entry: newUpdates){
+                System.out.println(entry);
+            }
+
+            updates = newUpdates;
+        });
     }
 
     public void setLogic(ChatScreen logic) {
