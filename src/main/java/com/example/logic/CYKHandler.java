@@ -6,7 +6,8 @@ import java.io.IOException;
 import java.util.*;
 import java.io.File;
 
-public class CYKHandler {
+public class CYKHandler{
+
     ArrayList<HashMap<String, ArrayList<String>>> rules;
     ArrayList<ArrayList<Action>> actions;
 
@@ -15,6 +16,7 @@ public class CYKHandler {
         rules.replaceAll(this::convertToCNF);
         actions = readActions();
     }
+
 
     public String retrieveAnswer(String prompt) {
         String output = null;
@@ -55,6 +57,7 @@ public class CYKHandler {
 
         return output;
     }
+
 
     public String retrieveMergedAnswer(String message, String slots) {
         String[] splitSlots = cleanWord(slots).split(" ");
@@ -382,4 +385,6 @@ public class CYKHandler {
     private boolean isTerminal(String word) {
         return word.contains("<") && word.contains(">");
     }
+
+
 }

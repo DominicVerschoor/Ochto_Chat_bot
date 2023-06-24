@@ -71,9 +71,13 @@ public class ChatScreen implements Initializable {
     @FXML
     private Button skillButton;
     private CYKHandler handler;
+    @FXML
+    private  Button algorithmButton = new Button();
     private ArrayList<String> userChatLog;
     private ArrayList<String> octoChatLog;
     private ArrayList<String> userSlotLog;
+    private final App app = new App();
+    private boolean isCYK = true;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -125,17 +129,27 @@ public class ChatScreen implements Initializable {
     }
 
     @FXML
+    public void cykORann(ActionEvent newActionEvent) {
+        if (isCYK) {
+            algorithmButton.setText("ANN");
+            isCYK = false;
+//            annHandle(newActionEvent);
+        } else {
+            algorithmButton.setText("CYK");
+            isCYK = true;
+            handle(newActionEvent);
+        }
+    }
+
+
+
+    @FXML
     public void handle(ActionEvent newActionEvent) {
         message = text_field.getText();
-
-
         addUMessage(message, vbox_message);
-
         if (!message.isEmpty()) {
             float start = System.currentTimeMillis();
-
             handler = new CYKHandler();
-
             if (octoChatLog.get(octoChatLog.size()-1).contains("<") && octoChatLog.get(octoChatLog.size()-1).contains(">")){
                 userSlotLog.add(message);
                 String ans = userChatLog.get(userChatLog.size()-1);
@@ -146,20 +160,18 @@ public class ChatScreen implements Initializable {
                 message = handler.retrieveAnswer(message);
             }
             octoChatLog.add(message);
-
             float end = System.currentTimeMillis();
-
         } else {
             message = "Input something!";
         }
-        TimerTask tt = new TimerTask() {
+
+    TimerTask tt = new TimerTask() {
             @Override
             public void run() {
                 Platform.runLater(() -> {
                     addBMessage(message, vbox_message);
                 });
             }
-
             ;
         };
         int delay = 1;
@@ -228,8 +240,8 @@ public class ChatScreen implements Initializable {
         vbox.getChildren().add(hBox);
     }
 
-    public void setName(String s) {
-        addBMessage("Hi " + s.toUpperCase() + "! How can i assist you?", vbox_message);
+    public void setName(String name) {
+        addBMessage("Hi " + name + "! How can i assist you?", vbox_message);
     }
 
     @FXML
@@ -294,6 +306,5 @@ public class ChatScreen implements Initializable {
         }
     }
 }
-
 
 
