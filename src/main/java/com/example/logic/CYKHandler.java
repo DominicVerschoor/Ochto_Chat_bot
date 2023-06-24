@@ -41,6 +41,17 @@ public class CYKHandler {
             }
         }
 
+        if (output == null) {
+            for (int i = 0; i < rules.size(); i++) {
+                for (String curPrompt : correctedPrompts) {
+                    CYK run = new CYK(rules.get(i), actions.get(i), read(curPrompt));
+                    if (run.belongs()) {
+                        output = run.getAction();
+                    }
+                }
+            }
+        }
+
 
         return output;
     }
@@ -56,7 +67,9 @@ public class CYKHandler {
             CSVReader reader = new CSVReader(file);
             ArrayList<String> ruleContent = reader.getRuleContent();
 
-            if (terminalMap.isEmpty()){ terminalMap = reader.getTerminalMap();}
+            if (terminalMap.isEmpty()) {
+                terminalMap = reader.getTerminalMap();
+            }
 
             for (String content : ruleContent) {
                 int compare = comparePrompts(message, content, terminalMap);
@@ -153,7 +166,7 @@ public class CYKHandler {
             }
 
         } else {
-            return "Can you give me more information";
+            return mergeContent(finalContent, finalPrompt, finalPrompt.split(" "), finalTerminalMap);
         }
 //
 //        if (counter > 5) {

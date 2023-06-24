@@ -7,7 +7,7 @@ public class SpellChecker {
     private Map<Character, List<Character>> keyboardMap;
     private String userInput;
     private final int distanceThreshold = 4;
-    private final int minWordLength = 4;
+    private final int minWordLength = 3;
 
     public SpellChecker(String userInput) {
         this.userInput = userInput;
@@ -61,39 +61,67 @@ public class SpellChecker {
     }
 
     public ArrayList<String> correctedPrompts() {
-        ArrayList<String> output = new ArrayList<>();
         String[] splitInput = userInput.split(" ");
+        LinkedHashSet<String> promptList = new LinkedHashSet<>();
+        promptList.add(userInput);
 
-        processPrompts(splitInput, output);
+        processPrompts(splitInput, promptList, 0, 0);
+        System.out.println("\nprocess count: " + promptList.size());
+        ArrayList<String> output = new ArrayList<>(promptList);
         output = removeIncorrectPrompt(output);
 
-        if (output.size() == 0){
-            output.add(userInput);
+        if (promptList.size() == 0) {
+            promptList.add(userInput);
         }
 
         return output;
     }
 
-    private void processPrompts(String[] prompt, ArrayList<String> output) {
-        for (int currentWord = 0; currentWord < prompt.length; currentWord++) {
-            String word = prompt[currentWord];
-            if (isNotCorrectlySpelled(word)) {
-                List<String> suggestions = getSuggestions(word);
-                for (String sug : suggestions) {
-                    String[] tempOutput = Arrays.copyOf(prompt, prompt.length);
-                    tempOutput[currentWord] = sug;
-                    output.add(String.join(" ", tempOutput));
-                    processPrompts(tempOutput, output); // Recursively process the updated prompt
+    private HashSet<String> processPrompts(String[] prompt, LinkedHashSet<String> output, int index, int promptIndex) {
+        if (index >= prompt.length) {
+            return output;
+        } else {
+            for (; index < prompt.length; index++) {
+                String word = prompt[index];
+                if (isNotCorrectlySpelled(word) && word.length() >= minWordLength) {
+                    ArrayList<String> currentOut = new ArrayList<>(output);
+                    List<String> suggestions = getSuggestions(word);
+                    System.out.printf(suggestions.size()+"+");
+                    if (promptIndex != 0) {
+                        for (int i = currentOut.size() - promptIndex; i < currentOut.size(); i++) {
+                            for (String sug : suggestions) {
+                                String[] tempOutput = currentOut.get(i).split(" ");
+                                tempOutput[index] = sug;
+                                output.add(String.join(" ", tempOutput));
+                            }
+                        }
+                    } else {
+                        for (String sug : suggestions) {
+                            String[] tempOutput = currentOut.get(currentOut.size() - 1).split(" ");
+                            tempOutput[index] = sug;
+                            output.add(String.join(" ", tempOutput));
+                        }
+                    }
+
+                    if (suggestions.size() > 1 && promptIndex > 0) {
+                        promptIndex = promptIndex * suggestions.size();
+                    } else if (suggestions.size() > 1 && promptIndex == 0){
+                        promptIndex = promptIndex + suggestions.size();
+                    }
+                    return processPrompts(prompt, output, ++index, promptIndex); // Recursively process the updated prompt
                 }
             }
         }
+
+        return null;
     }
 
-    private ArrayList<String> removeIncorrectPrompt(ArrayList<String> prompt){
+
+    private ArrayList<String> removeIncorrectPrompt(ArrayList<String> prompt) {
         for (int i = 0; i < prompt.size(); i++) {
             String[] splitPrompt = prompt.get(i).split(" ");
-            for (String word:splitPrompt) {
-                if (isNotCorrectlySpelled(word) && word.length() >= minWordLength){
+            for (String word : splitPrompt) {
+                if (isNotCorrectlySpelled(word) && word.length() >= minWordLength) {
                     prompt.remove(i);
                     i--;
                     break;
@@ -207,71 +235,36 @@ public class SpellChecker {
     }
 
     public static void main(String[] args) {
-        SpellChecker checker = new SpellChecker("Which lectures are there on monday");
-        System.out.println(checker.getLevenshteinDistance("Which lectures are there on", "Which lectures are there on at"));
-        System.out.println(checker.getLevenshteinDistance("Which lectures are there on", "Which lectures are there at on"));
-        System.out.println(checker.getLevenshteinDistance("Which lectures are there on", "at on which lectures do i have"));
-        System.out.println(checker.getLevenshteinDistance("Which lectures are there on", "on at which lectures do i have"));
+//        SpellChecker checker = new SpellChecker("Which lectures are there on monday");
+//        System.out.println(checker.getLevenshteinDistance("Which lectures are there on", "Which lectures are there on at"));
+//        System.out.println(checker.getLevenshteinDistance("Which lectures are there on", "Which lectures are there at on"));
+//        System.out.println(checker.getLevenshteinDistance("Which lectures are there on", "at on which lectures do i have"));
+//        System.out.println(checker.getLevenshteinDistance("Which lectures are there on", "on at which lectures do i have"));
+//        System.out.println();
+//        System.out.println(checker.getLevenshteinDistance("on which lectures do have", "Which lectures are there on at"));
+//        System.out.println(checker.getLevenshteinDistance("on which lectures do have", "Which lectures are there at on"));
+//        System.out.println(checker.getLevenshteinDistance("on which lectures do have", "at on which lectures do i have"));
+//        System.out.println(checker.getLevenshteinDistance("on which lectures do have", "on at which lectures do i have"));
+
+        String[] correct = "there are many people who enjoy listening music and playing sports such football basketball and tennis they like outdoors explore nature and adventures they also enjoy socializing with friends and family and having fun their free time".split(" ");
+        String misspelled = "ther are any peple who njoy liseng to musik and payng sportes succh as fotball bascketball and tenise they lik to go outors explor natuer and go on adventurs tey aso enjo socializin with frends and famly and hain funm in their fre time";
+        String variant = "there are lots humans who like singing to songs while enjoying games such as basketball football plus golf they enjoy to go outside explain things and go on trips those also enjoy talking with family and friends and receiving enjoyment in our off days";
+
+        SpellChecker checker = new SpellChecker(misspelled);
+        Set<String> dictionary = new HashSet<>(List.of(correct));
+        checker.setDictionary(dictionary);
+        ArrayList<String> cor = checker.correctedPrompts();
+        System.out.println("mis misspel: " + cor.size());
         System.out.println();
-        System.out.println(checker.getLevenshteinDistance("on which lectures do have", "Which lectures are there on at"));
-        System.out.println(checker.getLevenshteinDistance("on which lectures do have", "Which lectures are there at on"));
-        System.out.println(checker.getLevenshteinDistance("on which lectures do have", "at on which lectures do i have"));
-        System.out.println(checker.getLevenshteinDistance("on which lectures do have", "on at which lectures do i have"));
 
+        SpellChecker checker1 = new SpellChecker(variant);
+        checker1.setDictionary(dictionary);
+        ArrayList<String> cor1 = checker1.correctedPrompts();
+        System.out.println("mis variant: " + cor1.size());
 
-//        Set<String> rules = new HashSet<>();
-//        rules.add("which");
-//        rules.add("lectures");
-//        rules.add("have");
-//        rules.add("monday");
-//        rules.add("sonday");
-//
-//        SpellChecker test = new SpellChecker("Whic leures do I have on Moday at 9");
-//        test.setDictionary(rules);
-//
-//        ArrayList<String> outputs = test.correctedPrompts();
-//
-//        for (String s : outputs) {
+//        for (String s : cor) {
 //            System.out.println(s);
 //        }
 
-
-//        String[] correct = "There are many people who enjoy listening to music and playing sports such as football, basketball, and tennis. They like to go outdoors, explore nature, and go on adventures. They also enjoy socializing with friends and family, and having fun in their free time.".split(" ");
-//        String[] misspelled = "Ther are any peple who njoy liseng to musik and payng sportes succh as fotball, bascketball, and tenise. They lik to go outors, explor natuer, and go on adventurs. Tey aso enjo socializin with frends and famly, and hain funm in their fre time.".split(" ");
-//        String[] variant = "There are lots humans who like singing to songs while enjoying games such as basketball, football, plus golf. They enjoy to go outside, explain things, and go on trips. Those also enjoy talking with family and friends, and receiving enjoyment in our off days.".split(" ");
-//
-//
-//        SpellChecker checker = new SpellChecker();
-//
-//        System.out.println(checker.getLevenshteinDistance("there", "which"));
-//        System.out.println(checker.getLevenshteinDistance("there", "lectures"));
-//        System.out.println(checker.getLevenshteinDistance("there", "are"));
-//        System.out.println(checker.getLevenshteinDistance("there", "there"));
-//        System.out.println(checker.getLevenshteinDistance("there", "on"));
-//        System.out.println(checker.getLevenshteinDistance("there", "mnday"));
-//        System.out.println(checker.getLevenshteinDistance("there", "at"));
-//        System.out.println(checker.getLevenshteinDistance("there", "9"));
-//
-//        int cost1 = 26;
-//        int cost2 = 0;
-//        for (int i = 0; i < correct.length; i++) {
-//
-//            if (checker.checkSingleWord(misspelled[i], correct[i])){
-//                if (!(misspelled[i].length() < 3) && !misspelled[i].equalsIgnoreCase(correct[i])){
-//                    misspelled[i] = correct[i];
-//                    cost1--;
-//                }
-//            }
-//
-//            if (checker.checkSingleWord(variant[i], correct[i])){
-//                if (!(variant[i].length() < 3) && !variant[i].equalsIgnoreCase(correct[i])){
-//                    variant[i] = correct[i];
-//                    cost2++;
-//                }
-//            }
-//        }
-//
-//        System.out.println(cost1);
-//        System.out.println(cost2);
     }
 }
