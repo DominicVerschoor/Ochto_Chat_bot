@@ -24,10 +24,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Random;
-import java.util.ResourceBundle;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -53,7 +50,6 @@ public class ChatScreen implements Initializable {
     private final VBox vBox = new VBox();
     @FXML
     Circle circle = new Circle();
-    private String[] skills = {"Which lectures are there on DAY at TIME"};
     private final Stage stage2 = new Stage();
     private final Stage stage3 = new Stage();
     @FXML
@@ -76,9 +72,20 @@ public class ChatScreen implements Initializable {
     private String[] optionsForChoiceBox = {"Normal","RNN","Naive Bayes"};
     String assistantType = "Normal";
     private  String preProcessingPy = " ";
+    @FXML
+    private Button algorithmButton = new Button();
+    private ArrayList<String> userChatLog;
+    private ArrayList<String> octoChatLog;
+    private ArrayList<String> userSlotLog;
+    private final App app = new App();
+    private boolean isCYK = true;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        userChatLog = new ArrayList<>();
+        octoChatLog = new ArrayList<>();
+        userSlotLog = new ArrayList<>();
+        octoChatLog.add("Hi user");
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         vbox_message.heightProperty().addListener(new ChangeListener<Number>() {
@@ -126,13 +133,25 @@ public class ChatScreen implements Initializable {
 
 
     @FXML
+    public void cykORann(ActionEvent newActionEvent) {
+        if (isCYK) {
+            algorithmButton.setText("ANN");
+            isCYK = false;
+//            annHandle(newActionEvent);
+        } else {
+            algorithmButton.setText("CYK");
+            isCYK = true;
+//            handle(newActionEvent);
+        }
+    }
+
+    @FXML
     public void handle(ActionEvent newActionEvent) {
         message = text_field.getText();
         String preMessage = message;
         System.out.println(preMessage);
 
         addUMessage(message, vbox_message);
-
         if (!message.isEmpty()) {
             float start = System.currentTimeMillis();
 
@@ -161,9 +180,21 @@ public class ChatScreen implements Initializable {
             float end = System.currentTimeMillis();
 //            System.out.println("Time in ms: " + (end - start));
 
+            handler = new CYKHandler();
+            if (octoChatLog.get(octoChatLog.size() - 1).contains("<") && octoChatLog.get(octoChatLog.size() - 1).contains(">")) {
+                userSlotLog.add(message);
+                String ans = userChatLog.get(userChatLog.size() - 1);
+                String slt = userSlotLog.get(userSlotLog.size() - 1);
+                message = handler.retrieveMergedAnswer(ans, slt);
+            } else {
+                userChatLog.add(message);
+                message = handler.retrieveAnswer(message);
+            }
+            octoChatLog.add(message);
         } else {
             message = "Input something!";
         }
+
         TimerTask tt = new TimerTask() {
             @Override
             public void run() {

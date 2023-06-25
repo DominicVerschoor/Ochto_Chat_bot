@@ -72,10 +72,6 @@ public class CYK {
         }
     }
 
-    public ArrayList<String[]> labels (){
-        return labels;
-    }
-
     private ArrayList<String[]> getLabels (int row, int col, int rule){
         ArrayList<String[]> result = new ArrayList<String[]>();
         if(row == 0){
@@ -115,7 +111,7 @@ public class CYK {
                 return action.getAction();
             }
         }
-        return "I dunno :P";
+        return null;
     }
 
     private boolean slotsMatch(ArrayList<String[]> cykSlots, ArrayList<String[]> skillSlots){

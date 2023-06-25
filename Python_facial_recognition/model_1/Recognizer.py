@@ -1,3 +1,4 @@
+import time
 import face_recognition
 import os
 import cv2
@@ -13,7 +14,6 @@ def face_confidence(face_distance, face_match_threshold=0.6):
     else:
         value = (linear_val + ((1.0 - linear_val) * math.pow((linear_val - 0.5) * 2, 0.2))) * 100
         return str(round(value, 2)) + '%'
-
 class Recognition:
     face_locations = []
     face_encodings = []
@@ -24,7 +24,6 @@ class Recognition:
 
     def __init__(self):
         self.encode()
-
     def encode(self):
         for image in os.listdir("Python_facial_recognition/model_1/faces"):
             face_image = face_recognition.load_image_file(f"Python_facial_recognition/model_1/faces/{image}")
@@ -32,12 +31,12 @@ class Recognition:
             self.k_face_encodings.append(face_encoding)
             name = os.path.splitext(image)[0]
             self.k_face_names.append(name)
-
     def run(self):
         video_capture = cv2.VideoCapture(0)
         if not video_capture.isOpened():
             sys.exit('Video not found')
         recognized_names = []
+        start_time = None
         while True:
             _, frame = video_capture.read()
             if self.process_frame:
@@ -49,7 +48,7 @@ class Recognition:
                 for face_encoding in self.face_encodings:
                     matches = face_recognition.compare_faces(self.k_face_encodings, face_encoding)
                     name = "Unknown"
-                    confidence = ''
+                    confidence = "0.0"
                     face_distances = face_recognition.face_distance(self.k_face_encodings, face_encoding)
                     best_match_index = np.argmin(face_distances)
                     if matches[best_match_index]:
@@ -68,17 +67,20 @@ class Recognition:
                 cv2.rectangle(frame, (left, top), (right, bottom), (124, 252, 0), 2)
                 cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (124, 252, 0), cv2.FILLED)
                 cv2.putText(frame, name, (left + 6, bottom - 6), cv2.FONT_HERSHEY_DUPLEX, 0.8, (0, 0, 0), 2)
+            if self.face_names:
+                if start_time is None:
+                    start_time = time.time()
             cv2.imshow('Face Recognition', frame)
             if cv2.waitKey(1) == ord('q'):
                 break
-        video_capture.release()
-        cv2.destroyAllWindows()
+            if start_time is not None:
+                elapsed_time = time.time() - start_time
+                if elapsed_time >= 1:
+                    print(name)
+                    break
+
 
 
 if __name__ == '__main__':
     fr = Recognition()
     fr.run()
-
-
-
-    
