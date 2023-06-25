@@ -108,3 +108,8 @@ class Preprocessing:
         #print(f"The sentence is: {classification}")
 instnace = Preprocessing()
 instnace.run("hello")
+
+if __name__ == '__main__':
+    message = sys.argv[1]  # Get the image name from command-line argument
+    process = Preprocessing()
+    process.run(message)

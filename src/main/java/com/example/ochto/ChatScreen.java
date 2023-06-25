@@ -19,6 +19,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.*;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.time.LocalDate;
@@ -74,6 +75,7 @@ public class ChatScreen implements Initializable {
     private ChoiceBox<String> choiceBox;
     private String[] optionsForChoiceBox = {"Normal","RNN","Naive Bayes"};
     String assistantType = "Normal";
+    private  String preProcessingPy = " ";
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -122,10 +124,12 @@ public class ChatScreen implements Initializable {
         choiceBox.setOnAction(this::changeChoiceBoxOption);
     }
 
+
     @FXML
     public void handle(ActionEvent newActionEvent) {
         message = text_field.getText();
-
+        String preMessage = message;
+        System.out.println(preMessage);
 
         addUMessage(message, vbox_message);
 
@@ -143,21 +147,16 @@ public class ChatScreen implements Initializable {
                 message = bayesClassifier.getPromptAnswer(message);
             }
             else{
-                //change this here later
                 try {
-                    //ProcessBuilder processBuilder = new ProcessBuilder("python", "src/main/java/com/example/logic/Preprocessing.py");
-                    //Process proc = processBuilder.start();
-                    //BufferedReader out = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-
+                    ProcessBuilder processBuilder = new ProcessBuilder("python", "src/main/java/com/example/logic/Preprocessing.py", preMessage);
+                    Process proc = processBuilder.start();
+                    BufferedReader out = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+                    preProcessingPy = out.readLine();
+                    message = preProcessingPy;
                 } catch (Exception e) {
                     // TODO: handle exception
                 }
             }
-            
-
-            
-            
-
 
             float end = System.currentTimeMillis();
 //            System.out.println("Time in ms: " + (end - start));
