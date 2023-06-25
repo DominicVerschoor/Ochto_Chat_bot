@@ -17,8 +17,9 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.*;
-import javafx.scene.text.Font;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -27,17 +28,11 @@ import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
 
 
 public class ChatScreen implements Initializable {
@@ -75,6 +70,10 @@ public class ChatScreen implements Initializable {
     private Button skillButton;
     private CYKHandler handler;
     private SpellChecker spellChecker;
+    @FXML
+    private ChoiceBox<String> choiceBox;
+    private String[] optionsForChoiceBox = {"Normal","RNN","Naive Bayes"};
+    String assistantType = "Normal";
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -119,6 +118,8 @@ public class ChatScreen implements Initializable {
         light_theme_ImageView.setPreserveRatio(true);
         theme_button.setGraphic(light_theme_ImageView);
         main_image_view.setImage(dark_theme_background);
+        choiceBox.getItems().addAll(optionsForChoiceBox);
+        choiceBox.setOnAction(this::changeChoiceBoxOption);
     }
 
     @FXML
@@ -131,8 +132,31 @@ public class ChatScreen implements Initializable {
         if (!message.isEmpty()) {
             float start = System.currentTimeMillis();
 
-            handler = new CYKHandler();
-            message = handler.retrieveAnswer(message);
+            if(assistantType == "Normal")
+            {
+                handler = new CYKHandler();
+                message = handler.retrieveAnswer(message);
+            }
+            else if (assistantType == "Naive Bayes")
+            {
+                Bayes bayesClassifier = new Bayes();
+                message = bayesClassifier.getPromptAnswer(message);
+            }
+            else{
+                //change this here later
+                try {
+                    //ProcessBuilder processBuilder = new ProcessBuilder("python", "src/main/java/com/example/logic/Preprocessing.py");
+                    //Process proc = processBuilder.start();
+                    //BufferedReader out = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+
+                } catch (Exception e) {
+                    // TODO: handle exception
+                }
+            }
+            
+
+            
+            
 
 
             float end = System.currentTimeMillis();
@@ -275,6 +299,11 @@ public class ChatScreen implements Initializable {
                     CornerRadii.EMPTY,
                     Insets.EMPTY)));
         }
+    }
+    @FXML
+    public void changeChoiceBoxOption(ActionEvent newActionEvent) {
+        assistantType = choiceBox.getValue();
+        System.out.println(assistantType);
     }
 }
 
