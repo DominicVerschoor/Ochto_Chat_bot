@@ -98,12 +98,13 @@ class Preprocessing:
         prediction = model.predict(X_user_rnn)[0][0]
         return "In-domain" if prediction > 0.6 else "Out-of-domain"
 
-    def run(self):
+    def run(self, sentence):
         rnnModel1, X_test_rnn_1, y_test_1 = self.rnnModel()
         test_loss, test_accuracy = rnnModel1.evaluate(X_test_rnn_1, y_test_1)
         print(f'Test Loss: {test_loss}, Test Accuracy: {test_accuracy}')
-        user_input = "HHHHHHDHDHDSD"
+        user_input = sentence
         classification = self.classify_user_input(user_input, rnnModel1, self.vectorizer)
-        print(f"The sentence is: {classification}")
+        return classification
+        #print(f"The sentence is: {classification}")
 instnace = Preprocessing()
-instnace.run()
+instnace.run("hello")
