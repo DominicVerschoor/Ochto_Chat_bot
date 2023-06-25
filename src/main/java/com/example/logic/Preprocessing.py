@@ -81,7 +81,7 @@ class Preprocessing:
         y_train = np.array(y_train)
         y_test = np.array(y_test)
 
-        model.fit(X_train_rnn, y_train, epochs=14, verbose=1)
+        model.fit(X_train_rnn, y_train, epochs=14, verbose=0)
         return model, X_test_rnn, y_test
 
     def classify_user_input(self, user_input, model, vectorizer):
@@ -100,12 +100,13 @@ class Preprocessing:
 
     def run(self, sentence):
         rnnModel1, X_test_rnn_1, y_test_1 = self.rnnModel()
-        test_loss, test_accuracy = rnnModel1.evaluate(X_test_rnn_1, y_test_1)
-        print(f'Test Loss: {test_loss}, Test Accuracy: {test_accuracy}')
+        #test_loss, test_accuracy = rnnModel1.evaluate(X_test_rnn_1, y_test_1)
+        #print(f'Test Loss: {test_loss}, Test Accuracy: {test_accuracy}')
         user_input = sentence
         classification = self.classify_user_input(user_input, rnnModel1, self.vectorizer)
+        print(f"The sentence is: {classification}")
         return classification
-        #print(f"The sentence is: {classification}")
+        
 instnace = Preprocessing()
 instnace.run("hello")
 
