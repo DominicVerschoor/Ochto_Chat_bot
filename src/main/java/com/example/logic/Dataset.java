@@ -1,9 +1,6 @@
 package com.example.logic;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 public class Dataset {
@@ -14,10 +11,12 @@ public class Dataset {
     static ArrayList<String> actionDataset = new ArrayList<>();
     static ArrayList<String> finalRules = new ArrayList<>();
     static ArrayList<String> finalActions = new ArrayList<>();
+    static ArrayList<String> allRules = new ArrayList<>();
 
     public static void main(String[] args) {
         finalRules = new ArrayList<>();
         finalActions = new ArrayList<>();
+        allRules = new ArrayList<>();
 
         File folder = new File("Questions/");
         File[] files = folder.listFiles();
@@ -27,12 +26,38 @@ public class Dataset {
             actionMap = getActions(file);
 
             ruleDataset = makeRuleDataset(ruleMap.get("<action>"));
+            allRules.addAll(cleanDataset(ruleDataset));
             actionDataset = makeActionDataset(cleanDataset(ruleDataset));
 
             finalRules.addAll(getRuleDataset());
             finalActions.addAll(getActionDataset());
         }
         System.out.println("done");
+
+        generateFile(allRules);
+    }
+
+    public static void generateFile(ArrayList<String> inputList){
+
+
+        StringBuilder output = new StringBuilder();
+
+        for (String currentItem : inputList) {
+            output.append(currentItem).append("\n");
+        }
+
+        try {
+            FileWriter fw = new FileWriter("Database_For_NLU/dataset.txt");
+            BufferedWriter bw = new BufferedWriter(fw);
+            PrintWriter pw = new PrintWriter(bw);
+
+            pw.write(String.valueOf(output));
+
+            pw.flush();
+            pw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static ArrayList<String> getAllRules(){
