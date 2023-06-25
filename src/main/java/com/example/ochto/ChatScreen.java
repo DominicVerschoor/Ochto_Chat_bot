@@ -54,7 +54,6 @@ public class ChatScreen implements Initializable {
     private final VBox vBox = new VBox();
     @FXML
     Circle circle = new Circle();
-    private String[] skills = {"Which lectures are there on DAY at TIME"};
     private final Stage stage2 = new Stage();
     private final Stage stage3 = new Stage();
     @FXML
@@ -72,7 +71,7 @@ public class ChatScreen implements Initializable {
     private Button skillButton;
     private CYKHandler handler;
     @FXML
-    private  Button algorithmButton = new Button();
+    private Button algorithmButton = new Button();
     private ArrayList<String> userChatLog;
     private ArrayList<String> octoChatLog;
     private ArrayList<String> userSlotLog;
@@ -137,51 +136,42 @@ public class ChatScreen implements Initializable {
         } else {
             algorithmButton.setText("CYK");
             isCYK = true;
-            handle(newActionEvent);
+//            handle(newActionEvent);
         }
     }
-
-
 
     @FXML
     public void handle(ActionEvent newActionEvent) {
         message = text_field.getText();
         addUMessage(message, vbox_message);
         if (!message.isEmpty()) {
-            float start = System.currentTimeMillis();
             handler = new CYKHandler();
-            if (octoChatLog.get(octoChatLog.size()-1).contains("<") && octoChatLog.get(octoChatLog.size()-1).contains(">")){
+            if (octoChatLog.get(octoChatLog.size() - 1).contains("<") && octoChatLog.get(octoChatLog.size() - 1).contains(">")) {
                 userSlotLog.add(message);
-                String ans = userChatLog.get(userChatLog.size()-1);
-                String slt = userSlotLog.get(userSlotLog.size()-1);
+                String ans = userChatLog.get(userChatLog.size() - 1);
+                String slt = userSlotLog.get(userSlotLog.size() - 1);
                 message = handler.retrieveMergedAnswer(ans, slt);
             } else {
                 userChatLog.add(message);
                 message = handler.retrieveAnswer(message);
             }
             octoChatLog.add(message);
-            float end = System.currentTimeMillis();
         } else {
             message = "Input something!";
         }
 
-    TimerTask tt = new TimerTask() {
+        TimerTask tt = new TimerTask() {
             @Override
             public void run() {
                 Platform.runLater(() -> {
                     addBMessage(message, vbox_message);
                 });
             }
+
             ;
         };
         int delay = 1;
         timer.schedule(tt, delay * 500);
-
-        for (int i = 0; i < userChatLog.size(); i++) {
-            System.out.println("User: " + userChatLog.get(i));
-            System.out.println("Octo: " + octoChatLog.get(i));
-        }
-        System.out.println();
     }
 
     public void addUMessage(String message, VBox vbox) {
