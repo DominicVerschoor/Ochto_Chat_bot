@@ -34,11 +34,11 @@ public class Dataset {
         }
     }
 
-    public static ArrayList<String> getAllRules(){
+    public ArrayList<String> getAllRules(){
         return finalRules;
     }
 
-    public static ArrayList<String> getAllActions(){
+    public ArrayList<String> getAllActions(){
         return finalActions;
     }
 
@@ -55,7 +55,7 @@ public class Dataset {
         CYKHandler handler = new CYKHandler();
         for (int i = 0; i < ruleSet.size(); i++){
             String action = handler.retrieveAnswer(ruleSet.get(i));
-            if (action.equalsIgnoreCase("I dunno :P")){
+            if (action.equalsIgnoreCase("I dunno :P") || action.equalsIgnoreCase("No answer found")){
                 ruleDataset.set(i,"");
             } else{
                 actionSet.add(handler.retrieveAnswer(ruleSet.get(i)));

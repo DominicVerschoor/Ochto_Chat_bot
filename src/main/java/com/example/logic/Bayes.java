@@ -11,17 +11,15 @@ public class Bayes {
     ArrayList<String> actions;
     ArrayList<String> classes;
     ArrayList<Double> logPrior;
-    ArrayList<ArrayList<String>> bigDoc;
     ArrayList<ArrayList<Double>> logLikelihood;
     ArrayList<String> vocabulary;
 
     public Bayes(){
         Dataset data = new Dataset();
-        prompts = data.getRuleDataset();
-        actions = data.getActionDataset();
+        prompts = data.getAllRules();
+        actions = data.getAllActions();
         logPrior = new ArrayList<Double>();
         classes = new ArrayList<String>(new HashSet<>(actions));
-        bigDoc = new ArrayList<ArrayList<String>>();
         logLikelihood = new ArrayList<ArrayList<Double>>();
         HashSet<String> vocab = new HashSet<String>();
         for(int i = 0; i < prompts.size(); i++){
@@ -33,17 +31,17 @@ public class Bayes {
 
     public static void main(String[] args) {
         Bayes classifier = new Bayes();
-        System.out.println(classifier.getMaxProb("Which lectures are there on saturday"));
+        System.out.println(classifier.getPromptAnswer("Where is"));
     }
 
-    private String getMaxProb(String prompt){
+    private String getPromptAnswer(String prompt){
         ArrayList<Double> sum = new ArrayList<Double>();
         String[] words = prompt.split("\\s+");
         for(int i = 0; i < classes.size(); i++){
-            double s = 0;
+            double s = logPrior.get(i);
             for(String word : words){
                 if(vocabulary.contains(word)){
-                    s += logLikelihood.get(i).get(vocabulary.indexOf(word));
+                    s *= logLikelihood.get(i).get(vocabulary.indexOf(word));
                 }
             }
             sum.add(s);
@@ -52,29 +50,26 @@ public class Bayes {
     }
 
     private void trainBayes(){
-
-        int nDoc = prompts.size();
         for(int i = 0; i < classes.size(); i++){
-
+            double nDoc = prompts.size();
             int nC = Collections.frequency(actions, classes.get(i));
-            logPrior.add(Math.log(nC/nDoc));
+            logPrior.add((nC/nDoc));
 
-            ArrayList<String> labels = new ArrayList<String>();
+            ArrayList<String> documents = new ArrayList<String>();
             for(int j = 0; j < actions.size(); j++){
                 if(actions.get(j).equalsIgnoreCase(classes.get(i))){
-                    labels.add(actions.get(j));
+                    documents.add(prompts.get(j));
                 }
             }
-            bigDoc.add(labels);
 
             double countSum = 0;
             for(String word : vocabulary){
-                countSum += countOccurences(word, labels);
+                countSum += countOccurences(word, documents);
             }
             ArrayList<Double> wLL = new ArrayList<Double>();
             for(String word : vocabulary){
-                double count = countOccurences(word, labels);
-                wLL.add(Math.log((count+1)/(countSum + vocabulary.size())));
+                double count = countOccurences(word, documents);
+                wLL.add(((count+1)/(countSum + vocabulary.size())));
             }
             logLikelihood.add(wLL);
         }
