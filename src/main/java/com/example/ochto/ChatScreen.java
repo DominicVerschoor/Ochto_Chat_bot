@@ -42,7 +42,6 @@ public class ChatScreen implements Initializable {
     private ScrollPane scrollPane;
     private final LocalTime time = LocalTime.now();
     private final LocalDate date = LocalDate.now();
-    ;
     private final Random random = new Random();
     private String message;
     private final Timer timer = new Timer();
@@ -69,9 +68,9 @@ public class ChatScreen implements Initializable {
     private SpellChecker spellChecker;
     @FXML
     private ChoiceBox<String> choiceBox;
-    private String[] optionsForChoiceBox = {"Normal","RNN","Naive Bayes"};
+    private String[] optionsForChoiceBox = {"Normal", "RNN", "Naive Bayes"};
     String assistantType = "Normal";
-    private  String preProcessingPy = " ";
+    private String preProcessingPy = " ";
     @FXML
     private Button algorithmButton = new Button();
     private ArrayList<String> userChatLog;
@@ -131,41 +130,30 @@ public class ChatScreen implements Initializable {
         choiceBox.setOnAction(this::changeChoiceBoxOption);
     }
 
-
-    @FXML
-    public void cykORann(ActionEvent newActionEvent) {
-        if (isCYK) {
-            algorithmButton.setText("ANN");
-            isCYK = false;
-//            annHandle(newActionEvent);
-        } else {
-            algorithmButton.setText("CYK");
-            isCYK = true;
-//            handle(newActionEvent);
-        }
-    }
-
     @FXML
     public void handle(ActionEvent newActionEvent) {
         message = text_field.getText();
         String preMessage = message;
-        System.out.println(preMessage);
 
         addUMessage(message, vbox_message);
         if (!message.isEmpty()) {
-            float start = System.currentTimeMillis();
+            handler = new CYKHandler();
 
-            if(assistantType == "Normal")
-            {
-                handler = new CYKHandler();
-                message = handler.retrieveAnswer(message);
-            }
-            else if (assistantType == "Naive Bayes")
-            {
+            if (assistantType.equalsIgnoreCase("Normal")) {
+                if (octoChatLog.get(octoChatLog.size() - 1).contains("<") && octoChatLog.get(octoChatLog.size() - 1).contains(">")) {
+                    userSlotLog.add(message);
+                    String ans = userChatLog.get(userChatLog.size() - 1);
+                    String slt = userSlotLog.get(userSlotLog.size() - 1);
+                    message = handler.retrieveMergedAnswer(ans, slt);
+                } else {
+                    userChatLog.add(message);
+                    message = handler.retrieveAnswer(message);
+                }
+                octoChatLog.add(message);
+            } else if (assistantType.equalsIgnoreCase("Naive Bayes")) {
                 Bayes bayesClassifier = new Bayes();
                 message = bayesClassifier.getPromptAnswer(message);
-            }
-            else{
+            } else {
                 try {
                     ProcessBuilder processBuilder = new ProcessBuilder("python", "src/main/java/com/example/logic/Preprocessing.py", preMessage);
                     Process proc = processBuilder.start();
@@ -177,20 +165,7 @@ public class ChatScreen implements Initializable {
                 }
             }
 
-            float end = System.currentTimeMillis();
-//            System.out.println("Time in ms: " + (end - start));
 
-            handler = new CYKHandler();
-            if (octoChatLog.get(octoChatLog.size() - 1).contains("<") && octoChatLog.get(octoChatLog.size() - 1).contains(">")) {
-                userSlotLog.add(message);
-                String ans = userChatLog.get(userChatLog.size() - 1);
-                String slt = userSlotLog.get(userSlotLog.size() - 1);
-                message = handler.retrieveMergedAnswer(ans, slt);
-            } else {
-                userChatLog.add(message);
-                message = handler.retrieveAnswer(message);
-            }
-            octoChatLog.add(message);
         } else {
             message = "Input something!";
         }
@@ -330,6 +305,7 @@ public class ChatScreen implements Initializable {
                     Insets.EMPTY)));
         }
     }
+
     @FXML
     public void changeChoiceBoxOption(ActionEvent newActionEvent) {
         assistantType = choiceBox.getValue();

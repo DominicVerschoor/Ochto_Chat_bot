@@ -66,7 +66,6 @@ public class SpellChecker {
         promptList.add(userInput);
 
         processPrompts(splitInput, promptList, 0, 0);
-        System.out.println("\nprocess count: " + promptList.size());
         ArrayList<String> output = new ArrayList<>(promptList);
         output = removeIncorrectPrompt(output);
 

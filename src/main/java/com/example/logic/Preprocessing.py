@@ -1,15 +1,12 @@
 import re
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
-from sklearn.feature_extraction.text import CountVectorizer
 from nltk.stem import WordNetLemmatizer
 from sklearn.model_selection import train_test_split
-from keras.layers import RNN
 import tensorflow as tf
 from keras.models import Sequential
-from keras.layers import Dense, SimpleRNN, LSTM
+from keras.layers import Dense, SimpleRNN
 import numpy as np
-import pandas as pd
 import nltk
 from sklearn.feature_extraction.text import CountVectorizer
 import random
