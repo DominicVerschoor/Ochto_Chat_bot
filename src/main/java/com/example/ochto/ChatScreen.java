@@ -161,7 +161,7 @@ public class ChatScreen implements Initializable {
                     preProcessingPy = out.readLine();
                     message = preProcessingPy;
                 } catch (Exception e) {
-                    // TODO: handle exception
+                    e.printStackTrace();
                 }
             }
 
