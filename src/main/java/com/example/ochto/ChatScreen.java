@@ -155,7 +155,7 @@ public class ChatScreen implements Initializable {
                 message = bayesClassifier.getPromptAnswer(message);
             } else {
                 try {
-                    ProcessBuilder processBuilder = new ProcessBuilder("python", "src/main/java/com/example/logic/Preprocessing.py", preMessage);
+                    ProcessBuilder processBuilder = new ProcessBuilder("python", "src/main/java/com/example/logic/RNN.py", preMessage);
                     Process proc = processBuilder.start();
                     BufferedReader out = new BufferedReader(new InputStreamReader(proc.getInputStream()));
                     preProcessingPy = out.readLine();

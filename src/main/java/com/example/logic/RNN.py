@@ -12,7 +12,7 @@ import random
 import sys
 nltk.data.path.append('.')
 
-class Preprocessing:
+class RNN:
     vectorizer = CountVectorizer()
     #in_domain_data = []
     #out_of_domain_data = []
@@ -124,5 +124,5 @@ class Preprocessing:
 
 if __name__ == '__main__':
     message = sys.argv[1]
-    process = Preprocessing()
+    process = RNN()
     process.run(message)
