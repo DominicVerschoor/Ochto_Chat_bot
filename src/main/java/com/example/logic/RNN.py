@@ -74,7 +74,7 @@ class RNN:
         X_test_rnn = X_test.reshape((X_test.shape[0], 1, X_test.shape[1]))
         
         input_dim = X_train.shape[1]
-        rnn_units = 10
+        rnn_units = 200
 
         model = Sequential()
         model.add(SimpleRNN(units=rnn_units, input_shape=(None, input_dim), return_sequences=True,dropout=0.2, recurrent_dropout=0.2, activation='relu'))#kernel_regularizer=regularizers.l2(0.01)
@@ -119,8 +119,8 @@ class RNN:
         print(classification)
         return classification
         
-#instnace = Preprocessing()
-#instnace.run("which lectures are there on monday at 9")
+#instnace = RNN()
+#instnace.run("gkgkgkgkkkkk")
 
 if __name__ == '__main__':
     message = sys.argv[1]
