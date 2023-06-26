@@ -185,13 +185,11 @@ public class CYKHandler {
             for (String content : ruleContent) {
 
                 int compare = comparePrompts(prompt, content, terminalMap);
-//                int compare = checker.getLevenshteinDistance(prompt, content);
                 if (compare < min) {
                     finalContent = content;
                     finalPrompt = prompt;
                     min = compare;
                     finalTerminalMap = reader.getTerminalMap();
-                    counter = compare;
                 }
             }
         }
@@ -205,10 +203,7 @@ public class CYKHandler {
         } else {
             return mergeContent(finalContent, finalPrompt, finalPrompt.split(" "), finalTerminalMap);
         }
-//
-//        if (counter > 5) {
-//            return "Sorry I don't know";
-//        }
+
         return output.toString();
     }
 
