@@ -24,6 +24,7 @@ public class CYKHandler {
         spellChecker.generateDictionary(rules);
 
         ArrayList<String> correctedPrompts = spellChecker.correctedPrompts();
+
         for (int i = 0; i < rules.size(); i++) {
             for (String curPrompt : correctedPrompts) {
                 CYK run = new CYK(rules.get(i), actions.get(i), curPrompt);
@@ -33,7 +34,9 @@ public class CYKHandler {
             }
         }
 
-        if (output == null) {
+        if (output != null) {
+            return output;
+        } else {
             for (String curPrompt : correctedPrompts) {
                 String tempRead = read(curPrompt);
                 if (isTerminal(tempRead)) {
@@ -42,7 +45,9 @@ public class CYKHandler {
             }
         }
 
-        if (output == null) {
+        if (output != null) {
+            return output;
+        } else {
             for (int i = 0; i < rules.size(); i++) {
                 for (String curPrompt : correctedPrompts) {
                     CYK run = new CYK(rules.get(i), actions.get(i), read(curPrompt));
@@ -53,6 +58,20 @@ public class CYKHandler {
             }
         }
 
+        if (output != null) {
+            return output;
+        } else {
+            for (String curPrompt : correctedPrompts) {
+                String tempRead = read(curPrompt);
+                if (isTerminal(tempRead)) {
+                    output = tempRead;
+                }
+            }
+        }
+
+        if (output == null) {
+            return "I dunno :P";
+        }
 
         return output;
     }

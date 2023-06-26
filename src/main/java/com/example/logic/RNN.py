@@ -9,9 +9,10 @@ import numpy as np
 import nltk
 from sklearn.feature_extraction.text import CountVectorizer
 import random
+import sys
 nltk.data.path.append('.')
 
-class Preprocessing:
+class RNN:
     vectorizer = CountVectorizer()
     #in_domain_data = []
     #out_of_domain_data = []
@@ -29,8 +30,20 @@ class Preprocessing:
         
         for sentence in data:
             tokens = word_tokenize(sentence)
-            tokens = [lemmatizer.lemmatize(token.lower()) for token in tokens if token.isalpha()]
-            tokens = [token for token in tokens if token not in stop_words]
+            new_tokens = []
+            for token in tokens:
+                if token.isalpha():   
+                    lower_token = token.lower()
+                    lemmatized_token = lemmatizer.lemmatize(lower_token)
+                    new_tokens.append(lemmatized_token)
+            tokens = new_tokens
+
+            tokens_without_stop_words = []
+            for token in tokens:
+                if token not in stop_words:   # This line is checking if the token is not a stop word
+                    tokens_without_stop_words.append(token)  # If not, it's added to the list of filtered tokens
+            tokens = tokens_without_stop_words
+
             preprocessed_data.append(' '.join(tokens))
         
         
@@ -46,6 +59,11 @@ class Preprocessing:
     #print(preprocessed_out_of_domain_data)
         
     def rnnModel(self):
+        random.seed(0)
+        np.random.seed(0)
+        tf.random.set_seed(0)
+        
+        
         all_data = self.in_domain_data + self.out_of_domain_data
         labels = [1]*len(self.in_domain_data) + [0]*len(self.out_of_domain_data)
 
@@ -54,9 +72,7 @@ class Preprocessing:
 
         X_train_rnn = X_train.reshape((X_train.shape[0], 1, X_train.shape[1]))
         X_test_rnn = X_test.reshape((X_test.shape[0], 1, X_test.shape[1]))
-        random.seed(0)
-        np.random.seed(0)
-        tf.random.set_seed(0)
+        
         input_dim = X_train.shape[1]
         rnn_units = 10
 
@@ -77,7 +93,7 @@ class Preprocessing:
         y_train = np.array(y_train)
         y_test = np.array(y_test)
 
-        model.fit(X_train_rnn, y_train, epochs=14, verbose=0)
+        model.fit(X_train_rnn, y_train, epochs=11, verbose=0)
         return model, X_test_rnn, y_test
 
     def classify_user_input(self, user_input, model, vectorizer):
@@ -92,7 +108,7 @@ class Preprocessing:
         X_user_rnn = X_user.toarray().reshape((X_user.shape[0], 1, X_user.shape[1]))
 
         prediction = model.predict(X_user_rnn)[0][0]
-        return "In-domain" if prediction > 0.6 else "Out-of-domain"
+        return "In-domain" if prediction > 0.5 else "Out-of-domain"
 
     def run(self, sentence):
         rnnModel1, X_test_rnn_1, y_test_1 = self.rnnModel()
@@ -100,13 +116,13 @@ class Preprocessing:
         #print(f'Test Loss: {test_loss}, Test Accuracy: {test_accuracy}')
         user_input = sentence
         classification = self.classify_user_input(user_input, rnnModel1, self.vectorizer)
-        print(f"The sentence is: {classification}")
+        print(classification)
         return classification
         
-instnace = Preprocessing()
-instnace.run("hello")
+#instnace = Preprocessing()
+#instnace.run("which lectures are there on monday at 9")
 
 if __name__ == '__main__':
-    message = sys.argv[1]  # Get the image name from command-line argument
-    process = Preprocessing()
+    message = sys.argv[1]
+    process = RNN()
     process.run(message)

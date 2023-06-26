@@ -155,11 +155,29 @@ public class ChatScreen implements Initializable {
                 message = bayesClassifier.getPromptAnswer(message);
             } else {
                 try {
-                    ProcessBuilder processBuilder = new ProcessBuilder("python", "src/main/java/com/example/logic/Preprocessing.py", preMessage);
+                    ProcessBuilder processBuilder = new ProcessBuilder("python", "src/main/java/com/example/logic/RNN.py", preMessage);
                     Process proc = processBuilder.start();
                     BufferedReader out = new BufferedReader(new InputStreamReader(proc.getInputStream()));
                     preProcessingPy = out.readLine();
-                    message = preProcessingPy;
+                    String preProcessingPy1= out.readLine();
+                    String preProcessingPy2= out.readLine();
+                    String preProcessingPy3= out.readLine();
+                    if (preProcessingPy3.equals("In-domain")) {
+                        if (octoChatLog.get(octoChatLog.size() - 1).contains("<") && octoChatLog.get(octoChatLog.size() - 1).contains(">")) {
+                        userSlotLog.add(message);
+                        String ans = userChatLog.get(userChatLog.size() - 1);
+                        String slt = userSlotLog.get(userSlotLog.size() - 1);
+                        message = handler.retrieveMergedAnswer(ans, slt);
+                        } else {
+                            userChatLog.add(message);
+                            message = handler.retrieveAnswer(message);
+                        }
+                        octoChatLog.add(message);
+                    }
+                    else{
+                        message = preProcessingPy3;
+                    }
+                    
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
