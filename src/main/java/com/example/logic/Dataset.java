@@ -58,7 +58,7 @@ public class Dataset {
             if (action == null) {
                 ruleDataset.set(i, "");
             } else {
-                actionSet.add(handler.retrieveAnswer(ruleSet.get(i)));
+                actionSet.add(handler.bayesDataset(ruleSet.get(i)));
             }
         }
         return actionSet;

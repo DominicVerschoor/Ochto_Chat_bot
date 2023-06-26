@@ -29,9 +29,59 @@ public class Bayes {
         trainBayes();
     }
 
+     /*
     public static void main(String[] args) {
-        Bayes classifier = new Bayes();
-        System.out.println(classifier.getPromptAnswer("Where is"));
+        Bayes ba = new Bayes();
+        System.out.println(ba.getPromptAnswer("how is the weather in maastricht"));
+    }
+*/
+   
+    public static void main(String[] args) {
+        Dataset data = new Dataset();
+        ArrayList<String> promptData = data.getAllRules();
+        ArrayList<String> actionData = data.getAllActions();
+
+        promptData.add("what lectures do I have on monday at 9");
+        actionData.add("We start the week with math");
+
+        promptData.add("what lectures monday at 9");
+        actionData.add("We start the week with math");
+
+        promptData.add("what lectures I have monday at 9");
+        actionData.add("We start the week with math");
+
+        promptData.add("where spacebox");
+        actionData.add("is in the first floor");
+
+        promptData.add("on monday what lectures do i have at 9");
+        actionData.add("We start the week with math");
+
+        promptData.add("on monday what lectures do i have at 12");
+        actionData.add("On monday noon we have Theoratical Computer S");
+
+        promptData.add("on monday what i have at 12");
+        actionData.add("On monday noon we have Theoratical Computer S");
+
+        promptData.add("on saturday what lectures are there");
+        actionData.add("There are no lectures on saturday");
+
+        promptData.add("tomorrow in berlin how is the weather going to be");
+        actionData.add("It will be sunny.");
+
+        Bayes bayes = new Bayes();
+        int count = 0;
+        for(int i = 0; i < promptData.size(); i++){
+            System.out.println("Iteration: " + i);
+            System.out.println("Prompt: " + promptData.get(i));
+            System.out.println("Correct Answer: " + actionData.get(i));
+            System.out.println("Bayes Answer: " + bayes.getPromptAnswer(promptData.get(i)));
+            System.out.println();
+            System.out.println();
+            if(bayes.getPromptAnswer(promptData.get(i)).equalsIgnoreCase(actionData.get(i))){
+                count++;
+            }
+        }
+        System.out.println("Accuracy: " + (double) count/promptData.size());
     }
 
     public String getPromptAnswer(String prompt){
@@ -53,7 +103,7 @@ public class Bayes {
         for(int i = 0; i < classes.size(); i++){
             double nDoc = prompts.size();
             int nC = Collections.frequency(actions, classes.get(i));
-            logPrior.add((nC/nDoc));
+            logPrior.add(Math.log((double)nC/nDoc));
 
             ArrayList<String> documents = new ArrayList<String>();
             for(int j = 0; j < actions.size(); j++){
@@ -69,7 +119,7 @@ public class Bayes {
             ArrayList<Double> wLL = new ArrayList<Double>();
             for(String word : vocabulary){
                 double count = countOccurences(word, documents);
-                wLL.add(((count+1)/(countSum + vocabulary.size())));
+                wLL.add(Math.log((count + 10)/(countSum + vocabulary.size() * 10)));
             }
             logLikelihood.add(wLL);
         }
