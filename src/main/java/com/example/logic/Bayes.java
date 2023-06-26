@@ -41,7 +41,7 @@ public class Bayes {
             double s = logPrior.get(i);
             for(String word : words){
                 if(vocabulary.contains(word)){
-                    s *= logLikelihood.get(i).get(vocabulary.indexOf(word));
+                    s += logLikelihood.get(i).get(vocabulary.indexOf(word));
                 }
             }
             sum.add(s);
