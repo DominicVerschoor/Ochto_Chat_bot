@@ -24,6 +24,10 @@ public class CYKHandler {
         spellChecker.generateDictionary(rules);
 
         ArrayList<String> correctedPrompts = spellChecker.correctedPrompts();
+
+        if (correctedPrompts.isEmpty()) {
+            return "I dunno :PP";
+        }
         for (int i = 0; i < rules.size(); i++) {
             for (String curPrompt : correctedPrompts) {
                 CYK run = new CYK(rules.get(i), actions.get(i), curPrompt);
