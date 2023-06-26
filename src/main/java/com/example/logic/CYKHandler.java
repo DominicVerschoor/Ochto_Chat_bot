@@ -57,6 +57,22 @@ public class CYKHandler {
         return output;
     }
 
+    public String bayesDataset(String prompt) {
+        prompt = cleanWord(prompt);
+        SpellChecker spellChecker = new SpellChecker(prompt);
+        spellChecker.generateDictionary(rules);
+        for (int i = 0; i < rules.size(); i++) {
+            ArrayList<String> correctedPrompts = spellChecker.correctedPrompts();
+            for (String curPrompt : correctedPrompts) {
+                CYK run = new CYK(rules.get(i), actions.get(i), curPrompt);
+                if (run.belongs()) {
+                    return run.getAction();
+                }
+            }
+        }
+        return null;
+    }
+
 
     public String retrieveMergedAnswer(String message, String slots) {
         String[] splitSlots = cleanWord(slots).split(" ");

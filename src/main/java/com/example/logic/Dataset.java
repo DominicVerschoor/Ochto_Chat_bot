@@ -54,7 +54,7 @@ public class Dataset {
         ArrayList<String> actionSet = new ArrayList<>();
         CYKHandler handler = new CYKHandler();
         for (int i = 0; i < ruleSet.size(); i++) {
-            String action = handler.retrieveAnswer(ruleSet.get(i));
+            String action = handler.bayesDataset(ruleSet.get(i));
             if (action == null) {
                 ruleDataset.set(i, "");
             } else {
