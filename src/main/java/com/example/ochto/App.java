@@ -18,7 +18,6 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         runFR();
-        //name = "Misha";
         if (name != null && !name.equals("Unknown (0.0)")){
             runChat(stage);
         }else {
