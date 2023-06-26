@@ -7,13 +7,9 @@ import java.util.*;
 import java.io.File;
 
 public class CYKHandler {
+
     ArrayList<HashMap<String, ArrayList<String>>> rules;
     ArrayList<ArrayList<Action>> actions;
-
-    public static void main(String[] args) {
-        CYKHandler handler = new CYKHandler();
-        System.out.println(handler.retrieveAnswer("How is the weather in maastricht"));
-    }
 
     public CYKHandler() {
         rules = readRules();
@@ -22,72 +18,233 @@ public class CYKHandler {
     }
 
     public String retrieveAnswer(String prompt) {
+        String output = null;
         prompt = cleanWord(prompt);
+        SpellChecker spellChecker = new SpellChecker(prompt);
+        spellChecker.generateDictionary(rules);
+
+        ArrayList<String> correctedPrompts = spellChecker.correctedPrompts();
         for (int i = 0; i < rules.size(); i++) {
-            SpellChecker spellChecker = new SpellChecker(prompt);
-            spellChecker.generateDictionary(rules.get(i));
-            ArrayList<String> correctedPrompts = spellChecker.correctedPrompts();
             for (String curPrompt : correctedPrompts) {
                 CYK run = new CYK(rules.get(i), actions.get(i), curPrompt);
                 if (run.belongs()) {
-                    return run.getAction();
+                    output = run.getAction();
                 }
             }
         }
-        return "No answer found";
-    }
 
-    public String read(ArrayList<String> prompts){
-        ArrayList<File> files = getAllQuestions();
+        if (output == null) {
+            for (String curPrompt : correctedPrompts) {
+                String tempRead = read(curPrompt);
+                if (isTerminal(tempRead)) {
+                    output = tempRead;
+                }
+            }
+        }
 
-        for (File file:files) {
-            CSVReader reader = new CSVReader(file);
-            ArrayList<String> ruleContent = reader.getRuleContent();
-            String finalPrompt = "";
-            String finalContent = "";
-
-            int min = Integer.MAX_VALUE;
-            for (String prompt:prompts) {
-                for (String content:ruleContent) {
-                    if (comparePrompts(prompt, content) < min){
-                        finalContent = content;
-                        finalPrompt = prompt;
+        if (output == null) {
+            for (int i = 0; i < rules.size(); i++) {
+                for (String curPrompt : correctedPrompts) {
+                    CYK run = new CYK(rules.get(i), actions.get(i), read(curPrompt));
+                    if (run.belongs()) {
+                        output = run.getAction();
                     }
                 }
             }
-
-
-
-
         }
 
-        return "";
+
+        return output;
     }
 
-    public int comparePrompts(String prompt, String content){
-        String[] splitPrompt = prompt.split(" ");
-        String[] splitContent = content.split(" ");
 
-        int length = Integer.min(splitContent.length, splitPrompt.length);
-        int counter = Math.abs(splitContent.length - splitPrompt.length);
-        for (int i = 0; i < length; i++) {
-            if (!splitContent[i].equalsIgnoreCase(splitPrompt[i])){
-                counter++;
+    public String retrieveMergedAnswer(String message, String slots) {
+        String[] splitSlots = cleanWord(slots).split(" ");
+        ArrayList<File> files = getAllQuestions();
+        HashMap<String, ArrayList<String>> terminalMap = new HashMap<>();
+        int min = Integer.MAX_VALUE;
+        String finalContent = "";
+
+        for (File file : files) {
+            CSVReader reader = new CSVReader(file);
+            ArrayList<String> ruleContent = reader.getRuleContent();
+
+            if (terminalMap.isEmpty()) {
+                terminalMap = reader.getTerminalMap();
+            }
+
+            for (String content : ruleContent) {
+                int compare = comparePrompts(message, content, terminalMap);
+//                int compare = checker.getLevenshteinDistance(message, content);
+                if (compare < min) {
+                    finalContent = content;
+                    min = compare;
+                    terminalMap = reader.getTerminalMap();
+                }
             }
         }
 
-        return counter;
+        String mergedPrompt = mergeContent(finalContent, message, splitSlots, terminalMap);
+
+        return retrieveAnswer(mergedPrompt);
     }
 
-    public ArrayList<File> getAllQuestions() {
+    private String mergeContent(String finalContent, String message, String[] slots, HashMap<String, ArrayList<String>> terminalMap) {
+        String[] splitFinalContent = finalContent.split(" ");
+        HashMap<String, String> existingSlots = getExistingSlotsFromMessage(message, terminalMap);
+
+        for (int i = 0; i < splitFinalContent.length; i++) {
+            String word = splitFinalContent[i];
+            if (isTerminal(word)) {
+                String oldSlot = existingSlots.get(word.toLowerCase());
+                if (oldSlot != null) {
+                    splitFinalContent[i] = oldSlot.replaceAll("\\s", "");
+                } else {
+                    for (String slot : slots) {
+                        HashMap<String, String> newSlots = getExistingSlotsFromMessage(slot, terminalMap);
+                        String newSlot = newSlots.get(word.toLowerCase());
+
+                        if (newSlot != null) {
+                            splitFinalContent[i] = newSlot.replaceAll("\\s", "");
+                        }
+                    }
+                }
+            }
+        }
+
+        return String.join(" ", splitFinalContent);
+    }
+
+    private HashMap<String, String> getExistingSlotsFromMessage(String message, HashMap<String, ArrayList<String>> terminalMap) {
+        HashMap<String, String> output = new HashMap<>();
+
+        for (Map.Entry<String, ArrayList<String>> entry : terminalMap.entrySet()) {
+            String key = entry.getKey();
+            ArrayList<String> terminals = entry.getValue();
+
+            for (String word : terminals) {
+                if (isTerminalInString(message, word)) {
+                    output.put(key, word);
+                }
+            }
+        }
+
+        return output;
+    }
+
+    private String read(String prompt) {
+        StringBuilder output = new StringBuilder();
+        output.append("Can you also give me the");
+        ArrayList<File> files = getAllQuestions();
+        HashMap<String, ArrayList<String>> finalTerminalMap = new HashMap<>();
+        int min = Integer.MAX_VALUE;
+        String finalPrompt = "";
+        String finalContent = "";
+        int counter = 0;
+
+        for (File file : files) {
+            CSVReader reader = new CSVReader(file);
+            ArrayList<String> ruleContent = reader.getRuleContent();
+            HashMap<String, ArrayList<String>> terminalMap = reader.getTerminalMap();
+
+            for (String content : ruleContent) {
+
+                int compare = comparePrompts(prompt, content, terminalMap);
+//                int compare = checker.getLevenshteinDistance(prompt, content);
+                if (compare < min) {
+                    finalContent = content;
+                    finalPrompt = prompt;
+                    min = compare;
+                    finalTerminalMap = reader.getTerminalMap();
+                    counter = compare;
+                }
+            }
+        }
+
+        ArrayList<String> missingSlots = extractSlots(finalPrompt, finalContent, finalTerminalMap);
+        if (missingSlots != null) {
+            for (String slot : missingSlots) {
+                output.append(", ").append(slot);
+            }
+
+        } else {
+            return mergeContent(finalContent, finalPrompt, finalPrompt.split(" "), finalTerminalMap);
+        }
+//
+//        if (counter > 5) {
+//            return "Sorry I don't know";
+//        }
+        return output.toString();
+    }
+
+    private ArrayList<String> extractSlots(String prompt, String content, HashMap<String, ArrayList<String>> terminalMap) {
+        ArrayList<String> slots = new ArrayList<>();
+        String[] splitContent = content.toLowerCase().split(" ");
+
+        for (String con : splitContent) {
+            if (isTerminal(con)) {
+                slots.add(con);
+            }
+        }
+
+        Iterator<String> iterator = slots.iterator();
+        while (iterator.hasNext()) {
+            String slot = iterator.next();
+            ArrayList<String> currentTerminal = terminalMap.get(slot);
+            if (currentTerminal != null) {
+                for (String ter : currentTerminal) {
+                    if (isTerminalInString(prompt, ter)) {
+                        iterator.remove();
+                        break; // Exit the inner loop once a match is found
+                    }
+                }
+            }
+            if (slots.isEmpty()) {
+                return null;
+            }
+        }
+
+        return slots;
+    }
+
+    private int comparePrompts(String prompt, String content, HashMap<String, ArrayList<String>> terminalMap) {
+        SpellChecker checker = new SpellChecker("");
+        String[] splitPrompt = prompt.toLowerCase().split(" ");
+        String[] splitContent = content.toLowerCase().split(" ");
+        ArrayList<String> prunedContent = new ArrayList<>();
+        ArrayList<String> prunedPrompt = new ArrayList<>(Arrays.asList(splitPrompt));
+
+        for (String word : splitContent) {
+            if (!isTerminal(word)) {
+                prunedContent.add(word);
+            }
+        }
+
+        for (Map.Entry<String, ArrayList<String>> entry : terminalMap.entrySet()) {
+            ArrayList<String> terminals = entry.getValue();
+            for (String word : terminals) {
+                if (isTerminalInString(prompt, word)) {
+                    prunedPrompt.remove(word.toLowerCase());
+                }
+            }
+        }
+
+        String finalContent = String.join(" ", prunedContent);
+        String finalPrompt = String.join(" ", prunedPrompt);
+
+        return checker.getLevenshteinDistance(finalPrompt, finalContent);
+    }
+
+    private ArrayList<File> getAllQuestions() {
         String folderPath = "Questions";
-        ArrayList allFiles = new ArrayList();
+        ArrayList<File> allFiles = new ArrayList<>();
 
         // Get a list of all the files in the folder
         File folder = new File(folderPath);
         File[] fileList = folder.listFiles();
 
         // Loop over each file in the folder and read the first line
+        assert fileList != null;
         for (File file : fileList) {
             try (BufferedReader br = new BufferedReader(new FileReader(file))) {
                 br.readLine();
@@ -100,7 +257,19 @@ public class CYKHandler {
         return allFiles;
     }
 
-    public static String cleanWord(String input) {
+    private boolean isTerminalInString(String prompt, String terminal) {
+        String cleanTerminal = terminal.replaceAll("[^\\p{L}\\p{N}]+", "").toLowerCase();
+        String[] splitPrompt = prompt.toLowerCase().split(" ");
+
+        for (String word : splitPrompt) {
+            if (word.equalsIgnoreCase(cleanTerminal)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private String cleanWord(String input) {
         return input.replaceAll("[^\\p{L}\\p{N}\\s]+", "");
     }
 
@@ -212,74 +381,9 @@ public class CYKHandler {
         return result;
     }
 
-    private ArrayList<HashMap<String, ArrayList<String>>> generateDictionary() {
-        ArrayList<HashMap<String, ArrayList<String>>> output = new ArrayList<>();
-        File folder = new File("Questions/");
-        File[] files = folder.listFiles();
-        assert files != null;
-        for (File file : files) {
-            output.add(getTerminals(file));
-        }
-        return output;
+    private boolean isTerminal(String word) {
+        return word.contains("<") && word.contains(">");
     }
 
-    public static HashMap<String, ArrayList<String>> getTerminals(File fileName) {
-        HashMap<String, ArrayList<String>> result = new HashMap<String, ArrayList<String>>();
-        List<String> lines = new ArrayList<>();
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(fileName));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                lines.add(line);
-            }
-            reader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
-        for (String line : lines) {
-            String[] words = line.split(" ");
-            String cleanLine = line.substring(6 + words[1].length(), line.length());
-            if (words[0].equalsIgnoreCase("Rule")) {
-                boolean terminal = false;
-                String[] entries = cleanLine.split("[|]");
-                ArrayList<String> newEntries = new ArrayList<String>(Arrays.asList(entries));
-                for (int i = 0; i < newEntries.size(); i++) {
-                    if (newEntries.get(i).charAt(0) == ' ') {
-                        newEntries.set(i, newEntries.get(i).substring(1, newEntries.get(i).length()));
-                    }
-                    if (newEntries.get(i).charAt(newEntries.get(i).length() - 1) == ' ') {
-                        newEntries.set(i, newEntries.get(i).substring(0, newEntries.get(i).length() - 1));
-                    }
-                }
-                for (int i = 0; i < newEntries.size(); i++) {
-                    String[] entryWords = newEntries.get(i).split(" ");
-                    if (entryWords.length > 1 || entryWords[0].charAt(0) == '<') {
-                        for (int j = 0; j < entryWords.length; j++) {
-                            String word = entryWords[j].replaceAll("\\s", "");
-                            if (word.charAt(0) == '<') {
-                                word = word.substring(1, word.length() - 1);
-                            } else {
-                                word = "W";
-                                terminal = false;
-                            }
-                            entryWords[j] = word;
-                        }
-                    }
-                    ArrayList<String> temp = new ArrayList<String>(Arrays.asList(entryWords));
-                    for (int j = 0; j < temp.size() - 1; j++) {
-                        if (temp.get(j).equalsIgnoreCase("W") && temp.get(j + 1).equalsIgnoreCase("W")) {
-                            temp.remove(j);
-                        }
-                    }
-                    entryWords = temp.toArray(new String[temp.size()]);
-                    newEntries.set(i, String.join("", entryWords));
-                }
-                if (terminal) {
-                    result.put(words[1].substring(1, words[1].length() - 1), newEntries);
-                }
-            }
-        }
-        return result;
-    }
 }

@@ -34,37 +34,37 @@ public class Dataset {
         }
     }
 
-    public ArrayList<String> getAllRules(){
+    public ArrayList<String> getAllRules() {
         return finalRules;
     }
 
-    public ArrayList<String> getAllActions(){
+    public ArrayList<String> getAllActions() {
         return finalActions;
     }
 
-    public ArrayList<String> getRuleDataset(){
+    public ArrayList<String> getRuleDataset() {
         return cleanDataset(ruleDataset);
     }
 
-    public ArrayList<String> getActionDataset(){
+    public ArrayList<String> getActionDataset() {
         return cleanDataset(actionDataset);
     }
 
-    public static ArrayList<String> makeActionDataset(ArrayList<String> ruleSet){
+    public static ArrayList<String> makeActionDataset(ArrayList<String> ruleSet) {
         ArrayList<String> actionSet = new ArrayList<>();
         CYKHandler handler = new CYKHandler();
-        for (int i = 0; i < ruleSet.size(); i++){
+        for (int i = 0; i < ruleSet.size(); i++) {
             String action = handler.retrieveAnswer(ruleSet.get(i));
-            if (action.equalsIgnoreCase("I dunno :P") || action.equalsIgnoreCase("No answer found")){
-                ruleDataset.set(i,"");
-            } else{
+            if (action == null) {
+                ruleDataset.set(i, "");
+            } else {
                 actionSet.add(handler.retrieveAnswer(ruleSet.get(i)));
             }
         }
         return actionSet;
     }
 
-    public static ArrayList<String> makeRuleDataset(ArrayList<String> currentOptions){
+    public static ArrayList<String> makeRuleDataset(ArrayList<String> currentOptions) {
         ArrayList<String> returnList = new ArrayList<>();
 
         for (String currentOption : currentOptions) {
@@ -86,7 +86,7 @@ public class Dataset {
                             // if word is the terminal for which we found options
                             if (splitList[j].trim().equalsIgnoreCase(splitWord.trim())) {
 
-                                returnList.set(i,"");
+                                returnList.set(i, "");
 
                                 // go through all options for the terminal
                                 for (String option : options) {
@@ -108,15 +108,15 @@ public class Dataset {
         return returnList;
     }
 
-    public static ArrayList<String> cleanDataset(ArrayList<String> inputSet){
+    public static ArrayList<String> cleanDataset(ArrayList<String> inputSet) {
 
-        for (int j = 0; j < inputSet.size(); j++){
-            if (inputSet.get(j).startsWith(" ")){
-                inputSet.set(j,inputSet.get(j).substring(1));
+        for (int j = 0; j < inputSet.size(); j++) {
+            if (inputSet.get(j).startsWith(" ")) {
+                inputSet.set(j, inputSet.get(j).substring(1));
             }
         }
-        for (int i = 0; i < inputSet.size(); i++){
-            if (inputSet.get(i).trim().equals("")){
+        for (int i = 0; i < inputSet.size(); i++) {
+            if (inputSet.get(i).trim().equals("")) {
                 inputSet.remove(i);
                 i--;
             }
@@ -124,7 +124,7 @@ public class Dataset {
         return inputSet;
     }
 
-    public static void tokenize(ArrayList<String> inputData){
+    public static void tokenize(ArrayList<String> inputData) {
         HashMap<String, Integer> vocabularyIndex = new HashMap<>();
         ArrayList<ArrayList<Integer>> tokenizedData = new ArrayList<>();
 
@@ -144,7 +144,7 @@ public class Dataset {
 
     }
 
-    public static ArrayList<Action> getActions(File fileName){
+    public static ArrayList<Action> getActions(File fileName) {
         ArrayList<Action> result = new ArrayList<Action>();
         List<String> lines = new ArrayList<>();
         try {
@@ -158,15 +158,15 @@ public class Dataset {
             e.printStackTrace();
         }
 
-        for(String line : lines){
+        for (String line : lines) {
             line = line.toLowerCase();
             String[] words = line.split(" ");
-            if(words[0].equalsIgnoreCase("Action")){
+            if (words[0].equalsIgnoreCase("Action")) {
                 Action action = new Action(words[1]);
                 String[] cleanWords = Arrays.copyOfRange(words, 3, words.length);
                 int idx = 0;
-                while(cleanWords[idx].charAt(0) == '<'){
-                    action.addSlot(new String[]{cleanWords[idx], cleanWords[idx+1]});
+                while (cleanWords[idx].charAt(0) == '<') {
+                    action.addSlot(new String[]{cleanWords[idx], cleanWords[idx + 1]});
                     idx += 2;
                 }
                 action.setAction(String.join(" ", Arrays.copyOfRange(cleanWords, idx, cleanWords.length)));
@@ -177,7 +177,7 @@ public class Dataset {
         return result;
     }
 
-    public static HashMap<String, ArrayList<String>> getRules(File fileName){
+    public static HashMap<String, ArrayList<String>> getRules(File fileName) {
         HashMap<String, ArrayList<String>> result = new HashMap<String, ArrayList<String>>();
         List<String> lines = new ArrayList<>();
         try {
@@ -191,19 +191,19 @@ public class Dataset {
             e.printStackTrace();
         }
 
-        for(String line : lines){
+        for (String line : lines) {
             line = line.toLowerCase();
             String[] words = line.split(" ");
-            String cleanLine = line.substring(6+words[1].length(), line.length());
-            if(words[0].equalsIgnoreCase("Rule")){
+            String cleanLine = line.substring(6 + words[1].length(), line.length());
+            if (words[0].equalsIgnoreCase("Rule")) {
                 String[] entries = cleanLine.split("[|]");
                 ArrayList<String> newEntries = new ArrayList<String>(Arrays.asList(entries));
-                for(int i = 0; i < newEntries.size(); i++){
-                    if(newEntries.get(i).charAt(0) == ' '){
+                for (int i = 0; i < newEntries.size(); i++) {
+                    if (newEntries.get(i).charAt(0) == ' ') {
                         newEntries.set(i, newEntries.get(i).substring(1, newEntries.get(i).length()));
                     }
-                    if(newEntries.get(i).charAt(newEntries.get(i).length()-1) == ' '){
-                        newEntries.set(i, newEntries.get(i).substring(0, newEntries.get(i).length()-1));
+                    if (newEntries.get(i).charAt(newEntries.get(i).length() - 1) == ' ') {
+                        newEntries.set(i, newEntries.get(i).substring(0, newEntries.get(i).length() - 1));
                     }
                 }
                 result.put(words[1], newEntries);

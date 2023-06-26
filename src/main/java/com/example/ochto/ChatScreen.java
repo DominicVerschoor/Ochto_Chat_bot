@@ -17,27 +17,20 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.*;
-import javafx.scene.text.Font;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Random;
-import java.util.ResourceBundle;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
 
 
 public class ChatScreen implements Initializable {
@@ -49,7 +42,6 @@ public class ChatScreen implements Initializable {
     private ScrollPane scrollPane;
     private final LocalTime time = LocalTime.now();
     private final LocalDate date = LocalDate.now();
-    ;
     private final Random random = new Random();
     private String message;
     private final Timer timer = new Timer();
@@ -57,7 +49,6 @@ public class ChatScreen implements Initializable {
     private final VBox vBox = new VBox();
     @FXML
     Circle circle = new Circle();
-    private String[] skills = {"Which lectures are there on DAY at TIME"};
     private final Stage stage2 = new Stage();
     private final Stage stage3 = new Stage();
     @FXML
@@ -75,9 +66,25 @@ public class ChatScreen implements Initializable {
     private Button skillButton;
     private CYKHandler handler;
     private SpellChecker spellChecker;
+    @FXML
+    private ChoiceBox<String> choiceBox;
+    private String[] optionsForChoiceBox = {"Normal", "RNN", "Naive Bayes"};
+    String assistantType = "Normal";
+    private String preProcessingPy = " ";
+    @FXML
+    private Button algorithmButton = new Button();
+    private ArrayList<String> userChatLog;
+    private ArrayList<String> octoChatLog;
+    private ArrayList<String> userSlotLog;
+    private final App app = new App();
+    private boolean isCYK = true;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        userChatLog = new ArrayList<>();
+        octoChatLog = new ArrayList<>();
+        userSlotLog = new ArrayList<>();
+        octoChatLog.add("Hi user");
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         vbox_message.heightProperty().addListener(new ChangeListener<Number>() {
@@ -119,28 +126,50 @@ public class ChatScreen implements Initializable {
         light_theme_ImageView.setPreserveRatio(true);
         theme_button.setGraphic(light_theme_ImageView);
         main_image_view.setImage(dark_theme_background);
+        choiceBox.getItems().addAll(optionsForChoiceBox);
+        choiceBox.setOnAction(this::changeChoiceBoxOption);
     }
 
     @FXML
     public void handle(ActionEvent newActionEvent) {
         message = text_field.getText();
-
+        String preMessage = message;
 
         addUMessage(message, vbox_message);
-
         if (!message.isEmpty()) {
-            float start = System.currentTimeMillis();
-
             handler = new CYKHandler();
-            message = handler.retrieveAnswer(message);
 
+            if (assistantType.equalsIgnoreCase("Normal")) {
+                if (octoChatLog.get(octoChatLog.size() - 1).contains("<") && octoChatLog.get(octoChatLog.size() - 1).contains(">")) {
+                    userSlotLog.add(message);
+                    String ans = userChatLog.get(userChatLog.size() - 1);
+                    String slt = userSlotLog.get(userSlotLog.size() - 1);
+                    message = handler.retrieveMergedAnswer(ans, slt);
+                } else {
+                    userChatLog.add(message);
+                    message = handler.retrieveAnswer(message);
+                }
+                octoChatLog.add(message);
+            } else if (assistantType.equalsIgnoreCase("Naive Bayes")) {
+                Bayes bayesClassifier = new Bayes();
+                message = bayesClassifier.getPromptAnswer(message);
+            } else {
+                try {
+                    ProcessBuilder processBuilder = new ProcessBuilder("python", "src/main/java/com/example/logic/Preprocessing.py", preMessage);
+                    Process proc = processBuilder.start();
+                    BufferedReader out = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+                    preProcessingPy = out.readLine();
+                    message = preProcessingPy;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
 
-            float end = System.currentTimeMillis();
-//            System.out.println("Time in ms: " + (end - start));
 
         } else {
             message = "Input something!";
         }
+
         TimerTask tt = new TimerTask() {
             @Override
             public void run() {
@@ -275,6 +304,12 @@ public class ChatScreen implements Initializable {
                     CornerRadii.EMPTY,
                     Insets.EMPTY)));
         }
+    }
+
+    @FXML
+    public void changeChoiceBoxOption(ActionEvent newActionEvent) {
+        assistantType = choiceBox.getValue();
+        System.out.println(assistantType);
     }
 }
 

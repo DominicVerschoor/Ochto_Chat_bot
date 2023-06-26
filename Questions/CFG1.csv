@@ -8,4 +8,4 @@ Rule <pro> I | today | he
 Rule <verb> am | is
 Action <weather> * <city> berlin <time> tomorrow It will be sunny.
 Action <weather> * <city> Maastricht It is rainy.
-Action <weather> * <pro> my mother <verb> is  <city> Maastricht <time> today It is stormy today.
+Action <weather> * <pro> he <verb> is <city> Maastricht <time> today It is stormy today.

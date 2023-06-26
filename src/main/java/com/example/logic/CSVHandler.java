@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CSVHandler {
+public class CSVHandler{
 
     public static void main(String[] args) {
         HashMap<String, ArrayList<String>> map = CSVHandler.getRules(new File("Questions/CFG0.csv"));

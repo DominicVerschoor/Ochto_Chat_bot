@@ -34,7 +34,7 @@ public class Bayes {
         System.out.println(classifier.getPromptAnswer("Where is"));
     }
 
-    private String getPromptAnswer(String prompt){
+    public String getPromptAnswer(String prompt){
         ArrayList<Double> sum = new ArrayList<Double>();
         String[] words = prompt.split("\\s+");
         for(int i = 0; i < classes.size(); i++){
